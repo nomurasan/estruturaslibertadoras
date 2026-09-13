@@ -4,6 +4,8 @@ import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Challenge } from '../types';
 import { AI_POWERS } from '../data/powers';
+import { getLocalizedPower } from '../data/powersLocalization';
+import { getLocalizedChallenge } from '../data/challengesLocalization';
 
 interface QuizSectionViewProps {
   levelChallenges: Challenge[];
@@ -42,7 +44,8 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
   setActiveVideo,
   currentEnergy = 65,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'pt';
 
   if (!currentChallenge) {
     return (
@@ -52,23 +55,29 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
     );
   }
 
+  const localizedChallenge = getLocalizedChallenge(currentChallenge, currentLang);
+
   // Under the game rules, each question displays 6 structures (correct + distractors)
   const optionIds = [
     ...(currentChallenge.correctSkillIds || []),
     ...(currentChallenge.incorrectSkillIds || [])
   ];
 
-  // Pick options matching the combined IDs and sort by numeric ID to interleave naturally
+  // Pick options matching the combined IDs, localized by current language
   const finalOptions = AI_POWERS.filter((p) => optionIds.includes(Number(p.id)))
-    .sort((a, b) => Number(a.id) - Number(b.id));
+    .sort((a, b) => Number(a.id) - Number(b.id))
+    .map((p) => getLocalizedPower(p, currentLang));
 
   // Determine required number of structures based on level
   const requiredCount =
     selectedLevel === 'PADAWAN' ? 1 : selectedLevel === 'JEDI' ? 2 : 3;
 
-  // Selected structures objects for the visual String builder
+  // Selected structures objects for the visual String builder (localized)
   const selectedStructures = selectedSkillIds
-    .map((id) => AI_POWERS.find((p) => Number(p.id) === id))
+    .map((id) => {
+      const p = AI_POWERS.find((item) => Number(item.id) === id);
+      return p ? getLocalizedPower(p, currentLang) : null;
+    })
     .filter(Boolean);
 
   return (
@@ -86,7 +95,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               {t('quiz.stringBuilding', { defaultValue: 'Montagem de String' })} • {selectedLevel || 'PADAWAN'}
             </div>
             <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter text-white font-sans">
-              {currentChallenge.title || t('quiz.challengeFallback', { defaultValue: 'Exercício de String com Ecocycle' })}
+              {localizedChallenge.title || t('quiz.challengeFallback', { defaultValue: 'Exercício de String com Ecocycle' })}
             </h3>
             <button
               onClick={() =>
@@ -187,7 +196,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               </div>
 
               <p className="text-xl md:text-2xl font-bold leading-relaxed text-white tracking-tight italic select-text font-sans">
-                "{currentChallenge.scenario}"
+                "{localizedChallenge.scenario}"
               </p>
               
               <div className="pt-2 flex items-center gap-2 select-none">
@@ -419,14 +428,14 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    {currentChallenge.inStringRole && (
+                    {localizedChallenge.inStringRole && (
                       <span className="px-2.5 py-1 rounded-full bg-zello-orange/15 border border-zello-orange/30 text-zello-orange text-[10px] font-bold font-mono">
-                        🧭 {currentChallenge.inStringRole}
+                        🧭 {localizedChallenge.inStringRole}
                       </span>
                     )}
-                    {currentChallenge.ecocyclePhase && (
+                    {localizedChallenge.ecocyclePhase && (
                       <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/10 text-slate-300 text-[10px] font-bold font-mono">
-                        🌐 {currentChallenge.ecocyclePhase}
+                        🌐 {localizedChallenge.ecocyclePhase}
                       </span>
                     )}
                   </div>
@@ -440,11 +449,11 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                       {t('quiz.bestChoiceTitle', { defaultValue: '1. Melhor escolha' })}
                     </div>
                     <p className="text-white font-bold text-base leading-snug">
-                      {currentChallenge.bestChoiceName || currentChallenge.title}
+                      {localizedChallenge.bestChoiceName || localizedChallenge.title}
                     </p>
-                    {currentChallenge.stringSequence && (
+                    {localizedChallenge.stringSequence && (
                       <p className="text-xs font-mono text-slate-400 pt-1">
-                        {t('quiz.flowLabel', { defaultValue: 'Fluxo:' })} <span className="text-zello-orange">{currentChallenge.stringSequence}</span>
+                        {t('quiz.flowLabel', { defaultValue: 'Fluxo:' })} <span className="text-zello-orange">{localizedChallenge.stringSequence}</span>
                       </p>
                     )}
                   </div>
@@ -456,7 +465,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                       {t('quiz.whyItWorksTitle', { defaultValue: '2. Por que funciona?' })}
                     </div>
                     <p className="text-slate-200 text-xs leading-relaxed">
-                      {currentChallenge.whyItWorks || currentChallenge.explanation}
+                      {localizedChallenge.whyItWorks || localizedChallenge.explanation}
                     </p>
                   </div>
 
@@ -467,7 +476,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                       {t('quiz.scenarioClueTitle', { defaultValue: '3. Pista do cenário' })}
                     </div>
                     <p className="text-amber-100/90 italic text-xs leading-relaxed">
-                      {currentChallenge.scenarioClue || 'As pistas contextuais e o propósito do encontro orientam a escolha da estrutura.'}
+                      {localizedChallenge.scenarioClue || t('quiz.scenarioClueDefault', { defaultValue: 'As pistas contextuais e o propósito do encontro orientam a escolha da estrutura.' })}
                     </p>
                   </div>
 
@@ -478,7 +487,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                       {t('quiz.anotherPossibilityTitle', { defaultValue: '4. Outra possibilidade' })}
                     </div>
                     <p className="text-slate-300 text-xs leading-relaxed">
-                      {currentChallenge.anotherPossibility || 'Estruturas como Conversation Café ou 15% Solutions também poderiam enriquecer o desenho.'}
+                      {localizedChallenge.anotherPossibility || t('quiz.anotherPossibilityDefault', { defaultValue: 'Estruturas como Conversation Café ou 15% Solutions também poderiam enriquecer o desenho.' })}
                     </p>
                   </div>
                 </div>
@@ -508,7 +517,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                 ) : (
                   <div className="text-sm italic text-slate-300 leading-relaxed font-medium whitespace-pre-line space-y-2">
                     {isAnswered
-                      ? aiFeedback || currentChallenge.explanation
+                      ? aiFeedback || localizedChallenge.explanation
                       : t('quiz.defaultAdvice', { defaultValue: 'Uma String não é uma lista estática de dinâmicas. Cada Estrutura Libertadora recebe uma Entrada, opera uma Transformação com 100% dos participantes e entrega uma Saída que alimenta a etapa seguinte do Ecocycle Planning. Analise o gargalo do cenário e as pistas contextuais.' })}
                   </div>
                 )}

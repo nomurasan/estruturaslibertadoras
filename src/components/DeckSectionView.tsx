@@ -4,6 +4,7 @@ import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 import { AI_POWERS, AIPower } from '../data/powers';
+import { getLocalizedPower, CATEGORY_TRANSLATIONS } from '../data/powersLocalization';
 import { SuperPowerCard } from './SuperPowerCard';
 
 interface DeckSectionViewProps {
@@ -74,7 +75,8 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   setGameState,
   setActiveVideo,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'pt';
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedEdition, setSelectedEdition] = useState<EditionFilter>('all');
@@ -83,14 +85,36 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Localized categories list
+  const localizedCategories = useMemo(() => {
+    return CATEGORY_ITEMS.map((cat) => {
+      const trans = CATEGORY_TRANSLATIONS[cat.key];
+      const label = !currentLang || currentLang.startsWith('pt')
+        ? cat.label
+        : currentLang.startsWith('es')
+        ? trans?.es || cat.label
+        : trans?.en || cat.label;
+      return {
+        ...cat,
+        label,
+        shortLabel: label
+      };
+    });
+  }, [currentLang]);
+
+  // Localized powers list based on current language
+  const localizedPowers = useMemo(() => {
+    return AI_POWERS.map((power) => getLocalizedPower(power, currentLang));
+  }, [currentLang]);
+
   // Base counts
-  const totalCount = AI_POWERS.length;
-  const classicsCount = AI_POWERS.filter((p) => Number(p.id) >= 1 && Number(p.id) <= 33).length;
-  const fieldbookCount = AI_POWERS.filter((p) => Number(p.id) >= 34 && Number(p.id) <= 43).length;
+  const totalCount = localizedPowers.length;
+  const classicsCount = localizedPowers.filter((p) => Number(p.id) >= 1 && Number(p.id) <= 33).length;
+  const fieldbookCount = localizedPowers.filter((p) => Number(p.id) >= 34 && Number(p.id) <= 43).length;
 
   // Filtered structures
   const filteredPowers = useMemo(() => {
-    return AI_POWERS.filter((power) => {
+    return localizedPowers.filter((power) => {
       const numId = Number(power.id);
 
       // Match Edition
@@ -98,7 +122,12 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
       if (selectedEdition === 'fieldbook' && (numId < 34 || numId > 43)) return false;
 
       // Match Category
-      if (selectedCategory !== 'all' && power.category !== selectedCategory) return false;
+      if (selectedCategory !== 'all') {
+        const rawPower = AI_POWERS.find((p) => p.id === power.id);
+        if (rawPower?.category !== selectedCategory && power.category !== selectedCategory) {
+          return false;
+        }
+      }
 
       // Match Search Term
       if (searchTerm.trim() !== '') {
@@ -121,7 +150,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
       return true;
     });
-  }, [searchTerm, selectedCategory, selectedEdition]);
+  }, [localizedPowers, searchTerm, selectedCategory, selectedEdition]);
 
   const hasActiveFilters = searchTerm.trim() !== '' || selectedCategory !== 'all' || selectedEdition !== 'all';
 
@@ -132,7 +161,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   };
 
   // Active category display label
-  const activeCategoryObj = CATEGORY_ITEMS.find((c) => c.key === selectedCategory);
+  const activeCategoryObj = localizedCategories.find((c) => c.key === selectedCategory);
 
   return (
     <motion.div
@@ -379,7 +408,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               <span>Todas ({AI_POWERS.length})</span>
             </button>
 
-            {CATEGORY_ITEMS.map((cat) => {
+            {localizedCategories.map((cat) => {
               const count = AI_POWERS.filter((p) => p.category === cat.key).length;
               const isSelected = selectedCategory === cat.key;
               const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
@@ -425,10 +454,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                 }`}
               >
                 <LucideIcons.LayoutGrid size={12} />
-                <span>Todas ({AI_POWERS.length})</span>
+                <span>{t('deck.all', { defaultValue: 'Todas' })} ({totalCount})</span>
               </button>
 
-              {CATEGORY_ITEMS.map((cat) => {
+              {localizedCategories.map((cat) => {
                 const count = AI_POWERS.filter((p) => p.category === cat.key).length;
                 const isSelected = selectedCategory === cat.key;
                 const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
@@ -554,7 +583,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                   <span className="text-xs font-mono font-bold">{AI_POWERS.length}</span>
                 </button>
 
-                {CATEGORY_ITEMS.map((cat) => {
+                {localizedCategories.map((cat) => {
                   const count = AI_POWERS.filter((p) => p.category === cat.key).length;
                   const isSelected = selectedCategory === cat.key;
                   const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;

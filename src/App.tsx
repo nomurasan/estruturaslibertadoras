@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
+import { getLocalizedPower } from './data/powersLocalization';
 import {
   Brain,
   Shield,
@@ -68,6 +70,7 @@ interface UserProfile {
 }
 
 export default function App() {
+  const { t, i18n } = useTranslation();
   const [user, loading, error] = useAuthState(auth);
   const [gameState, setGameState] = useState<GameState>('home');
   const [selectedLevel, setSelectedLevel] = useState<'PADAWAN' | 'JEDI' | 'YODA' | null>(null);
@@ -77,6 +80,7 @@ export default function App() {
   const [selectedSkillIds, setSelectedSkillIds] = useState<number[]>([]);
   const [isAnsweredCorrectly, setIsAnsweredCorrectly] = useState(false);
   const [viewingPower, setViewingPower] = useState<AIPower | null>(null);
+  const [showModalScrollHint, setShowModalScrollHint] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -85,6 +89,28 @@ export default function App() {
     mediaQuery.addEventListener('change', listener);
     return () => mediaQuery.removeEventListener('change', listener);
   }, []);
+
+  // When viewingPower changes, reset scroll hint to visible
+  useEffect(() => {
+    if (viewingPower) {
+      setShowModalScrollHint(true);
+    }
+  }, [viewingPower]);
+
+  const handleModalScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    if (scrollTop > 80 && showModalScrollHint) {
+      setShowModalScrollHint(false);
+    } else if (scrollTop <= 80 && !showModalScrollHint) {
+      setShowModalScrollHint(true);
+    }
+  };
+
+  // Localized viewing power
+  const localizedViewingPower = useMemo(() => {
+    if (!viewingPower) return null;
+    return getLocalizedPower(viewingPower, i18n.language || 'pt');
+  }, [viewingPower, i18n.language]);
 
   const currentPowerIndex = viewingPower ? AI_POWERS.findIndex(p => p.id === viewingPower.id) : -1;
   const handlePrevPower = () => {
@@ -2238,280 +2264,323 @@ export default function App() {
                 exit={{ scale: 0.9, y: 20 }}
                 className="w-full max-w-[800px] max-h-[94vh] sm:max-h-[88vh] bg-zello-black border-2 border-zello-orange rounded-3xl sm:rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(240,90,40,0.3)] flex flex-col"
               >
-                {/* Scrollable Container with sequential details */}
-                <div 
-                  id="pwr-detail-scroll-container" 
-                  className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar space-y-6 sm:space-y-8 scroll-smooth"
-                >
-                  {/* Back Navigation Header */}
-                  <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-2">
-                    <button
-                      onClick={() => setViewingPower(null)}
-                      className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-zello-orange focus:text-zello-orange transition-colors cursor-pointer outline-none"
+                {/* Scrollable Container with sequential details and visible custom scrollbar */}
+                {(() => {
+                  const activePower = localizedViewingPower || viewingPower;
+                  return (
+                    <div 
+                      id="pwr-detail-scroll-container" 
+                      onScroll={handleModalScroll}
+                      className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto structure-modal-scrollbar space-y-6 sm:space-y-8 scroll-smooth relative"
                     >
-                      <LucideIcons.ArrowLeft size={14} />
-                      Voltar ao Deck
-                    </button>
-                    
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
-                      <span className="text-[9px] font-black text-zello-orange uppercase tracking-[0.2em]">EL</span>
-                      <span className="text-sm font-black text-white italic tracking-tighter">#{viewingPower.id.padStart(2, '0')}</span>
-                    </div>
-                  </div>
-
-                  {/* Header Info Area with Official Drawing */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-white/5">
-                    {/* Official Drawing Canvas Showcase */}
-                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-gradient-to-b from-white to-slate-100 p-4 flex items-center justify-center shrink-0 shadow-[0_0_30px_rgba(240,90,40,0.15)] border-2 border-white/20 relative group">
-                      {viewingPower.drawingUrl ? (
-                        <img
-                          src={viewingPower.drawingUrl}
-                          alt={`Desenho oficial de ${viewingPower.title}`}
-                          className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="text-slate-700 font-mono font-black text-2xl">#{viewingPower.id}</div>
-                      )}
-                      <div className="absolute bottom-2 px-2 py-0.5 rounded-md bg-black/5 text-[8px] font-mono text-slate-600 font-bold uppercase tracking-wider">
-                        Desenho Oficial
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 text-center sm:text-left flex-1 select-none">
-                      <div className="flex items-center justify-center sm:justify-start gap-2">
-                        <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">
-                          {viewingPower.category}
-                        </span>
-                        <span className="text-xs font-mono text-slate-500">•</span>
-                        <span className="text-xs font-mono font-bold text-slate-300">
-                          ESTRUTURA #{viewingPower.id.padStart(2, '0')}
-                        </span>
-                      </div>
-
-                      <h2 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-tight font-sans">
-                        {viewingPower.title}
-                      </h2>
-
-                      {viewingPower.englishTitle && (
-                        <p className="text-xs font-mono text-zello-orange/90 font-bold tracking-wide">
-                          Título Original: {viewingPower.englishTitle}
-                        </p>
-                      )}
-
-                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-                        {viewingPower.timeNeeded && (
-                          <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
-                            ⏱️ {viewingPower.timeNeeded}
-                          </span>
-                        )}
-                        {viewingPower.groupSize && (
-                          <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
-                            👥 {viewingPower.groupSize}
-                          </span>
-                        )}
-                      </div>
-
-                      {viewingPower.objective && (
-                        <p className="text-slate-300 text-sm leading-relaxed font-medium pt-1">
-                          {viewingPower.objective}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Scroll affordance indicator */}
-                  <button
-                    onClick={() => {
-                      const element = document.getElementById('pwr-detail-section-0');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                    className="w-full flex flex-col items-center justify-center py-4 text-slate-400 hover:text-zello-orange focus:text-zello-orange transition-colors duration-300 group outline-none border-b border-white/5"
-                    aria-label="Rolar para ver detalhes da estrutura"
-                  >
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-zello-orange transition-colors">
-                      CONTINUE PARA DESCOBRIR COMO CONDUZIR ESTA ESTRUTURA
-                    </span>
-                    <motion.div
-                      animate={prefersReducedMotion ? {} : { y: [0, 4, 0] }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                      className="mt-2 text-zello-orange text-sm font-black"
-                    >
-                      ↓
-                    </motion.div>
-                  </button>
-
-                  {/* Sequential Facilitation Layout */}
-                  <div className="space-y-10 pt-4 pb-12">
-                    {/* 01 — ENTENDA / CONTEXTO */}
-                    {viewingPower.applicationContext && (
-                      <div id="pwr-detail-section-0" className="space-y-4 text-left">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">01</span>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                            QUANDO UTILIZAR
-                          </h4>
-                        </div>
-                        <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Contexto de Aplicação</p>
-                          <p className="text-slate-300 text-sm leading-relaxed font-semibold">
-                            {viewingPower.applicationContext}
-                          </p>
+                      {/* Back Navigation Header */}
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-2">
+                        <button
+                          onClick={() => setViewingPower(null)}
+                          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-zello-orange focus:text-zello-orange transition-colors cursor-pointer outline-none"
+                        >
+                          <LucideIcons.ArrowLeft size={14} />
+                          {t('deck.backToDeck', { defaultValue: 'Voltar ao Deck' })}
+                        </button>
+                        
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
+                          <span className="text-[9px] font-black text-zello-orange uppercase tracking-[0.2em]">EL</span>
+                          <span className="text-sm font-black text-white italic tracking-tighter">#{activePower.id.padStart(2, '0')}</span>
                         </div>
                       </div>
-                    )}
 
-                    {/* 02 — FLUXO DE FACILITAÇÃO (Entrada, Processo, Saída) */}
-                    {(viewingPower.input || viewingPower.process || viewingPower.output) && (
-                      <div className="space-y-4 text-left">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">02</span>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                            FLUXO DE FACILITAÇÃO
-                          </h4>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {viewingPower.input && (
-                            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                              <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">Entrada</span>
-                              <p className="text-xs text-slate-300 leading-relaxed">{viewingPower.input}</p>
-                            </div>
+                      {/* Header Info Area with Official Drawing */}
+                      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-white/5">
+                        {/* Official Drawing Canvas Showcase */}
+                        <div className="w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-gradient-to-b from-white to-slate-100 p-4 flex items-center justify-center shrink-0 shadow-[0_0_30px_rgba(240,90,40,0.15)] border-2 border-white/20 relative group">
+                          {activePower.drawingUrl ? (
+                            <img
+                              src={activePower.drawingUrl}
+                              alt={t('deck.officialDrawingOf', { title: activePower.title, defaultValue: `Desenho oficial de ${activePower.title}` })}
+                              className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="text-slate-700 font-mono font-black text-2xl">#{activePower.id}</div>
                           )}
-                          {viewingPower.process && (
-                            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                              <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">Processo</span>
-                              <p className="text-xs text-slate-300 leading-relaxed">{viewingPower.process}</p>
-                            </div>
-                          )}
-                          {viewingPower.output && (
-                            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                              <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">Saída</span>
-                              <p className="text-xs text-slate-300 leading-relaxed">{viewingPower.output}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 03 — VEJA UM EXEMPLO */}
-                    {viewingPower.practicalExample && (
-                      <div id="pwr-detail-section-1" className="space-y-4 text-left">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">03</span>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                            EXEMPLO PRÁTICO DE CONDUÇÃO
-                          </h4>
-                        </div>
-                        <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Dinâmica em Ação</p>
-                          <p className="text-slate-300 text-sm leading-relaxed">
-                            {viewingPower.practicalExample}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 04 — EXPERIMENTE / CASOS DE USO */}
-                    {viewingPower.cases && Array.isArray(viewingPower.cases) && viewingPower.cases.length > 0 && (
-                      <div id="pwr-detail-section-2" className="space-y-4 text-left">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">04</span>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                            CASOS DE USO RECOMENDADOS
-                          </h4>
-                        </div>
-                        <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Onde aplicar no dia a dia</p>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {viewingPower.cases.map((useCase, idx) => (
-                              <div key={`pwr-case-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
-                                <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
-                                <span className="text-xs text-slate-300">{useCase}</span>
-                              </div>
-                            ))}
+                          <div className="absolute bottom-2 px-2 py-0.5 rounded-md bg-black/5 text-[8px] font-mono text-slate-600 font-bold uppercase tracking-wider">
+                            {t('deck.officialDrawing', { defaultValue: 'Desenho Oficial' })}
                           </div>
                         </div>
-                      </div>
-                    )}
 
-                    {/* 05 — BENEFÍCIOS */}
-                    {viewingPower.expectedBenefits && 
-                     Array.isArray(viewingPower.expectedBenefits) && 
-                     viewingPower.expectedBenefits.filter(Boolean).length > 0 && (
-                      <div id="pwr-detail-section-3" className="space-y-4 text-left">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">05</span>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                            BENEFÍCIOS DA ESTRUTURA
-                          </h4>
-                        </div>
-                        <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Impactos Esperados</p>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {viewingPower.expectedBenefits.filter(Boolean).map((benefit, idx) => (
-                              <div key={`pwr-benefit-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
-                                <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
-                                <span className="text-xs text-slate-300">{benefit}</span>
-                              </div>
-                            ))}
+                        <div className="space-y-3 text-center sm:text-left flex-1 select-none">
+                          <div className="flex items-center justify-center sm:justify-start gap-2">
+                            <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">
+                              {activePower.category}
+                            </span>
+                            <span className="text-xs font-mono text-slate-500">•</span>
+                            <span className="text-xs font-mono font-bold text-slate-300">
+                              {t('deck.structureNumber', { defaultValue: 'ESTRUTURA' })} #{activePower.id.padStart(2, '0')}
+                            </span>
                           </div>
+
+                          <h2 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-tight font-sans">
+                            {activePower.title}
+                          </h2>
+
+                          {activePower.englishTitle && (
+                            <p className="text-xs font-mono text-zello-orange/90 font-bold tracking-wide">
+                              {t('deck.originalTitle', { defaultValue: 'Título Original:' })} {activePower.englishTitle}
+                            </p>
+                          )}
+
+                          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                            {activePower.timeNeeded && (
+                              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
+                                ⏱️ {activePower.timeNeeded}
+                              </span>
+                            )}
+                            {activePower.groupSize && (
+                              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
+                                👥 {activePower.groupSize}
+                              </span>
+                            )}
+                          </div>
+
+                          {activePower.objective && (
+                            <p className="text-slate-300 text-sm leading-relaxed font-medium pt-1">
+                              {activePower.objective}
+                            </p>
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Navigation bar between ELs */}
-                  <div className="border-t border-white/5 pt-8 pb-4 flex flex-col items-center gap-6">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zello-orange/80">
-                      ESTRUTURA LIBERTADORA #{viewingPower.id.padStart(2, '0')}
-                    </span>
-                    
-                    <div className="flex items-center justify-between w-full gap-4">
-                      {currentPowerIndex > 0 ? (
+                      {/* Prominent Scroll Affordance Banner & Indicator */}
+                      <div className="space-y-2">
                         <button
-                          onClick={handlePrevPower}
-                          className="px-5 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-zello-orange/50 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-2 outline-none"
+                          onClick={() => {
+                            const element = document.getElementById('pwr-detail-section-0');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
+                          className="w-full p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-zello-orange/15 via-zello-orange/25 to-zello-orange/15 border-2 border-zello-orange/50 hover:border-zello-orange hover:bg-zello-orange/35 transition-all duration-300 group outline-none shadow-[0_0_30px_rgba(240,90,40,0.25)] cursor-pointer flex flex-col items-center justify-center text-center select-none"
+                          aria-label={t('deck.scrollDownAria', { defaultValue: 'Rolar para ver detalhes completos da estrutura' })}
                         >
-                          <LucideIcons.ChevronLeft size={14} />
-                          Estrutura Anterior
+                          <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+                            <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
+                            <span className="text-[11px] sm:text-xs md:text-sm font-black uppercase tracking-[0.16em] text-white group-hover:text-zello-orange transition-colors">
+                              {t('deck.scrollDownPrompt', { defaultValue: 'Role a tela para baixo • 5 Etapas do Guia Completo de Condução' })}
+                            </span>
+                            <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
+                          </div>
+                          <div className="flex items-center gap-2 mt-1.5 text-[9px] sm:text-[10px] font-mono text-slate-300 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-zello-orange animate-ping shrink-0" />
+                            <span>{t('deck.scrollDownHint', { defaultValue: 'Use a barra de rolagem laranja à direita ou clique neste banner para avançar' })}</span>
+                          </div>
                         </button>
-                      ) : (
-                        <button
-                          disabled
-                          className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
-                          aria-disabled="true"
-                        >
-                          <LucideIcons.ChevronLeft size={14} />
-                          Estrutura Anterior
-                        </button>
-                      )}
+                      </div>
 
-                      {currentPowerIndex < AI_POWERS.length - 1 ? (
-                        <button
-                          onClick={handleNextPower}
-                          className="px-5 py-3 bg-zello-orange hover:brightness-110 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-[0_0_15px_rgba(240,90,40,0.2)] flex items-center gap-2 outline-none"
-                        >
-                          Próxima Estrutura
-                          <LucideIcons.ChevronRight size={14} />
-                        </button>
-                      ) : (
-                        <button
-                          disabled
-                          className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
-                          aria-disabled="true"
-                        >
-                          Próxima Estrutura
-                          <LucideIcons.ChevronRight size={14} />
-                        </button>
-                      )}
+                      {/* Sequential Facilitation Layout */}
+                      <div className="space-y-10 pt-4 pb-12">
+                        {/* 01 — ENTENDA / CONTEXTO */}
+                        {activePower.applicationContext && (
+                          <div id="pwr-detail-section-0" className="space-y-4 text-left">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">01</span>
+                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                {t('deck.whenToUse', { defaultValue: 'QUANDO UTILIZAR' })}
+                              </h4>
+                            </div>
+                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                {t('deck.applicationContext', { defaultValue: 'Contexto de Aplicação' })}
+                              </p>
+                              <p className="text-slate-300 text-sm leading-relaxed font-semibold">
+                                {activePower.applicationContext}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 02 — FLUXO DE FACILITAÇÃO (Entrada, Processo, Saída) */}
+                        {(activePower.input || activePower.process || activePower.output) && (
+                          <div className="space-y-4 text-left">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">02</span>
+                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                {t('deck.facilitationFlow', { defaultValue: 'FLUXO DE FACILITAÇÃO' })}
+                              </h4>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              {activePower.input && (
+                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                    {t('deck.input', { defaultValue: 'Entrada' })}
+                                  </span>
+                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.input}</p>
+                                </div>
+                              )}
+                              {activePower.process && (
+                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                    {t('deck.process', { defaultValue: 'Processo' })}
+                                  </span>
+                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.process}</p>
+                                </div>
+                              )}
+                              {activePower.output && (
+                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                    {t('deck.output', { defaultValue: 'Saída' })}
+                                  </span>
+                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.output}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 03 — VEJA UM EXEMPLO */}
+                        {activePower.practicalExample && (
+                          <div id="pwr-detail-section-1" className="space-y-4 text-left">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">03</span>
+                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                {t('deck.practicalExampleHeading', { defaultValue: 'EXEMPLO PRÁTICO DE CONDUÇÃO' })}
+                              </h4>
+                            </div>
+                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                {t('deck.dynamicInAction', { defaultValue: 'Dinâmica em Ação' })}
+                              </p>
+                              <p className="text-slate-300 text-sm leading-relaxed">
+                                {activePower.practicalExample}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 04 — EXPERIMENTE / CASOS DE USO */}
+                        {activePower.cases && Array.isArray(activePower.cases) && activePower.cases.length > 0 && (
+                          <div id="pwr-detail-section-2" className="space-y-4 text-left">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">04</span>
+                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                {t('deck.recommendedCases', { defaultValue: 'CASOS DE USO RECOMENDADOS' })}
+                              </h4>
+                            </div>
+                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                {t('deck.whereToApply', { defaultValue: 'Onde aplicar no dia a dia' })}
+                              </p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {activePower.cases.map((useCase, idx) => (
+                                  <div key={`pwr-case-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
+                                    <span className="text-xs text-slate-300">{useCase}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 05 — BENEFÍCIOS */}
+                        {activePower.expectedBenefits && 
+                         Array.isArray(activePower.expectedBenefits) && 
+                         activePower.expectedBenefits.filter(Boolean).length > 0 && (
+                          <div id="pwr-detail-section-3" className="space-y-4 text-left">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">05</span>
+                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                {t('deck.structureBenefits', { defaultValue: 'BENEFÍCIOS DA ESTRUTURA' })}
+                              </h4>
+                            </div>
+                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                {t('deck.expectedImpacts', { defaultValue: 'Impactos Esperados' })}
+                              </p>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {activePower.expectedBenefits.filter(Boolean).map((benefit, idx) => (
+                                  <div key={`pwr-benefit-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
+                                    <span className="text-xs text-slate-300">{benefit}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Navigation bar between ELs */}
+                      <div className="border-t border-white/5 pt-8 pb-4 flex flex-col items-center gap-6">
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zello-orange/80">
+                          {t('deck.structureNumber', { defaultValue: 'ESTRUTURA LIBERTADORA' })} #{activePower.id.padStart(2, '0')}
+                        </span>
+                        
+                        <div className="flex items-center justify-between w-full gap-4">
+                          {currentPowerIndex > 0 ? (
+                            <button
+                              onClick={handlePrevPower}
+                              className="px-5 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-zello-orange/50 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-2 outline-none"
+                            >
+                              <LucideIcons.ChevronLeft size={14} />
+                              {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
+                            </button>
+                          ) : (
+                            <button
+                              disabled
+                              className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
+                              aria-disabled="true"
+                            >
+                              <LucideIcons.ChevronLeft size={14} />
+                              {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
+                            </button>
+                          )}
+
+                          {currentPowerIndex < AI_POWERS.length - 1 ? (
+                            <button
+                              onClick={handleNextPower}
+                              className="px-5 py-3 bg-zello-orange hover:brightness-110 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-[0_0_15px_rgba(240,90,40,0.2)] flex items-center gap-2 outline-none"
+                            >
+                              {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
+                              <LucideIcons.ChevronRight size={14} />
+                            </button>
+                          ) : (
+                            <button
+                              disabled
+                              className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
+                              aria-disabled="true"
+                            >
+                              {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
+                              <LucideIcons.ChevronRight size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Floating Prompt Pill when at the top of modal */}
+                      <AnimatePresence>
+                        {showModalScrollHint && (
+                          <div className="sticky bottom-2 left-0 right-0 flex justify-center pointer-events-none z-30 py-1">
+                            <motion.button
+                              initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                              onClick={() => {
+                                const element = document.getElementById('pwr-detail-section-0');
+                                if (element) {
+                                  element.scrollIntoView({ behavior: 'smooth' });
+                                }
+                              }}
+                              className="pointer-events-auto px-4 py-2 rounded-full bg-zello-orange text-white font-black text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-2 shadow-[0_0_25px_rgba(240,90,40,0.8)] border border-white/30 hover:scale-105 active:scale-95 transition-all cursor-pointer select-none"
+                            >
+                              <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
+                              <span>{t('deck.scrollToGuide', { defaultValue: 'Role para o Guia de Facilitação' })}</span>
+                              <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
+                            </motion.button>
+                          </div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                  </div>
-                </div>
+                  );
+                })()}
               </motion.div>
             </motion.div>
           )}
