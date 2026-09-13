@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import * as LucideIcons from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Company } from '../types';
 
 interface AdminSectionViewProps {
@@ -62,13 +63,15 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
   getRank,
   isWhitelistingLoading,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="max-w-[1400px] mx-auto p-4 md:p-8 space-y-12 font-sans select-none">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-8">
         <div className="space-y-2 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-[10px] font-black uppercase tracking-widest font-mono">
             <LucideIcons.ShieldAlert size={12} className="animate-pulse" />
-            Painel Administrativo Jedi
+            {t('admin.title', { defaultValue: 'Painel Administrativo' })}
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none font-sans">
             CONTROLE DE <span className="text-zello-orange">ACESSO CORPORATIVO</span>
@@ -252,22 +255,22 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                   <thead className="bg-white/10 sticky top-0 z-20 backdrop-blur-md">
                     <tr key="global-users-header-row-st">
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        Participante
+                        {t('admin.participant', { defaultValue: 'Participante' })}
                       </th>
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-                        XP Acumulado
+                        {t('admin.accumulatedXp', { defaultValue: 'XP Acumulado' })}
                       </th>
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-                        Rank
+                        {t('admin.rank', { defaultValue: 'Rank' })}
                       </th>
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-                        Empresa / Turma
+                        {t('admin.company', { defaultValue: 'Empresa / Turma' })}
                       </th>
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
-                        Atributo
+                        {t('admin.role', { defaultValue: 'Função' })}
                       </th>
                       <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
-                        Ações
+                        {t('admin.actions', { defaultValue: 'Ações' })}
                       </th>
                     </tr>
                   </thead>
@@ -319,7 +322,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                                 : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'
                             }`}
                           >
-                            {u.isAdmin ? 'ADMINISTRADOR' : 'PARTICIPANTE'}
+                            {u.isAdmin ? t('admin.roleAdmin', { defaultValue: 'ADMINISTRADOR' }) : t('admin.roleParticipant', { defaultValue: 'PARTICIPANTE' })}
                           </button>
                         </td>
                         <td className="p-8 text-right select-none">
@@ -329,7 +332,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                                 onClick={() => handleResetUserProgress(u.userId)}
                                 disabled={u.userId === user?.uid}
                                 className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
-                                title="Zerar Progresso (Reset para Padawan e 0 XP)"
+                                title={t('admin.resetProgress', { defaultValue: 'ZERAR PROGRESSO' })}
                               >
                                 <LucideIcons.RotateCcw size={18} />
                               </button>
@@ -338,19 +341,19 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                               onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                               disabled={u.userId === user?.uid}
                               className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
-                              title={u.isAdmin ? 'Demitir Admin' : 'Tornar Admin'}
+                              title={u.isAdmin ? t('admin.demoteAdmin', { defaultValue: 'Demitir Admin' }) : t('admin.makeAdmin', { defaultValue: 'Tornar Admin' })}
                             >
                               <LucideIcons.Shield size={18} />
                             </button>
                             <button
                               onClick={() => {
-                                if (confirm('Tem certeza que deseja excluir as informações deste usuário?')) {
+                                if (confirm(t('admin.confirmDelete', { defaultValue: 'Tem certeza que deseja EXCLUIR permanentemente este usuário da plataforma? Esta ação não pode ser desfeita.' }))) {
                                   handleDeleteUser(u.userId);
                                 }
                               }}
                               disabled={u.userId === user?.uid}
                               className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
-                              title="Excluir Usuário"
+                              title={t('admin.deleteUser', { defaultValue: 'EXCLUIR USUÁRIO' })}
                             >
                               <LucideIcons.UserMinus size={18} />
                             </button>
@@ -417,7 +420,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
                         }`}
                       >
-                        {u.isAdmin ? 'ADMIN' : 'PARTICIPANTE'}
+                        {u.isAdmin ? t('admin.roleAdminShort', { defaultValue: 'ADMIN' }) : t('admin.roleParticipantShort', { defaultValue: 'PARTICIPANTE' })}
                       </button>
                     </div>
 
@@ -429,7 +432,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
                         >
                           <LucideIcons.RotateCcw size={12} />
-                          Zerar
+                          {t('admin.resetShort', { defaultValue: 'Zerar' })}
                         </button>
                       )}
                       <button
@@ -438,11 +441,11 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                         className="py-2 px-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
                       >
                         <LucideIcons.Shield size={12} />
-                        {u.isAdmin ? 'Demitir' : 'Promover'}
+                        {u.isAdmin ? t('admin.demoteShort', { defaultValue: 'Demitir' }) : t('admin.promoteShort', { defaultValue: 'Promover' })}
                       </button>
                       <button
                         onClick={() => {
-                          if (confirm('Tem certeza que deseja excluir as informações deste usuário?')) {
+                          if (confirm(t('admin.confirmDelete', { defaultValue: 'Tem certeza que deseja EXCLUIR permanentemente este usuário da plataforma? Esta ação não pode ser desfeita.' }))) {
                             handleDeleteUser(u.userId);
                           }
                         }}
@@ -450,14 +453,14 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                         className="py-2 px-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
                       >
                         <LucideIcons.UserMinus size={12} />
-                        Excluir
+                        {t('admin.deleteShort', { defaultValue: 'Excluir' })}
                       </button>
                     </div>
                   </div>
                 ))}
                 {allUsers.length === 0 && (
                   <div className="p-12 text-center text-slate-500 text-xs font-bold uppercase tracking-wider">
-                    Nenhum usuário cadastrado no sistema
+                    {t('admin.noUsers', { defaultValue: 'Nenhum usuário cadastrado no sistema' })}
                   </div>
                 )}
               </div>

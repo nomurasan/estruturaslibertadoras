@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { AIPower } from '../data/powers';
 import * as LucideIcons from 'lucide-react';
 
@@ -11,6 +12,7 @@ interface SuperPowerCardProps {
 }
 
 export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked = false, onClick, onConsult }) => {
+  const { t } = useTranslation();
   const IconComponent = (LucideIcons as any)[power.icon] || LucideIcons.Zap;
 
   return (
@@ -61,7 +63,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             {power.drawingUrl ? (
               <img
                 src={power.drawingUrl}
-                alt={`Desenho oficial de ${power.title}`}
+                alt={t('deck.officialDrawingOf', { title: power.title, defaultValue: `Desenho oficial de ${power.title}` })}
                 className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
               />
@@ -70,7 +72,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             )}
             
             <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/10 border border-black/5 text-[7px] sm:text-[8px] font-mono text-slate-700 font-bold uppercase tracking-wider">
-              Desenho Oficial
+              {t('deck.officialDrawingBadge', { defaultValue: 'Desenho Oficial' })}
             </div>
           </div>
 
@@ -88,7 +90,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
           {/* Bottom Bar: Time, Group Size & Action */}
           <div className="pt-2.5 sm:pt-3 flex items-center justify-between border-t border-white/5 gap-2">
             <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest font-mono truncate">
-              {power.timeNeeded || '15-30 min'} • {power.groupSize || 'Qualquer grupo'}
+              {power.timeNeeded || '15-30 min'} • {power.groupSize || t('deck.anyGroup', { defaultValue: 'Qualquer grupo' })}
             </span>
 
             <button
@@ -101,7 +103,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
               className="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-zello-orange text-white hover:bg-zello-orange/90 active:scale-95 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_0_15px_rgba(240,90,40,0.3)] shrink-0 font-sans min-h-[36px]"
             >
               <LucideIcons.Eye size={12} />
-              Ver Estrutura
+              {t('deck.viewStructure', { defaultValue: 'Ver Estrutura' })}
             </button>
           </div>
         </div>
@@ -112,3 +114,4 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
     </motion.div>
   );
 };
+

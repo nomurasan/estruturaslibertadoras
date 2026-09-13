@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import * as LucideIcons from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Challenge } from '../types';
 import { AI_POWERS } from '../data/powers';
 
@@ -41,10 +42,12 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
   setActiveVideo,
   currentEnergy = 65,
 }) => {
+  const { t } = useTranslation();
+
   if (!currentChallenge) {
     return (
       <div className="p-12 text-center text-slate-400 font-sans">
-        Nenhum exercício de String carregado para este nível. Redirecionando...
+        {t('quiz.noChallenge', { defaultValue: 'Nenhum exercício de String carregado para este nível. Redirecionando...' })}
       </div>
     );
   }
@@ -80,22 +83,22 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <div className="px-3 py-1 bg-zello-orange/15 border border-zello-orange/30 rounded-full text-zello-orange text-[10px] font-black uppercase tracking-widest font-mono">
-              Montagem de String • {selectedLevel || 'PADAWAN'}
+              {t('quiz.stringBuilding', { defaultValue: 'Montagem de String' })} • {selectedLevel || 'PADAWAN'}
             </div>
             <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter text-white font-sans">
-              {currentChallenge.title || 'Exercício de String com Ecocycle'}
+              {currentChallenge.title || t('quiz.challengeFallback', { defaultValue: 'Exercício de String com Ecocycle' })}
             </h3>
             <button
               onClick={() =>
                 setActiveVideo({
-                  title: 'Como Funciona o Quiz?',
+                  title: t('quiz.howQuizWorks', { defaultValue: 'Como Funciona o Quiz?' }),
                   url: 'https://www.youtube.com/embed/RG4Ch3P1Sow?rel=0',
                 })
               }
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 hover:border-zello-orange/30 text-[10px] text-slate-400 hover:text-white font-bold uppercase tracking-widest rounded-full transition-all cursor-pointer group font-sans"
             >
               <LucideIcons.Play size={8} className="fill-slate-400 group-hover:fill-white text-slate-400 group-hover:text-white" />
-              Como Funciona o Quiz
+              {t('quiz.howQuizWorks', { defaultValue: 'Como Funciona o Quiz' })}
             </button>
           </div>
 
@@ -129,7 +132,9 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               <LucideIcons.Timer className={timeLeft < 10 ? 'text-red-500' : 'text-zello-orange'} size={15} />
             </div>
             <div>
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">Tempo</span>
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">
+                {t('quiz.timeLeft', { defaultValue: 'Tempo' })}
+              </span>
               <span className={`text-base font-black tabular-nums ${timeLeft < 10 ? 'text-red-500' : 'text-white'}`}>
                 {timeLeft}s
               </span>
@@ -141,7 +146,9 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               <LucideIcons.Layers className="text-zello-orange" size={15} />
             </div>
             <div>
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">Progresso</span>
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">
+                {t('quiz.progress', { defaultValue: 'Progresso' })}
+              </span>
               <span className="text-base font-black text-white font-mono">
                 {currentChallengeIndex + 1} / {levelChallenges.length}
               </span>
@@ -153,7 +160,9 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               <LucideIcons.Zap className="text-zello-orange fill-zello-orange" size={15} />
             </div>
             <div>
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">Energia</span>
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block leading-none font-mono">
+                {t('quiz.energy', { defaultValue: 'Energia' })}
+              </span>
               <span className="text-base font-black text-zello-orange font-mono">
                 {currentEnergy}%
               </span>
@@ -173,7 +182,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <LucideIcons.HelpCircle size={20} />
                 </div>
                 <span className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                  Cenário de Facilitação com Ecocycle Planning
+                  {t('quiz.scenarioTitle', { defaultValue: 'Cenário de Facilitação com Ecocycle Planning' })}
                 </span>
               </div>
 
@@ -184,9 +193,9 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               <div className="pt-2 flex items-center gap-2 select-none">
                 <LucideIcons.Layers size={14} className="text-zello-orange shrink-0" />
                 <span className="text-xs font-semibold text-slate-300">
-                  {selectedLevel === 'PADAWAN' && 'Selecione a Estrutura Libertadora mais aderente às pistas deste cenário.'}
-                  {selectedLevel === 'JEDI' && 'Selecione as 2 Estruturas Libertadoras que compõem uma String fluida com o Ecocycle.'}
-                  {selectedLevel === 'YODA' && 'Selecione as 3 Estruturas Libertadoras que complementam a arquitetura de facilitação.'}
+                  {selectedLevel === 'PADAWAN' && t('quiz.instructionPadawan', { defaultValue: 'Selecione a Estrutura Libertadora mais aderente às pistas deste cenário.' })}
+                  {selectedLevel === 'JEDI' && t('quiz.instructionJedi', { defaultValue: 'Selecione as 2 Estruturas Libertadoras que compõem uma String fluida com o Ecocycle.' })}
+                  {selectedLevel === 'YODA' && t('quiz.instructionYoda', { defaultValue: 'Selecione as 3 Estruturas Libertadoras que complementam a arquitetura de facilitação.' })}
                 </span>
               </div>
             </div>
@@ -196,12 +205,12 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
           <div className="p-4 rounded-2xl bg-black/40 border border-white/5 flex flex-wrap items-center gap-2.5">
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 mr-2 flex items-center gap-1.5">
               <LucideIcons.Sliders size={12} className="text-zello-orange" />
-              Pipeline da String:
+              {t('quiz.pipelineTitle', { defaultValue: 'Pipeline da String:' })}
             </span>
 
             {selectedStructures.length === 0 ? (
               <span className="text-xs italic text-slate-500">
-                Selecione as estruturas abaixo para montar o fluxo da sua String...
+                {t('quiz.selectPrompt', { defaultValue: 'Selecione as estruturas abaixo para montar o fluxo da sua String...' })}
               </span>
             ) : (
               selectedStructures.map((struct, idx) => (
@@ -223,7 +232,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
             )}
 
             <div className="ml-auto text-[10px] font-mono text-slate-400 font-bold">
-              {selectedSkillIds.length} de {requiredCount} selecionada{requiredCount > 1 ? 's' : ''}
+              {selectedSkillIds.length} / {requiredCount} {t('quiz.selected', { defaultValue: 'selecionada(s)' })}
             </div>
           </div>
 
@@ -345,7 +354,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   }
                 `}
               >
-                Confirmar String ({selectedSkillIds.length}/{requiredCount})
+                {t('quiz.confirmString', { defaultValue: 'Confirmar String' })} ({selectedSkillIds.length}/{requiredCount})
               </button>
             </div>
           )}
@@ -370,8 +379,8 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div>
                     <h4 className="text-2xl font-black uppercase italic leading-none font-sans">
                       {isAnsweredCorrectly
-                        ? 'Boa escolha de facilitação!'
-                        : 'Às vezes aprendemos. Às vezes acertamos.'}
+                        ? t('quiz.goodChoice', { defaultValue: 'Boa escolha de facilitação!' })
+                        : t('quiz.learningOpportunity', { defaultValue: 'Às vezes aprendemos. Às vezes acertamos.' })}
                     </h4>
                     <div className="mt-2 flex items-center gap-2">
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
@@ -380,13 +389,13 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                           : 'bg-red-950/60 border border-red-400/40 text-red-200'
                       }`}>
                         <LucideIcons.Zap size={13} className="fill-current" />
-                        {isAnsweredCorrectly ? '+15% Energia da Força' : '-15% Energia da Força'}
+                        {isAnsweredCorrectly ? '+15% Energia' : '-15% Energia'}
                       </span>
                     </div>
                     <p className="text-white/95 font-medium text-sm mt-2 max-w-xl leading-relaxed">
                       {isAnsweredCorrectly
-                        ? 'Sua seleção é muito aderente ao propósito e às pistas deste cenário.'
-                        : 'A facilitação é um processo vivo de refinamento. Analise as pistas conceituais abaixo para aprofundar seu repertório.'}
+                        ? t('quiz.correctDesc', { defaultValue: 'Sua seleção é muito aderente ao propósito e às pistas deste cenário.' })
+                        : t('quiz.incorrectDesc', { defaultValue: 'A facilitação é um processo vivo de refinamento. Analise as pistas conceituais abaixo para aprofundar seu repertório.' })}
                     </p>
                   </div>
                 </div>
@@ -394,7 +403,9 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   onClick={nextChallenge}
                   className="px-8 py-4 bg-white text-zello-orange font-black uppercase tracking-widest text-xs rounded-xl hover:bg-slate-100 transition-all whitespace-nowrap active:scale-95 cursor-pointer shadow-lg font-sans"
                 >
-                  {currentChallengeIndex === levelChallenges.length - 1 ? 'Concluir Quizzes' : 'Próximo Desafio de String'}
+                  {currentChallengeIndex === levelChallenges.length - 1
+                    ? t('quiz.finishQuiz', { defaultValue: 'Concluir Quizzes' })
+                    : t('quiz.nextChallenge', { defaultValue: 'Próximo Desafio de String' })}
                 </button>
               </div>
 
@@ -404,7 +415,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="flex items-center gap-2">
                     <LucideIcons.Compass size={18} className="text-zello-orange" />
                     <span className="text-xs font-black uppercase tracking-widest text-white font-mono">
-                      Análise Pedagógica da Facilitação
+                      {t('quiz.pedagogicalAnalysis', { defaultValue: 'Análise Pedagógica da Facilitação' })}
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -426,14 +437,14 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-1.5">
                     <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider font-mono">
                       <LucideIcons.Check size={14} />
-                      1. Melhor escolha
+                      {t('quiz.bestChoiceTitle', { defaultValue: '1. Melhor escolha' })}
                     </div>
                     <p className="text-white font-bold text-base leading-snug">
                       {currentChallenge.bestChoiceName || currentChallenge.title}
                     </p>
                     {currentChallenge.stringSequence && (
                       <p className="text-xs font-mono text-slate-400 pt-1">
-                        Fluxo: <span className="text-zello-orange">{currentChallenge.stringSequence}</span>
+                        {t('quiz.flowLabel', { defaultValue: 'Fluxo:' })} <span className="text-zello-orange">{currentChallenge.stringSequence}</span>
                       </p>
                     )}
                   </div>
@@ -442,7 +453,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-1.5">
                     <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase tracking-wider font-mono">
                       <LucideIcons.Lightbulb size={14} />
-                      2. Por que funciona?
+                      {t('quiz.whyItWorksTitle', { defaultValue: '2. Por que funciona?' })}
                     </div>
                     <p className="text-slate-200 text-xs leading-relaxed">
                       {currentChallenge.whyItWorks || currentChallenge.explanation}
@@ -453,7 +464,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-1.5">
                     <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">
                       <LucideIcons.Search size={14} />
-                      3. Pista do cenário
+                      {t('quiz.scenarioClueTitle', { defaultValue: '3. Pista do cenário' })}
                     </div>
                     <p className="text-amber-100/90 italic text-xs leading-relaxed">
                       {currentChallenge.scenarioClue || 'As pistas contextuais e o propósito do encontro orientam a escolha da estrutura.'}
@@ -464,7 +475,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-1.5">
                     <div className="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase tracking-wider font-mono">
                       <LucideIcons.Shuffle size={14} />
-                      4. Outra possibilidade
+                      {t('quiz.anotherPossibilityTitle', { defaultValue: '4. Outra possibilidade' })}
                     </div>
                     <p className="text-slate-300 text-xs leading-relaxed">
                       {currentChallenge.anotherPossibility || 'Estruturas como Conversation Café ou 15% Solutions também poderiam enriquecer o desenho.'}
@@ -483,7 +494,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
               <div className="flex items-center gap-2 mb-4 select-none">
                 <LucideIcons.Sparkles size={14} className="text-zello-orange" />
                 <h4 className="text-xs font-black uppercase tracking-widest text-zello-orange font-mono">
-                  Conselho do Facilitador Mestre:
+                  {t('quiz.mentorAdviceTitle', { defaultValue: 'Conselho do Facilitador Mestre:' })}
                 </h4>
               </div>
 
@@ -498,7 +509,7 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                   <div className="text-sm italic text-slate-300 leading-relaxed font-medium whitespace-pre-line space-y-2">
                     {isAnswered
                       ? aiFeedback || currentChallenge.explanation
-                      : 'Uma String não é uma lista estática de dinâmicas. Cada Estrutura Libertadora recebe uma Entrada, opera uma Transformação com 100% dos participantes e entrega uma Saída que alimenta a etapa seguinte do Ecocycle Planning. Analise o gargalo do cenário e as pistas contextuais.'}
+                      : t('quiz.defaultAdvice', { defaultValue: 'Uma String não é uma lista estática de dinâmicas. Cada Estrutura Libertadora recebe uma Entrada, opera uma Transformação com 100% dos participantes e entrega uma Saída que alimenta a etapa seguinte do Ecocycle Planning. Analise o gargalo do cenário e as pistas contextuais.' })}
                   </div>
                 )}
               </div>
@@ -519,8 +530,12 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                 )}
               </div>
               <div>
-                <span className="text-xs font-black text-white uppercase italic tracking-wider block">Mestre Nomura</span>
-                <span className="text-[10px] text-zello-orange font-mono">Facilitador Estratégico</span>
+                <span className="text-xs font-black text-white uppercase italic tracking-wider block">
+                  {t('home.mentorName', { defaultValue: 'Mestre Nomura' })}
+                </span>
+                <span className="text-[10px] text-zello-orange font-mono">
+                  {t('quiz.mentorRole', { defaultValue: 'Facilitador Estratégico' })}
+                </span>
               </div>
             </div>
           </div>
@@ -529,3 +544,4 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
     </motion.div>
   );
 };
+

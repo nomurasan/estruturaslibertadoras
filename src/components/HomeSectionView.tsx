@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Infinity as InfinityIcon, Play, LayoutGrid, Gamepad2, BarChart2, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 
 interface HomeSectionViewProps {
@@ -14,6 +15,8 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
   setGameState,
   setActiveVideo,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       key="home-section"
@@ -26,21 +29,23 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
       <div className="space-y-6">
         {/* Mobile XP Total element */}
         <div className="md:hidden inline-flex flex-col items-center px-6 py-2 bg-zello-orange/10 rounded-2xl border border-zello-orange/20 min-w-[125px] max-w-fit mx-auto mb-4 select-none">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-zello-orange/60 leading-none">XP Total</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-zello-orange/60 leading-none">
+            {t('nav.totalXp', { defaultValue: 'XP Total' })}
+          </span>
           <span className="text-xl font-black text-zello-orange tabular-nums mt-1">{score.toLocaleString()}</span>
         </div>
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-xs font-black uppercase tracking-widest">
           <InfinityIcon size={14} className="text-zello-orange" />
-          Acesso Livre • Estruturas Libertadoras & Ecocycle Planning
+          {t('home.freeAccessBadge', { defaultValue: 'Acesso Livre • Estruturas Libertadoras & Ecocycle Planning' })}
         </div>
 
         <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-white uppercase italic font-sans">
-          ECOCYCLE <br /> <span className="text-zello-orange">PLANNING</span>
+          {t('home.heroTitle1', { defaultValue: 'ECOCYCLE' })} <br /> <span className="text-zello-orange">{t('home.heroTitle2', { defaultValue: 'PLANNING' })}</span>
         </h1>
         
         <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-          Domine a arte de desenhar <span className="text-white font-bold">Strings com Estruturas Libertadoras</span> para destravar as Armadilhas da Pobreza e da Rigidez, equilibrar o portfólio no Ecocycle e semear novas iniciativas.
+          {t('home.heroDesc', { defaultValue: 'Domine a arte de desenhar Strings com Estruturas Libertadoras para destravar as Armadilhas da Pobreza e da Rigidez, equilibrar o portfólio no Ecocycle e semear novas iniciativas.' })}
         </p>
 
         <div className="flex justify-center pt-2 w-full">
@@ -65,27 +70,29 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
             <div className="text-center sm:text-left space-y-2 flex-1">
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 <span className="text-[9px] bg-zello-orange/20 text-zello-orange border border-zello-orange/30 px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider">
-                  Facilitador Mestre
+                  {t('home.mentorBadge', { defaultValue: 'Facilitador Mestre' })}
                 </span>
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               </div>
-              <h3 className="text-lg font-black text-white italic uppercase tracking-wider mb-0.5">Mestre Nomura</h3>
+              <h3 className="text-lg font-black text-white italic uppercase tracking-wider mb-0.5 font-sans">
+                {t('home.mentorName', { defaultValue: 'Mestre Nomura' })}
+              </h3>
               <p className="text-xs text-slate-400 font-semibold leading-relaxed max-w-[280px]">
-                "As Estruturas Libertadoras dão forma à inteligência coletiva. Encadeie-as em Strings harmoniosas em torno do Ecociclo!"
+                {t('home.mentorQuote', { defaultValue: '"As Estruturas Libertadoras dão forma à inteligência coletiva. Encadeie-as em Strings harmoniosas em torno do Ecociclo!"' })}
               </p>
 
               <div className="pt-2">
                 <button
                   onClick={() =>
                     setActiveVideo({
-                      title: 'Como Funciona a Jornada do Ecocycle Planning?',
+                      title: t('home.howJourneyWorks', { defaultValue: 'Como Funciona a Jornada do Ecocycle Planning?' }),
                       url: 'https://www.youtube.com/embed/-SIsDpgvoXs?rel=0',
                     })
                   }
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-zello-orange hover:bg-zello-orange/90 text-white text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(240,90,40,0.3)] hover:shadow-[0_0_30px_rgba(240,90,40,0.5)] transition-all duration-300 cursor-pointer group/btn font-sans"
                 >
                   <Play size={10} className="fill-white text-white group-hover/btn:scale-110 transition-transform" />
-                  Como Funciona a Jornada?
+                  {t('home.howJourneyWorks', { defaultValue: 'Como Funciona a Jornada?' })}
                 </button>
               </div>
             </div>
@@ -96,14 +103,14 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
       {/* ─── MAPA DA JORNADA DE APRENDIZAGEM ─── */}
       <div className="space-y-4 max-w-2xl mx-auto text-center select-none pt-4">
         <h2 className="text-xs font-black text-zello-orange uppercase tracking-[0.3em]">
-          Sua Jornada com Estruturas Libertadoras
+          {t('home.journeyTitle', { defaultValue: 'Sua Jornada com Estruturas Libertadoras' })}
         </h2>
         <div className="flex items-center justify-center gap-2 md:gap-4 text-white text-base md:text-lg font-black tracking-wider uppercase italic">
-          <span>Explore o Deck</span>
+          <span>{t('home.journeyStep1', { defaultValue: 'Explore o Deck' })}</span>
           <span className="text-zello-orange/60">•</span>
-          <span>Monte Strings</span>
+          <span>{t('home.journeyStep2', { defaultValue: 'Monte Strings' })}</span>
           <span className="text-zello-orange/60">•</span>
-          <span>Dashboard</span>
+          <span>{t('home.journeyStep3', { defaultValue: 'Dashboard' })}</span>
         </div>
       </div>
 
@@ -132,17 +139,21 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 </div>
                 
                 <div className="space-y-1">
-                  <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">DECK</h3>
-                  <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">43 ESTRUTURAS LIBERTADORAS</p>
+                  <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">
+                    {t('home.cardDeckTitle', { defaultValue: 'DECK' })}
+                  </h3>
+                  <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">
+                    {t('home.cardDeckSub', { defaultValue: '43 ESTRUTURAS LIBERTADORAS' })}
+                  </p>
                 </div>
                 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
-                  Conheça todas as 43 Estruturas Libertadoras oficiais com propósito, passos, fluxo sequencial e conexão biológica com o Ecocycle Planning.
+                  {t('home.cardDeckDesc', { defaultValue: 'Conheça todas as 43 Estruturas Libertadoras oficiais com propósito, passos, fluxo sequencial e conexão biológica com o Ecocycle Planning.' })}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-white/5 flex items-center justify-between text-zello-orange text-xs font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                <span>EXPLORAR AS 43 ELS</span>
+                <span>{t('home.cardDeckBtn', { defaultValue: 'EXPLORAR AS 43 ELS' })}</span>
                 <ChevronRight size={16} />
               </div>
             </div>
@@ -169,17 +180,21 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 </div>
                 
                 <div className="space-y-1">
-                  <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">QUIZZES</h3>
-                  <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">MONTAGEM DE STRINGS</p>
+                  <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">
+                    {t('home.cardQuizTitle', { defaultValue: 'QUIZZES' })}
+                  </h3>
+                  <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">
+                    {t('home.cardQuizSub', { defaultValue: 'MONTAGEM DE STRINGS' })}
+                  </p>
                 </div>
                 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
-                  30 exercícios desafiadores em 3 níveis (Padawan, Jedi e Yoda) de encadeamento de Strings com o Ecocycle Planning para destravar gargalos.
+                  {t('home.cardQuizDesc', { defaultValue: '30 exercícios desafiadores em 3 níveis (Padawan, Jedi e Yoda) de encadeamento de Strings com o Ecocycle Planning para destravar gargalos.' })}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-white/5 flex items-center justify-between text-zello-orange text-xs font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                <span>MONTAR STRINGS</span>
+                <span>{t('home.cardQuizBtn', { defaultValue: 'MONTAR STRINGS' })}</span>
                 <ChevronRight size={16} />
               </div>
             </div>
@@ -198,9 +213,11 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
               <BarChart2 className="text-slate-400 group-hover:text-zello-orange" size={32} />
             </div>
             <div>
-              <div className="font-black text-3xl text-slate-200 uppercase italic tracking-tighter group-hover:text-white font-sans">Dashboard de Facilitação</div>
+              <div className="font-black text-3xl text-slate-200 uppercase italic tracking-tighter group-hover:text-white font-sans">
+                {t('home.cardDashTitle', { defaultValue: 'Dashboard de Facilitação' })}
+              </div>
               <div className="text-slate-400 font-medium text-sm leading-relaxed mt-1 max-w-xl">
-                Acompanhe o domínio das 43 Estruturas Libertadoras, sua evolução em montagem de Strings e diagnósticos do Ecocycle Planning.
+                {t('home.cardDashDesc', { defaultValue: 'Acompanhe o domínio das 43 Estruturas Libertadoras, sua evolução em montagem de Strings e diagnósticos do Ecocycle Planning.' })}
               </div>
             </div>
           </div>
@@ -210,3 +227,4 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
     </motion.div>
   );
 };
+

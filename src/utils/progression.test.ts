@@ -79,12 +79,14 @@ describe('Logic and Progression Unit Tests (10 tests)', () => {
   // Test 10: normalizeUserProfile guarantees data integrity and progression alignment
   it('10. normalizeUserProfile validates and repairs user scores and completed status', () => {
     const rawProfile: UserProfile = {
-      uid: 'user-test-123',
-      displayName: 'Test Facilitator',
+      userId: 'user-test-123',
       email: 'test@example.com',
-      company: 'Empresa A',
+      companyId: 'Empresa A',
       createdAt: '2025-01-01',
-      lastLogin: '2025-01-01',
+      lastActive: '2025-01-01',
+      unlockedPowers: [],
+      currentMissionIndex: 0,
+      missionProgress: {},
       xp: 0,
       completedQuizzes: ['PADAWAN'],
       bestScores: { PADAWAN: 14000, JEDI: 0, YODA: 0 }

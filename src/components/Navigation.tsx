@@ -39,6 +39,20 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('app_language', lang);
+        localStorage.setItem('i18nextLng', lang);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  const getTranslatedRank = () => {
+    if (currentRank.name === 'Padawan') return t('ranks.padawan', { defaultValue: 'Padawan' });
+    if (currentRank.name === 'Jedi') return t('ranks.jedi', { defaultValue: 'Jedi' });
+    return t('ranks.yoda', { defaultValue: 'Mestre Yoda' });
   };
 
   return (
@@ -51,7 +65,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           <div className="flex flex-col">
             <span className="text-xl font-black italic tracking-tighter leading-none text-white font-sans">ECOCYCLE PLANNING</span>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-[10px] font-bold text-zello-orange uppercase tracking-widest leading-none">ACESSO LIVRE</span>
+              <span className="text-[10px] font-bold text-zello-orange uppercase tracking-widest leading-none">{t('nav.freeAccess', { defaultValue: 'ACESSO LIVRE' })}</span>
               {currentCompany && (
                 <>
                   <div className="w-1 h-1 rounded-full bg-white/20"></div>
@@ -68,26 +82,26 @@ export const Navigation: React.FC<NavigationProps> = ({
               onClick={() => setGameState('deck')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'deck' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
             >
-              Deck
+              {t('nav.deck', { defaultValue: 'Deck' })}
             </button>
             <button
               onClick={() => setGameState('level-selection')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'level-selection' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
             >
-              Quizzes
+              {t('nav.quizzes', { defaultValue: 'Quizzes' })}
             </button>
             <button
               onClick={() => setGameState('dashboards')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'dashboards' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
             >
-              Dashboard
+              {t('nav.dashboard', { defaultValue: 'Dashboard' })}
             </button>
             {isAdmin && (
               <button
                 onClick={() => setGameState('admin')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'admin' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
               >
-                Admin
+                {t('nav.admin', { defaultValue: 'Admin' })}
               </button>
             )}
           </div>
@@ -135,14 +149,14 @@ export const Navigation: React.FC<NavigationProps> = ({
             className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all text-xs font-bold cursor-pointer"
           >
             <LogOut size={14} />
-            Sair
+            {t('nav.logout', { defaultValue: 'Sair' })}
           </button>
           <div className="hidden md:flex flex-col items-end">
-            <span className="text-[10px] text-zello-orange font-bold uppercase tracking-widest leading-none">Rank Atual</span>
-            <span className={`text-sm font-black uppercase italic ${currentRank.color}`}>{currentRank.name}</span>
+            <span className="text-[10px] text-zello-orange font-bold uppercase tracking-widest leading-none">{t('nav.currentRank', { defaultValue: 'Rank Atual' })}</span>
+            <span className={`text-sm font-black uppercase italic ${currentRank.color}`}>{getTranslatedRank()}</span>
           </div>
           <div className="hidden md:flex flex-col items-center px-4 py-2 bg-zello-orange/10 rounded-2xl border border-zello-orange/20 min-w-[100px] select-none">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zello-orange/60 leading-none">XP Total</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zello-orange/60 leading-none">{t('nav.totalXp', { defaultValue: 'XP Total' })}</span>
             <span className="text-lg font-black text-zello-orange tabular-nums">{score.toLocaleString()}</span>
           </div>
           <button
@@ -173,7 +187,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 }}
                 className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'home' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
               >
-                <span>Início</span>
+                <span>{t('nav.home', { defaultValue: 'Início' })}</span>
                 <ChevronRight size={16} className={gameState === 'home' ? 'text-zello-orange' : 'text-slate-500'} />
               </button>
 
@@ -184,7 +198,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 }}
                 className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'deck' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
               >
-                <span>Deck</span>
+                <span>{t('nav.deck', { defaultValue: 'Deck' })}</span>
                 <ChevronRight size={16} className={gameState === 'deck' ? 'text-zello-orange' : 'text-slate-500'} />
               </button>
 
@@ -195,7 +209,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 }}
                 className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'level-selection' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
               >
-                <span>Quizzes</span>
+                <span>{t('nav.quizzes', { defaultValue: 'Quizzes' })}</span>
                 <ChevronRight size={16} className={gameState === 'level-selection' ? 'text-zello-orange' : 'text-slate-500'} />
               </button>
 
@@ -206,7 +220,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 }}
                 className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'dashboards' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
               >
-                <span>Dashboard</span>
+                <span>{t('nav.dashboard', { defaultValue: 'Dashboard' })}</span>
                 <ChevronRight size={16} className={gameState === 'dashboards' ? 'text-zello-orange' : 'text-slate-500'} />
               </button>
 
@@ -218,7 +232,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                   }}
                   className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'admin' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
                 >
-                  <span>Admin</span>
+                  <span>{t('nav.admin', { defaultValue: 'Admin' })}</span>
                   <ChevronRight size={16} className={gameState === 'admin' ? 'text-zello-orange' : 'text-slate-500'} />
                 </button>
               )}
@@ -232,7 +246,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               >
                 <span className="flex items-center gap-2.5">
                   <LogOut size={16} />
-                  <span>Sair</span>
+                  <span>{t('nav.logout', { defaultValue: 'Sair' })}</span>
                 </span>
                 <ChevronRight size={16} className="text-red-500/40" />
               </button>
@@ -240,7 +254,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
             <div className="space-y-4 pt-6 border-t border-white/5">
               <div className="flex items-center justify-between px-2">
-                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Idioma / Language</span>
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">{t('nav.language', { defaultValue: 'Idioma / Language' })}</span>
                 <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 gap-1">
                   <button
                     onClick={() => changeLanguage('pt-BR')}
@@ -276,8 +290,8 @@ export const Navigation: React.FC<NavigationProps> = ({
               </div>
 
               <div className="flex items-center justify-between px-2">
-                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Nível Jedi</span>
-                <span className={`text-sm font-black uppercase italic ${currentRank.color}`}>{currentRank.name}</span>
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">{t('nav.jediLevel', { defaultValue: 'Nível Jedi' })}</span>
+                <span className={`text-sm font-black uppercase italic ${currentRank.color}`}>{getTranslatedRank()}</span>
               </div>
               <button
                 onClick={() => {
@@ -287,7 +301,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 className="w-full py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 font-black uppercase tracking-wider text-xs rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogOut size={14} />
-                Encerrar Sessão
+                {t('nav.endSession', { defaultValue: 'Encerrar Sessão' })}
               </button>
             </div>
           </motion.div>

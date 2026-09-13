@@ -514,7 +514,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               }`}
             >
               <Zap size={13} className={activeTab === 'individual' ? 'fill-white' : ''} />
-              Participante
+              {t('dashboard.tabParticipant', { defaultValue: 'Participante' })}
             </button>
             <button
               onClick={() => setActiveTab('team')}
@@ -525,17 +525,21 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               }`}
             >
               <Users size={13} />
-              Turma (Geral)
+              {t('dashboard.tabTeam', { defaultValue: 'Turma (Geral)' })}
             </button>
           </div>
 
           <div className="flex flex-wrap gap-3 justify-end">
             <div className="px-5 py-3.5 bg-zello-orange text-white rounded-2xl shadow-[0_0_30px_rgba(240,90,40,0.25)] min-w-[140px] text-left">
-              <span className="text-[9px] font-black uppercase tracking-widest opacity-80 block mb-0.5">XP ACUMULADO</span>
+              <span className="text-[9px] font-black uppercase tracking-widest opacity-80 block mb-0.5">
+                {t('dashboard.accumulatedXp', { defaultValue: 'XP ACUMULADO' })}
+              </span>
               <div className="text-2xl font-black tabular-nums italic">{score.toLocaleString()}</div>
             </div>
             <div className="px-5 py-3.5 bg-white/5 border border-white/10 text-white rounded-2xl min-w-[140px] text-left">
-              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block mb-0.5">PATENTE</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block mb-0.5">
+                {t('dashboard.rankLabel', { defaultValue: 'PATENTE' })}
+              </span>
               <div className={`text-2xl font-black italic ${currentRank.color}`}>{currentRank.name}</div>
             </div>
           </div>
@@ -563,11 +567,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       <Zap size={16} className="fill-zello-orange animate-pulse" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-zello-orange font-mono">
-                      Cristal Kyber Vital
+                      {t('dashboard.kyberCrystal', { defaultValue: 'Cristal Kyber Vital' })}
                     </span>
                   </div>
                   <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">
-                    Energia da Força
+                    {t('dashboard.forceEnergy', { defaultValue: 'Energia da Força' })}
                   </h3>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${energyConfig.badgeBg}`}>
@@ -583,19 +587,19 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       {currentEnergy}%
                     </span>
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                      de Potência
+                      {t('dashboard.ofPower', { defaultValue: 'de Potência' })}
                     </span>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] font-mono font-bold text-slate-400 block uppercase">
-                      Variação Dinâmica
+                      {t('dashboard.dynamicVariation', { defaultValue: 'Variação Dinâmica' })}
                     </span>
                     <span className="text-xs font-black text-emerald-400">
-                      +15% no Acerto
+                      {t('dashboard.gainOnHit', { defaultValue: '+15% no Acerto' })}
                     </span>
                     <span className="text-xs text-slate-500 mx-1">•</span>
                     <span className="text-xs font-black text-red-400">
-                      -15% no Erro
+                      {t('dashboard.lossOnError', { defaultValue: '-15% no Erro' })}
                     </span>
                   </div>
                 </div>
@@ -614,7 +618,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
                 <span className="font-medium text-slate-400">{energyConfig.subtitle}</span>
                 <span className="text-[10px] font-bold text-zello-orange uppercase tracking-wider">
-                  Holocron Sintonizado
+                  {t('dashboard.holocronSynced', { defaultValue: 'Holocron Sintonizado' })}
                 </span>
               </div>
             </div>
@@ -623,7 +627,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-between hover:border-white/20 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Precisão no Quiz
+                  {t('dashboard.accuracyInQuiz', { defaultValue: 'Precisão no Quiz' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
                   <Target size={16} />
@@ -634,9 +638,9 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   {accuracyRate}%
                 </div>
                 <div className="flex items-center gap-2 mt-1 text-xs text-slate-400 font-medium">
-                  <span className="text-emerald-400 font-bold">{totalCorrect} Acertos</span>
+                  <span className="text-emerald-400 font-bold">{totalCorrect} {t('dashboard.hits', { defaultValue: 'Acertos' })}</span>
                   <span>•</span>
-                  <span className="text-red-400 font-bold">{totalIncorrect} Erros</span>
+                  <span className="text-red-400 font-bold">{totalIncorrect} {t('dashboard.misses', { defaultValue: 'Erros' })}</span>
                 </div>
               </div>
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -651,7 +655,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 flex flex-col justify-between hover:border-white/20 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Sequência (Streak)
+                  {t('dashboard.streakTitle', { defaultValue: 'Sequência (Streak)' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center text-amber-400">
                   <Flame size={16} className="fill-amber-400" />
@@ -663,15 +667,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     {currentStreak}
                   </span>
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    acertos seguidos
+                    {t('dashboard.consecutiveHits', { defaultValue: 'acertos seguidos' })}
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 font-medium mt-1">
-                  Melhor sequência histórica: <strong className="text-white">{bestStreak} acertos</strong>
+                  {t('dashboard.bestStreakLabel', { defaultValue: 'Melhor sequência histórica:' })} <strong className="text-white">{bestStreak} {t('dashboard.hitsLower', { defaultValue: 'acertos' })}</strong>
                 </p>
               </div>
               <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                {currentStreak >= 3 ? '🔥 Ritmo de Mestre Jedi!' : 'Acerte o próximo para subir o streak'}
+                {currentStreak >= 3 ? t('dashboard.jediPace', { defaultValue: '🔥 Ritmo de Mestre Jedi!' }) : t('dashboard.streakHint', { defaultValue: 'Acerte o próximo para subir o streak' })}
               </div>
             </div>
           </div>
@@ -689,11 +693,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     <Activity size={15} />
                   </div>
                   <h4 className="text-lg md:text-xl font-black text-white italic uppercase tracking-tight font-sans">
-                    Evolução de Acertos como Energia da Força
+                    {t('dashboard.energyEvolutionTitle', { defaultValue: 'Evolução de Acertos como Energia da Força' })}
                   </h4>
                 </div>
                 <p className="text-xs text-slate-400 font-medium">
-                  Trajetória contínua da energia: <span className="text-emerald-400 font-bold">+15% de acréscimo</span> a cada desafio correto e <span className="text-red-400 font-bold">-15% de dreno</span> a cada erro.
+                  {t('dashboard.energyEvolutionDesc', { defaultValue: 'Trajetória contínua da energia: +15% de acréscimo a cada desafio correto e -15% de dreno a cada erro.' })}
                 </p>
               </div>
 
@@ -701,15 +705,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="flex items-center gap-4 text-xs font-bold shrink-0">
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-                  <span className="text-slate-300">Acerto (+15%)</span>
+                  <span className="text-slate-300">{t('dashboard.hitPlus', { defaultValue: 'Acerto (+15%)' })}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                  <span className="text-slate-300">Erro (-15%)</span>
+                  <span className="text-slate-300">{t('dashboard.errorMinus', { defaultValue: 'Erro (-15%)' })}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-1 bg-zello-orange"></span>
-                  <span className="text-slate-300">Nível Vital</span>
+                  <span className="text-slate-300">{t('dashboard.vitalLevel', { defaultValue: 'Nível Vital' })}</span>
                 </div>
               </div>
             </div>

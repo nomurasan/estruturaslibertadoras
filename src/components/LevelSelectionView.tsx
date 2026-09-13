@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import * as LucideIcons from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 import { RANKS } from '../constants';
 
@@ -21,6 +22,8 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
   setActiveVideo,
   completedQuizzes = [],
 }) => {
+  const { t } = useTranslation();
+
   const isLevelLocked = (level: 'PADAWAN' | 'JEDI' | 'YODA') => {
     if (level === 'PADAWAN') return false;
     if (level === 'JEDI') {
@@ -44,14 +47,16 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 pb-8 border-b border-white/5">
         <div className="space-y-4 text-center lg:text-left flex-1">
           <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter text-white font-sans">
-            Escolha seu Quiz
+            {t('levelSelection.title', { defaultValue: 'Escolha seu Quiz' })}
           </h2>
-          <p className="text-slate-400 font-medium">Selecione o nível de dificuldade e a quantidade de perguntas</p>
+          <p className="text-slate-400 font-medium">
+            {t('levelSelection.subtitle', { defaultValue: 'Selecione o nível de dificuldade e a quantidade de perguntas' })}
+          </p>
 
           <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-white/5 p-4 rounded-3xl border border-white/10 w-full sm:w-auto">
               <span className="text-xs font-black uppercase tracking-widest text-zello-orange shrink-0 select-none">
-                Nº PERGUNTAS:
+                {t('levelSelection.questionCount', { defaultValue: 'Nº PERGUNTAS:' })}
               </span>
               <div className="flex items-center gap-2 select-none justify-center">
                 {[1, 3, 5, 10].map((num) => (
@@ -83,7 +88,7 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
               onClick={() => setGameState('home')}
               className="px-8 py-4 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs rounded-xl hover:bg-white/10 transition-colors cursor-pointer active:scale-95 font-sans"
             >
-              Voltar
+              {t('levelSelection.back', { defaultValue: 'Voltar' })}
             </button>
           </div>
         </div>
@@ -109,27 +114,29 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
           <div className="text-center sm:text-left space-y-2 flex-1">
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <span className="text-[9px] bg-zello-orange/20 text-zello-orange border border-zello-orange/30 px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider">
-                Jedi Mentor
+                {t('levelSelection.mentorBadge', { defaultValue: 'Jedi Mentor' })}
               </span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             </div>
-            <h3 className="text-lg font-black text-white italic uppercase tracking-wider mb-0.5 font-sans">Mestre Nomura</h3>
+            <h3 className="text-lg font-black text-white italic uppercase tracking-wider mb-0.5 font-sans">
+              {t('levelSelection.mentorName', { defaultValue: 'Mestre Nomura' })}
+            </h3>
             <p className="text-xs text-slate-400 font-semibold leading-relaxed max-w-[280px]">
-              "Dê o primeiro passo para testar seus conhecimentos. O aprendizado real vem dos desafios superados. Que a força esteja com você!"
+              {t('levelSelection.mentorQuote', { defaultValue: '"Dê o primeiro passo para testar seus conhecimentos. O aprendizado real vem dos desafios superados. Que a força esteja com você!"' })}
             </p>
 
             <div className="pt-2">
               <button
                 onClick={() =>
                   setActiveVideo({
-                    title: 'Como Funciona o Quiz?',
+                    title: t('levelSelection.howQuizWorks', { defaultValue: 'Como Funciona o Quiz?' }),
                     url: 'https://www.youtube.com/embed/RG4Ch3P1Sow?rel=0',
                   })
                 }
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-zello-orange hover:bg-zello-orange/90 text-white text-[10px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(240,90,40,0.3)] hover:shadow-[0_0_30px_rgba(240,90,40,0.5)] transition-all duration-300 cursor-pointer group/btn font-sans"
               >
                 <LucideIcons.Play size={8} className="fill-white text-white group-hover/btn:scale-110 transition-transform" />
-                Como Funciona o Quiz?
+                {t('levelSelection.howQuizWorks', { defaultValue: 'Como Funciona o Quiz?' })}
               </button>
             </div>
           </div>
@@ -139,6 +146,10 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 select-none">
         {(['PADAWAN', 'JEDI', 'YODA'] as const).map((level, lIdx) => {
           const locked = isLevelLocked(level);
+          const rankKey = level.toLowerCase();
+          const translatedName = t(`levelSelection.${rankKey}Name`, { defaultValue: RANKS[level].name });
+          const translatedDesc = t(`levelSelection.${rankKey}Desc`, { defaultValue: RANKS[level].description });
+
           return (
             <button
               key={`lvl-sel-final-${level}-${lIdx}`}
@@ -156,7 +167,7 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
               <div className={`w-32 h-32 rounded-full border-4 border-zello-orange/20 p-2 overflow-hidden bg-zello-black/40 ${!locked ? 'group-hover:scale-110' : ''} transition-transform`}>
                 <img
                   src={RANKS[level].image}
-                  alt={RANKS[level].name}
+                  alt={translatedName}
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -164,10 +175,10 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
               <div className="text-center relative z-10 flex-1 flex flex-col justify-between">
                 <div>
                   <h3 className={`text-2xl font-black uppercase italic transition-colors font-sans ${RANKS[level].color}`}>
-                    {RANKS[level].name}
+                    {translatedName}
                   </h3>
                   <p className="text-sm text-slate-400 mt-2 font-medium leading-relaxed">
-                    {RANKS[level].description}
+                    {translatedDesc}
                   </p>
                 </div>
                 {locked && (
@@ -175,8 +186,8 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
                     <LucideIcons.Lock size={12} className="shrink-0" />
                     <span>
                       {level === 'JEDI'
-                        ? 'Requer 100% de acertos no Quiz Padawan'
-                        : 'Requer 100% de acertos no Quiz Jedi'}
+                        ? t('levelSelection.requiresPadawan', { defaultValue: 'Requer 100% de acertos no Quiz Padawan' })
+                        : t('levelSelection.requiresJedi', { defaultValue: 'Requer 100% de acertos no Quiz Jedi' })}
                     </span>
                   </p>
                 )}
@@ -186,7 +197,9 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
                   ? 'border-white/5 text-slate-600'
                   : 'border-white/10 text-slate-500 group-hover:text-zello-orange group-hover:border-zello-orange'
               }`}>
-                {locked ? 'Bloqueado' : 'Iniciar Quiz'}
+                {locked
+                  ? t('levelSelection.locked', { defaultValue: 'Bloqueado' })
+                  : t('levelSelection.startQuiz', { defaultValue: 'Iniciar Quiz' })}
               </div>
             </button>
           );
@@ -198,7 +211,7 @@ export const LevelSelectionView: React.FC<LevelSelectionViewProps> = ({
           onClick={() => setGameState('home')}
           className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors cursor-pointer font-sans"
         >
-          Voltar ao Início
+          {t('levelSelection.backToHome', { defaultValue: 'Voltar ao Início' })}
         </button>
       </div>
     </motion.div>

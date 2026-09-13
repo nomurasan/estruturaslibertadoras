@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import * as LucideIcons from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 import { AI_POWERS, AIPower } from '../data/powers';
 import { SuperPowerCard } from './SuperPowerCard';
@@ -73,6 +74,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   setGameState,
   setActiveVideo,
 }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedEdition, setSelectedEdition] = useState<EditionFilter>('all');
@@ -144,15 +146,15 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
         <div className="space-y-3 text-center lg:text-left flex-1 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-[10px] sm:text-xs font-black uppercase tracking-widest">
             <LucideIcons.Sparkles size={14} />
-            Repertório Oficial de Facilitação
+            {t('deck.officialBadge', { defaultValue: 'Repertório Oficial de Facilitação' })}
           </div>
 
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-white font-sans leading-tight">
-            Deck das 43 Estruturas Libertadoras
+            {t('deck.title', { defaultValue: 'Deck das 43 Estruturas Libertadoras' })}
           </h2>
 
           <p className="text-slate-300 text-xs sm:text-sm md:text-base font-medium leading-relaxed">
-            Explore as 43 Estruturas Libertadoras oficiais (as 33 clássicas + as 10 novidades do Fieldbook em liberatingstructures.com) com seus desenhos oficiais, propósitos essenciais, fluxos sequenciais e regras mínimas.
+            {t('deck.subtitle', { defaultValue: 'Explore as 43 Estruturas Libertadoras oficiais (as 33 clássicas + as 10 novidades do Fieldbook em liberatingstructures.com) com seus desenhos oficiais, propósitos essenciais, fluxos sequenciais e regras mínimas.' })}
           </p>
 
           <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-center lg:justify-start pt-1">
@@ -160,14 +162,14 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               onClick={() => setGameState('home')}
               className="px-5 sm:px-7 py-2.5 sm:py-3 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] sm:text-xs rounded-xl hover:bg-white/10 active:scale-95 transition-all cursor-pointer font-sans"
             >
-              Voltar ao Início
+              {t('deck.backToHome', { defaultValue: 'Voltar ao Início' })}
             </button>
             <button
               onClick={() => setGameState('level-selection')}
               className="px-5 sm:px-7 py-2.5 sm:py-3 bg-zello-orange/20 border border-zello-orange/40 text-zello-orange font-black uppercase tracking-widest text-[10px] sm:text-xs rounded-xl hover:bg-zello-orange/30 active:scale-95 transition-all cursor-pointer font-sans flex items-center gap-2"
             >
               <LucideIcons.Layers size={14} />
-              Praticar nos Quizzes
+              {t('deck.practiceQuizzes', { defaultValue: 'Praticar nos Quizzes' })}
             </button>
           </div>
         </div>
@@ -193,29 +195,29 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
           <div className="text-center sm:text-left space-y-1.5 flex-1 min-w-0">
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <span className="text-[9px] bg-zello-orange/20 text-zello-orange border border-zello-orange/30 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
-                Facilitador Mestre
+                {t('deck.mentorBadge', { defaultValue: 'Facilitador Mestre' })}
               </span>
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <h3 className="text-xs sm:text-sm font-black text-white italic uppercase tracking-wider mb-0.5 font-sans">
-              Mestre Nomura
+              {t('deck.mentorName', { defaultValue: 'Mestre Nomura' })}
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-400 font-semibold leading-relaxed line-clamp-2 sm:line-clamp-none">
-              "Cada Estrutura Libertadora tem um propósito único. Use os filtros por propósito e coleção para encontrar a dinâmica exata para o seu momento de facilitação."
+              {t('deck.mentorQuote', { defaultValue: '"Cada Estrutura Libertadora tem um propósito único. Use os filtros por propósito e coleção para encontrar a dinâmica exata para o seu momento de facilitação."' })}
             </p>
 
             <div className="pt-0.5">
               <button
                 onClick={() =>
                   setActiveVideo({
-                    title: 'Como Funciona o Deck das Estruturas Libertadoras?',
+                    title: t('deck.howDeckWorks', { defaultValue: 'Como Funciona o Deck das Estruturas Libertadoras?' }),
                     url: 'https://www.youtube.com/embed/La7fiY38IDA?rel=0',
                   })
                 }
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zello-orange hover:bg-zello-orange/90 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(240,90,40,0.3)] hover:shadow-[0_0_25px_rgba(240,90,40,0.5)] transition-all duration-300 cursor-pointer group/btn font-sans"
               >
                 <LucideIcons.Play size={9} className="fill-white text-white group-hover/btn:scale-110 transition-transform" />
-                Como Funciona o Deck?
+                {t('deck.howDeckWorks', { defaultValue: 'Como Funciona o Deck?' })}
               </button>
             </div>
           </div>
@@ -232,7 +234,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             <LucideIcons.Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 shrink-0" size={16} />
             <input
               type="text"
-              placeholder="Buscar por #ID, nome, objetivo ou propósito..."
+              placeholder={t('deck.searchPlaceholder', { defaultValue: 'Buscar por #ID, nome, objetivo ou propósito...' })}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-9 py-2.5 sm:py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-zello-orange transition-all font-sans"
