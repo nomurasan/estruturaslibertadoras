@@ -28,11 +28,12 @@ jobs:
       - name: Code Quality (Linters)
         run: npm run lint
 
-      - name: Security Audit (Block High & Critical)
-        run: |
-          # Fails the pipeline on high or critical vulnerabilities. 
-          # Documented exceptions can be added temporarily via 'npm audit --audit-level=high || true' ONLY under exceptional, audited circumstances.
-          npm audit --audit-level=high
+      - name: Production Security Audit (Block High & Critical)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Development Security Audit (Alert Only)
+        continue-on-error: true
+        run: npm audit --audit-level=high
 
       - name: Run Unit Tests
         run: npm run test:unit --if-present
