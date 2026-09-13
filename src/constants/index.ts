@@ -4,25 +4,25 @@ export const RANKS: Record<string, RankInfo> = {
   PADAWAN: {
     name: 'Padawan',
     image: 'https://static.wikia.nocookie.net/starwars/images/5/59/ObiWan.png',
-    description: 'Dia 1: Descobrindo a IA e suas habilidades iniciais.',
-    color: 'text-orange-400'
+    description: 'Reconhecendo Estruturas Libertadoras e suas conexões com o Ecocycle Planning.',
+    color: 'text-orange-400',
+    pedagogicalRole: 'Reconhece ELs aderentes aos desafios do Ecocycle.'
   },
   JEDI: {
     name: 'Jedi',
     image: 'https://static.wikia.nocookie.net/starwars/images/3/3d/LukeSkywalker.png',
-    description: 'Dia 2: Aplicando a IA no trabalho e processos do dia a dia.',
-    color: 'text-orange-500'
+    description: 'Combinando Estruturas Libertadoras em Strings com o Ecocycle Planning.',
+    color: 'text-orange-500',
+    pedagogicalRole: 'Combina ELs em Strings coerentes com o propósito.'
   },
   YODA: {
     name: 'Mestre Yoda',
     image: 'https://static.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png',
-    description: 'Dia 3: Pensando a IA de forma estratégica e imaginando o futuro.',
-    color: 'text-emerald-400'
+    description: 'Arquitetando experiências de facilitação com Ecocycle Planning e Strings.',
+    color: 'text-emerald-400',
+    pedagogicalRole: 'Arquitetura experiências completas de facilitação.'
   }
 };
 
-export const getRank = (xp: number): RankInfo => {
-  if (xp <= 3000) return RANKS.PADAWAN;
-  if (xp <= 7500) return RANKS.JEDI;
-  return RANKS.YODA;
-};
+export { getRank } from '../utils/progression';
+

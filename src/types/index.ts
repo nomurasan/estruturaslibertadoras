@@ -18,6 +18,14 @@ export interface Company {
   accessCode?: string;
 }
 
+export type EcocycleConcept =
+  | 'GESTAÇÃO'
+  | 'NASCIMENTO'
+  | 'MATURIDADE'
+  | 'DESTRUIÇÃO_CRIATIVA'
+  | 'ARMADILHA_DA_POBREZA'
+  | 'ARMADILHA_DA_RIGIDEZ';
+
 export interface UserProfile {
   userId: string;
   email: string;
@@ -32,6 +40,12 @@ export interface UserProfile {
   surveyCompleted?: boolean;
   skillsSurvey?: Record<string, { current: number; target: number }>;
   completedQuizzes?: string[];
+  bestScores?: {
+    PADAWAN?: number;
+    JEDI?: number;
+    YODA?: number;
+  };
+  preferredLanguage?: 'pt-BR' | 'es' | 'en';
   quizStats?: QuizStats;
 }
 
@@ -45,6 +59,7 @@ export interface QuizAttemptRecord {
   energyAfter: number;
   timestamp: number;
   structuresInvolved?: string[];
+  ecocycleConcepts?: EcocycleConcept[];
 }
 
 export interface QuizStats {
@@ -63,6 +78,7 @@ export interface RankInfo {
   image: string;
   description: string;
   color: string;
+  pedagogicalRole?: string;
 }
 
 export interface AIUsageAudit {
@@ -103,6 +119,7 @@ export interface Challenge {
   stringSequence?: string;          // Sequência visual sugerida (ex: TRIZ ➔ Ecocycle ➔ 15%)
   anotherPossibility?: string;      // 4. Outra possibilidade (EL complementar quando aplicável)
   ecocyclePhase?: string;           // Ponto do Ecociclo (ex: Gestação, Armadilha da Pobreza, etc.)
+  ecocycleConcepts?: EcocycleConcept[];
 }
 
 export interface AIPower {

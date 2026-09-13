@@ -10,8 +10,12 @@ export const gerarRelatorioSchema = z.object({
     target: z.number().int().min(1).max(5)
   })).nullable().optional(),
   quizEnergy: z.number().optional(),
-  quizAccuracy: z.number().optional()
-});
+  quizAccuracy: z.number().optional(),
+  completedQuizzes: z.array(z.string()).optional(),
+  currentRank: z.string().optional(),
+  ecocycleDomainStats: z.any().optional(),
+  facilitatorEvolution: z.any().optional()
+}).passthrough();
 
 export const quizFeedbackSchema = z.object({
   scenario: z.string().min(5),

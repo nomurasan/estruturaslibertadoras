@@ -17,6 +17,7 @@ interface AdminSectionViewProps {
   handleRemoveWhitelist: (id: string) => Promise<void>;
   handleToggleUserAdmin: (userId: string, currentVal: boolean) => Promise<void>;
   handleDeleteUser: (userId: string) => Promise<void>;
+  handleResetUserProgress?: (userId: string) => Promise<void>;
   handleJoinCompany: (companyId: string) => Promise<void>;
   handleCreateCompany: () => Promise<void>;
   handleUpdateCompany: () => Promise<void>;
@@ -28,7 +29,7 @@ interface AdminSectionViewProps {
   isRegisteringCompany: boolean;
   newCompanyName: string;
   setNewCompanyName: (val: string) => void;
-  getRank: (xp: number) => { name: string; color: string };
+  getRank: (completedQuizzesOrXp?: any) => { name: string; color: string };
   isWhitelistingLoading: boolean;
 }
 
@@ -46,6 +47,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
   handleRemoveWhitelist,
   handleToggleUserAdmin,
   handleDeleteUser,
+  handleResetUserProgress,
   handleJoinCompany,
   handleCreateCompany,
   handleUpdateCompany,
@@ -296,8 +298,8 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           </div>
                         </td>
                         <td className="p-8 text-center select-none">
-                          <div className={`text-xs font-black uppercase italic ${getRank(u.xp || 0).color}`}>
-                            {getRank(u.xp || 0).name}
+                          <div className={`text-xs font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                            {getRank(u.completedQuizzes).name}
                           </div>
                         </td>
                         <td className="p-8 text-center select-none">
@@ -321,7 +323,17 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           </button>
                         </td>
                         <td className="p-8 text-right select-none">
-                          <div className="flex items-center justify-end gap-3">
+                          <div className="flex items-center justify-end gap-2">
+                            {handleResetUserProgress && (
+                              <button
+                                onClick={() => handleResetUserProgress(u.userId)}
+                                disabled={u.userId === user?.uid}
+                                className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
+                                title="Zerar Progresso (Reset para Padawan e 0 XP)"
+                              >
+                                <LucideIcons.RotateCcw size={18} />
+                              </button>
+                            )}
                             <button
                               onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                               disabled={u.userId === user?.uid}
@@ -360,6 +372,94 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                     )}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile Cards View */}
+              <div className="md:hidden divide-y divide-white/5 p-4 space-y-4">
+                {allUsers.map((u, idx) => (
+                  <div
+                    key={`admin-user-card-m-${u.userId || 'u'}-${idx}`}
+                    className="p-5 bg-white/[0.03] border border-white/10 rounded-2xl space-y-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-sm shrink-0">
+                        {u.email?.[0].toUpperCase() || '?'}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-bold text-white truncate">{u.email}</div>
+                        <div className="text-[10px] text-slate-500 font-mono truncate">ID: {u.userId}</div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 block">Nível (Rank)</span>
+                        <span className={`font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                          {getRank(u.completedQuizzes).name}
+                        </span>
+                      </div>
+                      <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
+                        <span className="text-[9px] uppercase font-bold text-slate-500 block">XP Acumulado</span>
+                        <span className="font-black text-zello-orange italic">
+                          {u.xp || 0} XP
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        {availableCompanies.find(c => c.id === u.companyId)?.name || 'Sem Turma'}
+                      </div>
+                      <button
+                        onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                        disabled={u.userId === user?.uid}
+                        className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                          u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
+                        }`}
+                      >
+                        {u.isAdmin ? 'ADMIN' : 'PARTICIPANTE'}
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                      {handleResetUserProgress && (
+                        <button
+                          onClick={() => handleResetUserProgress(u.userId)}
+                          disabled={u.userId === user?.uid}
+                          className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
+                        >
+                          <LucideIcons.RotateCcw size={12} />
+                          Zerar
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                        disabled={u.userId === user?.uid}
+                        className="py-2 px-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
+                      >
+                        <LucideIcons.Shield size={12} />
+                        {u.isAdmin ? 'Demitir' : 'Promover'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm('Tem certeza que deseja excluir as informações deste usuário?')) {
+                            handleDeleteUser(u.userId);
+                          }
+                        }}
+                        disabled={u.userId === user?.uid}
+                        className="py-2 px-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
+                      >
+                        <LucideIcons.UserMinus size={12} />
+                        Excluir
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {allUsers.length === 0 && (
+                  <div className="p-12 text-center text-slate-500 text-xs font-bold uppercase tracking-wider">
+                    Nenhum usuário cadastrado no sistema
+                  </div>
+                )}
               </div>
             </div>
           </div>

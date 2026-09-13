@@ -1,11 +1,13 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { LogOut, Zap, Menu, X, ChevronRight } from 'lucide-react';
-import { getRank } from '../constants';
+import { LogOut, Zap, Menu, X, ChevronRight, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { getRank } from '../utils/progression';
 import { Company, GameState } from '../types';
 
 interface NavigationProps {
   score: number;
+  completedQuizzes?: string[];
   gameState: GameState;
   setGameState: (state: GameState) => void;
   currentCompany: Company | null;
@@ -17,6 +19,7 @@ interface NavigationProps {
 
 export const Navigation: React.FC<NavigationProps> = ({
   score,
+  completedQuizzes = [],
   gameState,
   setGameState,
   currentCompany,
@@ -25,7 +28,18 @@ export const Navigation: React.FC<NavigationProps> = ({
   setIsMobileMenuOpen,
   onLogout,
 }) => {
-  const currentRank = getRank(score);
+  const { t, i18n } = useTranslation();
+  const currentRank = getRank(completedQuizzes);
+
+  const currentLang = i18n.language?.startsWith('es')
+    ? 'es'
+    : i18n.language?.startsWith('en')
+    ? 'en'
+    : 'pt-BR';
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
 
   return (
     <>
@@ -77,6 +91,45 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             )}
           </div>
+
+          {/* Language Switcher */}
+          <div className="hidden lg:flex items-center bg-white/5 border border-white/10 rounded-xl p-1 gap-1">
+            <Globe size={13} className="text-slate-500 ml-1.5 mr-0.5" />
+            <button
+              onClick={() => changeLanguage('pt-BR')}
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                currentLang === 'pt-BR'
+                  ? 'bg-zello-orange text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Português"
+            >
+              PT
+            </button>
+            <button
+              onClick={() => changeLanguage('es')}
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                currentLang === 'es'
+                  ? 'bg-zello-orange text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="Español"
+            >
+              ES
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                currentLang === 'en'
+                  ? 'bg-zello-orange text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+              title="English"
+            >
+              EN
+            </button>
+          </div>
+
           <button
             onClick={onLogout}
             className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all text-xs font-bold cursor-pointer"
@@ -186,6 +239,42 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
 
             <div className="space-y-4 pt-6 border-t border-white/5">
+              <div className="flex items-center justify-between px-2">
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Idioma / Language</span>
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 gap-1">
+                  <button
+                    onClick={() => changeLanguage('pt-BR')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      currentLang === 'pt-BR'
+                        ? 'bg-zello-orange text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    PT
+                  </button>
+                  <button
+                    onClick={() => changeLanguage('es')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      currentLang === 'es'
+                        ? 'bg-zello-orange text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    ES
+                  </button>
+                  <button
+                    onClick={() => changeLanguage('en')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      currentLang === 'en'
+                        ? 'bg-zello-orange text-white shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    EN
+                  </button>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between px-2">
                 <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Nível Jedi</span>
                 <span className={`text-sm font-black uppercase italic ${currentRank.color}`}>{currentRank.name}</span>

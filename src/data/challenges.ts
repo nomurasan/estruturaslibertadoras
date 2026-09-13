@@ -22,6 +22,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'TRIZ (#8) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'Wicked Questions (#4) ou Conversation Café (#14) poderiam ajudar a verbalizar tensões veladas caso o humor encontre resistência inicial.',
     ecocyclePhase: 'Destruição Criativa / Armadilha da Rigidez',
+    ecocycleConcepts: ['DESTRUIÇÃO_CRIATIVA', 'ARMADILHA_DA_RIGIDEZ'],
     explanation: 'TRIZ (#8) é uma escolha muito aderente para abrir a String quando o objetivo é quebrar a negação da Armadilha da Rigidez. O riso compartilhado sobre hábitos disfuncionais facilita a aceitação da Destruição Criativa no Ecocycle Planning.'
   },
 
@@ -40,6 +41,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Troika Consulting (#6) pode ser acoplada em seguida para que os colegas enriqueçam e desafiem positivamente essas soluções a 15%.',
     ecocyclePhase: 'Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_POBREZA'],
     explanation: '15% Solutions (#5) é extremamente coerente para responder à Armadilha da Pobreza no Ecocycle Planning. Ela devolve o protagonismo ao grupo, concentrando a energia no que é viável sem depender de orçamentos adicionais.'
   },
 
@@ -58,6 +60,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ What, So What, Now What? (W3) (#11)',
     anotherPossibility: '15% Solutions (#5) pode suceder o What, So What, Now What? (W3) (#11) para transformar as conclusões do "E agora?" em compromissos individuais imediatos.',
     ecocyclePhase: 'Integração de todo o Ecocycle Planning',
+    ecocycleConcepts: ['MATURIDADE', 'DESTRUIÇÃO_CRIATIVA'],
     explanation: 'What, So What, Now What? (W3) (#11) é uma escolha muito sólida para fechar sessões com o Ecocycle Planning, pois impede que o grupo pule direto para soluções simplistas antes de analisar criticamente o panorama geral.'
   },
 
@@ -76,6 +79,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Impromptu Networking (#2) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'Appreciative Interviews (#16) pode ser utilizada se a equipe estiver desmotivada e precisar resgatar histórias de sucesso antes da conexão geral.',
     ecocyclePhase: 'Abertura da sessão / Fase preparatória',
+    ecocycleConcepts: ['GESTAÇÃO', 'NASCIMENTO'],
     explanation: 'Impromptu Networking (#2) encaixa-se com grande fluidez na abertura da String. As 3 trocas rápidas preparam o terreno emocional e relacional para a sinceridade exigida pelo Ecocycle Planning.'
   },
 
@@ -94,6 +98,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'Conversation Café (#14) pode ser utilizado em temas especialmente sensíveis ou controversos dentro de cada quadrante.',
     ecocyclePhase: 'Mapeamento de todos os quadrantes do Ecocycle Planning',
+    ecocycleConcepts: ['NASCIMENTO', 'MATURIDADE'],
     explanation: '1-2-4-All (#1) é uma escolha especialmente aderente para incorporar à String do Ecocycle Planning. Ela garante que todas as vozes contribuam com profundidade antes de colar os post-its no diagrama.'
   },
 
@@ -112,6 +117,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '9 Whys (#3) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'Purpose to Practice (P2P) (#33) pode complementar caso a equipe precise desdobrar o propósito descoberto em princípios e estruturas organizacionais.',
     ecocyclePhase: 'Fase preparatória / Gestação e Propósito',
+    ecocycleConcepts: ['GESTAÇÃO'],
     explanation: '9 Whys (#3) traz clareza ao propósito raiz. Sem essa referência compartilhada, o grupo tem dificuldade em encontrar consenso sobre o que deve ser sustentado ou descontinuado no Ecocycle Planning.'
   },
 
@@ -130,6 +136,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Min Specs (#19)',
     anotherPossibility: 'TRIZ (#8) pode anteceder ou suceder o Min Specs para rir do absurdo de regras excessivas antes de podá-las.',
     ecocyclePhase: 'Armadilha da Rigidez / Maturidade',
+    ecocycleConcepts: ['MATURIDADE', 'ARMADILHA_DA_RIGIDEZ'],
     explanation: 'Min Specs (#19) atua de forma muito eficaz para destravar a Armadilha da Rigidez no Ecocycle Planning. Ao definir apenas o estritamente obrigatório, devolve autonomia e flexibilidade às equipes.'
   },
 
@@ -148,6 +155,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Troika Consulting (#6)',
     anotherPossibility: 'Wise Crowds (#7) é uma opção complementar caso o desafio seja sistêmico e precise de um conselho consultivo maior em vez de trios.',
     ecocyclePhase: 'Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_POBREZA'],
     explanation: 'Troika Consulting (#6) é muito aderente para destravar iniciativas na Armadilha da Pobreza. Em menos de 30 minutos, múltiplos líderes recebem orientações práticas e frescas de seus colegas.'
   },
 
@@ -166,6 +174,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 25/10 Crowdsourcing (#13)',
     anotherPossibility: '1-2-4-All (#1) pode ser usado como alternativa mais reflexiva se o tempo for maior ou o grupo menor.',
     ecocyclePhase: 'Gestação',
+    ecocycleConcepts: ['GESTAÇÃO'],
     explanation: '25/10 Crowdsourcing (#13) funciona de forma notável para abastecer a fase de Gestação do Ecocycle Planning, aproveitando a inteligência coletiva de grupos grandes em tempo reduzido.'
   },
 
@@ -184,6 +193,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'Integrated~Autonomy (#29) pode ser utilizada caso o atrito venha de um conflito estrutural entre centralização e liberdade local.',
     ecocyclePhase: 'Armadilha da Pobreza / Fronteira entre áreas',
+    ecocycleConcepts: ['ARMADILHA_DA_POBREZA'],
     explanation: 'What I Need From You (WINFY) (#30) desata bloqueios relacionais entre áreas que retêm projetos na Armadilha da Pobreza do Ecocycle Planning, substituindo reuniões evasivas por acordos de serviço claros.'
   },
 
@@ -208,6 +218,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'TRIZ (#8) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Min Specs (#19) poderia ser inserido entre o Ecocycle Planning e o 15% Solutions (#5) para podar regras antes dos planos individuais.',
     ecocyclePhase: 'Destruição Criativa e Armadilha da Pobreza',
+    ecocycleConcepts: ['DESTRUIÇÃO_CRIATIVA', 'ARMADILHA_DA_POBREZA'],
     explanation: 'A sequência TRIZ ➔ Ecocycle Planning ➔ 15% Solutions é uma String muito coerente para situações de desapego, análise do portfólio e ativação de ações autônomas, preparando o terreno e garantindo execução prática.'
   },
 
@@ -226,6 +237,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '9 Whys (#3) ➔ Ecocycle Planning (#12) ➔ What, So What, Now What? (W3) (#11)',
     anotherPossibility: 'Impromptu Networking (#2) poderia anteceder os 9 Whys caso os participantes precisem de aquecimento interpessoal inicial.',
     ecocyclePhase: 'Propósito Estratégico e Integração Geral',
+    ecocycleConcepts: ['GESTAÇÃO', 'MATURIDADE'],
     explanation: '9 Whys (#3) ajuda o grupo a aprofundar seu propósito antes do Ecocycle Planning, e What, So What, Now What? (W3) (#11) traduz a visão do mapa em decisões lúcidas e planos executáveis.'
   },
 
@@ -244,6 +256,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5) ➔ Troika Consulting (#6)',
     anotherPossibility: 'Wise Crowds (#7) pode ser uma alternativa à Troika caso os desafios envolvam conhecimentos técnicos muito especializados.',
     ecocyclePhase: 'Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_POBREZA'],
     explanation: '15% Solutions (#5) ativa o protagonismo pessoal dos donos dos projetos travados, e Troika Consulting (#6) mobiliza a colaboração ágil de colegas para expandir e refinar esses primeiros passos.'
   },
 
@@ -262,6 +275,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Min Specs (#19) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'TRIZ (#8) poderia preparar o terreno do Min Specs, ajudando o grupo a rir dos regulamentos excessivos.',
     ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_RIGIDEZ', 'ARMADILHA_DA_POBREZA'],
     explanation: 'Min Specs (#19) atua na poda de restrições desnecessárias da Rigidez, enquanto What I Need From You (WINFY) (#30) remove o gargalo de cooperação entre áreas que impedia projetos de decolarem.'
   },
 
@@ -280,6 +294,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 25/10 Crowdsourcing (#13) ➔ Purpose to Practice (P2P) (#33)',
     anotherPossibility: '1-2-4-All (#1) pode anteceder o 25/10 Crowdsourcing (#13) para amadurecer as perguntas provocadoras sobre o futuro.',
     ecocyclePhase: 'Gestação',
+    ecocycleConcepts: ['GESTAÇÃO', 'NASCIMENTO'],
     explanation: '25/10 Crowdsourcing (#13) semeia propostas ousadas na Gestação do Ecocycle Planning, e Purpose to Practice (P2P) (#33) traduz a aposta principal em governança e modelo de operação claros.'
   },
 
@@ -298,6 +313,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Heard, Seen, Respected (HSR) (#23) ➔ Conversation Café (#14)',
     anotherPossibility: 'Appreciative Interviews (#16) pode ser introduzida em seguida para resgatar aprendizados positivos deixados pelo ciclo que se encerra.',
     ecocyclePhase: 'Destruição Criativa / Luto Organizacional',
+    ecocycleConcepts: ['DESTRUIÇÃO_CRIATIVA'],
     explanation: 'Heard, Seen, Respected (HSR) (#23) e Conversation Café (#14) criam a segurança psicológica necessária para que o grupo processe as consequências humanas da Destruição Criativa sem cair no cinismo.'
   },
 
@@ -316,6 +332,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Impromptu Networking (#2) ➔ Ecocycle Planning (#12) ➔ Social Network Webbing (#17)',
     anotherPossibility: 'What I Need From You (WINFY) (#30) pode fechar a String para formalizar pedidos nas pontes descobertas pelo mapeamento de rede.',
     ecocyclePhase: 'Conexão sistêmica e fluxo de recursos',
+    ecocycleConcepts: ['NASCIMENTO', 'MATURIDADE'],
     explanation: 'Impromptu Networking (#2) estabelece a presença e abertura relacional na abertura, e Social Network Webbing (#17) materializa as vias de conexão informal necessárias para sustentar as transições do Ecocycle Planning.'
   },
 
@@ -334,6 +351,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Wicked Questions (#4) ➔ Ecocycle Planning (#12) ➔ Integrated~Autonomy (#29)',
     anotherPossibility: 'Min Specs (#19) pode apoiar o Integrated~Autonomy definindo as regras mínimas inegociáveis que a sede exige.',
     ecocyclePhase: 'Tensões entre Maturidade e Gestação',
+    ecocycleConcepts: ['MATURIDADE', 'GESTAÇÃO'],
     explanation: 'Wicked Questions (#4) nomeia a tensão polarizada de forma construtiva, e Integrated~Autonomy (#29) oferece a arquitetura operacional para que autonomia local e integração central coexistam.'
   },
 
@@ -352,6 +370,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Simple Ethnography (#28) ➔ User Experience Fishbowl (UX Fishbowl) (#15) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'What, So What, Now What? (W3) (#11) pode fechar a rodada de observação para consolidar os insights antes de entrar no Ecocycle Planning.',
     ecocyclePhase: 'Diagnóstico da fase de Maturidade',
+    ecocycleConcepts: ['MATURIDADE'],
     explanation: 'Simple Ethnography (#28) e User Experience Fishbowl (UX Fishbowl) (#15) alimentam o Ecocycle Planning com dados de experiência do usuário legítimos, evitando que o posicionamento dos itens seja baseado em opiniões subjetivas de gabinete.'
   },
 
@@ -370,6 +389,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Critical Uncertainties (#32) ➔ Design Storyboards (#21)',
     anotherPossibility: '15% Solutions (#5) pode acompanhar o Design Storyboards para definir quem assume a responsabilidade pelas ações dos primeiros quadros.',
     ecocyclePhase: 'Teste de resiliência e planejamento de transições',
+    ecocycleConcepts: ['MATURIDADE', 'DESTRUIÇÃO_CRIATIVA'],
     explanation: 'Critical Uncertainties (#32) testa a robustez das iniciativas mapeadas no Ecocycle Planning frente a surpresas externas, e Design Storyboards (#21) ancora as decisões em um roadmap visual compartilhado.'
   },
 
@@ -394,6 +414,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'TRIZ (#8) ➔ Ecocycle Planning (#12) com 1-2-4-All (#1) ➔ 15% Solutions (#5)',
     anotherPossibility: 'What, So What, Now What? (W3) (#11) poderia ser intercalado antes de 15% Solutions (#5) se a liderança exigir um debriefing analítico intermediário.',
     ecocyclePhase: 'Ciclo completo: Desapego ➔ Mapeamento ➔ Ação Autônoma',
+    ecocycleConcepts: ['ARMADILHA_DA_RIGIDEZ', 'DESTRUIÇÃO_CRIATIVA'],
     explanation: 'Esta sequência combina três forças de facilitação de grande coerência pedagógica: TRIZ desconstrói a resistência da Rigidez, 1-2-4-All viabiliza o mapeamento coletivo no Ecocycle Planning, e 15% Solutions ativa a execução sem dependências hierárquicas.'
   },
 
@@ -412,6 +433,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Appreciative Interviews (#16) ➔ Ecocycle Planning (#12) ➔ What, So What, Now What? (W3) (#11) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Conversation Café (#14) poderia anteceder o What, So What, Now What? (W3) (#11) caso o luto ainda exija desabafo emocional antes da análise de fatos.',
     ecocyclePhase: 'Travessia da Destruição Criativa para a Gestação',
+    ecocycleConcepts: ['DESTRUIÇÃO_CRIATIVA', 'GESTAÇÃO'],
     explanation: 'Appreciative Interviews (#16) restaura a confiança psicológica, o Ecocycle Planning situa a realidade do portfólio, What, So What, Now What? (W3) (#11) constrói sentido coletivo e 15% Solutions (#5) sela o compromisso de reconstrução.'
   },
 
@@ -430,6 +452,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Min Specs (#19) ➔ What I Need From You (WINFY) (#30) ➔ Troika Consulting (#6)',
     anotherPossibility: '15% Solutions (#5) pode ser realizada antes da Troika Consulting (#6) para que cada líder traga sua proposta inicial pronta para receber conselho.',
     ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_RIGIDEZ', 'ARMADILHA_DA_POBREZA'],
     explanation: 'Esta combinação ataca os dois nós críticos do Ecocycle Planning: Min Specs (#19) desengessa a governança interna, What I Need From You (WINFY) (#30) garante cooperação entre departamentos e Troika Consulting (#6) oferece mentoria prática imediata.'
   },
 
@@ -448,6 +471,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Wicked Questions (#4) ➔ 25/10 Crowdsourcing (#13) ➔ Purpose to Practice (P2P) (#33)',
     anotherPossibility: 'Design Storyboards (#21) pode ilustrar o plano cronológico de lançamento derivado de Purpose to Practice (P2P) (#33).',
     ecocyclePhase: 'Destruição Criativa ➔ Gestação ➔ Nascimento',
+    ecocycleConcepts: ['DESTRUIÇÃO_CRIATIVA', 'GESTAÇÃO', 'NASCIMENTO'],
     explanation: 'Wicked Questions (#4) desafia o pensamento convencional, 25/10 Crowdsourcing (#13) traz ideias ousadas na Gestação, e Purpose to Practice (P2P) (#33) estabelece as bases sólidas para a nova aposta emergir com governança clara.'
   },
 
@@ -466,6 +490,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Strategy Knotworking (#43) ➔ Ecocycle Planning (#12) ➔ Wise Crowds (#7) ➔ Shift & Share (#10)',
     anotherPossibility: 'Social Network Webbing (#17) pode mapear os laços informais entre os hospitais regionais antes do Shift & Share (#10).',
     ecocyclePhase: 'Alinhamento de ecossistema multinível',
+    ecocycleConcepts: ['MATURIDADE', 'NASCIMENTO'],
     explanation: 'Strategy Knotworking (#43) sustenta a estratégia viva em rede, Wise Crowds (#7) resolve dilemas complexos de grande escala, e Shift & Share (#10) multiplica as práticas bem-sucedidas por todas as unidades da organização.'
   },
 
@@ -484,6 +509,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: 'Impromptu Networking (#2) ➔ Ecocycle Planning (#12) ➔ Open Space Technology (#31) ➔ What, So What, Now What? (W3) (#11)',
     anotherPossibility: '25/10 Crowdsourcing (#13) poderia alimentar a abertura do Open Space Technology (#31) com ideias ousadas.',
     ecocyclePhase: 'Mobilização em larga escala / Governança emergente',
+    ecocycleConcepts: ['GESTAÇÃO', 'NASCIMENTO'],
     explanation: 'Impromptu Networking (#2) constrói a sintonia relacional de partida, Open Space Technology (#31) ativa a auto-organização e paixão dos líderes sobre os dilemas do Ecocycle Planning, e What, So What, Now What? (W3) (#11) sintetiza os planos em decisões conjuntas.'
   },
 
@@ -502,6 +528,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Improv Prototyping (#20) ➔ Integrated~Autonomy (#29) ➔ Design Storyboards (#21)',
     anotherPossibility: 'User Experience Fishbowl (UX Fishbowl) (#15) poderia preceder o Improv Prototyping (#20) para coletar histórias reais dos usuários que serão encenadas.',
     ecocyclePhase: 'Transição do Nascimento para Maturidade',
+    ecocycleConcepts: ['NASCIMENTO', 'MATURIDADE'],
     explanation: 'Improv Prototyping (#20) desenvolve a habilidade prática em cena simulada, Integrated~Autonomy (#29) harmoniza autonomia e padronização, e Design Storyboards (#21) traduz a experiência em uma linha do tempo clara.'
   },
 
@@ -520,6 +547,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Generative Relationships STAR (#26) ➔ Conversation Café (#14) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'Heard, Seen, Respected (HSR) (#23) poderia atuar como etapa de acolhimento inicial em pares antes do Conversation Café (#14).',
     ecocyclePhase: 'Cura de atritos e destravamento da Armadilha da Pobreza',
+    ecocycleConcepts: ['ARMADILHA_DA_POBREZA'],
     explanation: 'Generative Relationships STAR (#26) diagnostica os vetores relacionais fragilizados, Conversation Café (#14) restabelece a confiança na fala, e What I Need From You (WINFY) (#30) fecha acordos de serviço categóricos.'
   },
 
@@ -538,6 +566,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '5 Design Elements (#25) ➔ Celebrity Interview (#22) ➔ Ecocycle Planning (#12) ➔ Critical Uncertainties (#32)',
     anotherPossibility: 'Purpose to Practice (P2P) (#33) pode ser utilizada caso o conselho precise desenhar um novo comitê estratégico derivado das incertezas.',
     ecocyclePhase: 'Metadesign, Governança e Resiliência Estratégica',
+    ecocycleConcepts: ['MATURIDADE', 'DESTRUIÇÃO_CRIATIVA'],
     explanation: '5 Design Elements (#25) fornece o metadesign de facilitação para arquitetar a sessão, Celebrity Interview (#22) conecta a liderança com autenticidade, e Critical Uncertainties (#32) prepara o Ecocycle Planning contra choques futuros.'
   },
 
@@ -556,6 +585,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     stringSequence: '9 Whys (#3) ➔ Discovery & Action Dialogue (DAD) (#9) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Appreciative Interviews (#16) pode atuar em sinergia com o Discovery & Action Dialogue (DAD) (#9) para aprofundar histórias de superação.',
     ecocyclePhase: 'Propósito ➔ Descoberta de Soluções ➔ Ecocycle Planning ➔ Autonomia',
+    ecocycleConcepts: ['GESTAÇÃO', 'NASCIMENTO'],
     explanation: '9 Whys (#3) ancora a bússola de prioridades, Discovery & Action Dialogue (DAD) (#9) mobiliza as soluções que a própria equipe já desenvolveu na prática, e 15% Solutions (#5) traduz essas descobertas em ações imediatas.'
   }
 ];

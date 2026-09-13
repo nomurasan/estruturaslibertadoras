@@ -16,40 +16,48 @@ export async function handleGerarRelatorio(req: AuthenticatedRequest, res: Respo
     return res.status(400).json({ error: "Corpo da requisição inválido.", details: validation.error.format() });
   }
 
-  const { email, xp, unlockedPowers, completedMissions, skillsSurvey, quizEnergy, quizAccuracy } = validation.data;
+  const { email, xp, unlockedPowers, completedMissions, skillsSurvey, quizEnergy, quizAccuracy, completedQuizzes, currentRank, ecocycleDomainStats, facilitatorEvolution } = validation.data;
 
   try {
     const prompt = `
       Você é o Facilitador Mestre da Ordem das Estruturas Libertadoras e Ecocycle Planning (Mestre Nomura).
-      Gere um Relatório Diagnóstico de Domínio do Ecocycle Planning e Strings de Estruturas Libertadoras para este participante, avaliando seu progresso na jornada de facilitação colaborativa e estratégia sistêmica.
+      Gere um Relatório Diagnóstico de Domínio do Ecocycle Planning e Strings de Estruturas Libertadoras para este participante, avaliando com total fidelidade seu progresso real na jornada de facilitação colaborativa e estratégia sistêmica.
 
       DADOS DO PARTICIPANTE:
       - Facilitador / Email: ${email || "Mestre Jedi em Formação"}
-      - XP / Pontuação Acumulada: ${xp || 0}
+      - Rank / Nível Atual de Competência: ${currentRank || (completedQuizzes?.includes('YODA') ? 'Yoda' : completedQuizzes?.includes('JEDI') ? 'Jedi' : 'Padawan')}
+      - Quizzes Concluídos com 100%: ${JSON.stringify(completedQuizzes || [])}
+      - XP / Energia de Pontuação Acumulada: ${xp || 0}
       - Estruturas Libertadoras Desbloqueadas: ${JSON.stringify(unlockedPowers || [])}
-      - Desafios / Missões Concluídas: ${JSON.stringify(completedMissions || {})}
       - Energia Atual: ${quizEnergy ?? 100}%
-      - Assertividade Geral: ${quizAccuracy ?? 77}%
+      - Assertividade Geral nos Quizzes: ${quizAccuracy ?? 77}%
+      - Desempenho nas Fases do Ecocycle Planning: ${JSON.stringify(ecocycleDomainStats || [])}
+      - Evolução de Competência em Strings: ${JSON.stringify(facilitatorEvolution || [])}
 
       CONTEXTO DA JORNADA DE FACILITAÇÃO (ESTRUTURAS LIBERTADORAS & ECOCYCLE PLANNING):
       - Nível 1 (Padawan): Strings Básicas com 1 EL Chave para objetivos pontuais (ex: Impromptu Networking, 1-2-4-All, 15% Solutions).
-      - Nível 2 (Jedi): Encadeamentos Duplos e Triplos de Estruturas (ex: TRIZ ➔ Min Specs, 9 Whys ➔ Troika Consulting, 15% Solutions ➔ 25/10 Crowd Sourcing).
-      - Nível 3 (Yoda): Strings Avançadas integradas ao Ecocycle Planning para destravar portfólios, equipes e organizações (Gestação, Nascimento, Maturidade, Destruição Criativa, superação das Armadilhas da Pobreza/Escassez e da Rigidez).
+      - Nível 2 (Jedi): Encadeamentos Duplos de Estruturas (ex: TRIZ ➔ Min Specs, 9 Whys ➔ Troika Consulting, 15% Solutions ➔ 25/10 Crowd Sourcing).
+      - Nível 3 (Yoda): Arquitetura Estratégica de Strings integradas ao Ecocycle Planning para destravar portfólios, equipes e organizações (Gestação, Nascimento, Maturidade, Destruição Criativa, Armadilha da Escassez e Armadilha da Rigidez).
+
+      IMPORTANTE SOBRE PROGRESSÃO E XP:
+      - O XP é uma medida de pontuação/energia de jogo, enquanto o Nível (Padawan / Jedi / Yoda) reflete a competência comprovada nos Quizzes de 100%. Avalie o nível real baseado em seus quizzes concluídos.
+      - NUNCA atribua competências de Jedi ou Yoda se o participante ainda for Padawan.
 
       ESTRUTURA OBRIGATÓRIA DO RELATÓRIO DIAGNÓSTICO (Formate em Markdown com títulos ## e tópicos estruturados):
       
       ## 1. MAESTRIA NO ECOCYCLE PLANNING & ESTRUTURAS LIBERTADORAS (Diagnóstico)
-      Avalie o perfil do facilitador e sua assertividade nas 5 macro-fases do Ecociclo:
+      Avalie o perfil do facilitador e sua assertividade demonstrada no Ecociclo:
+      - **Gestação**: Ideias embrionárias que necessitam de sementes e conexões iniciais.
       - **Nascimento & Conexão**: Capacidade de criar segurança psicológica, engajamento e rede inicial (Impromptu Networking, 1-2-4-All, Conversation Café).
-      - **Armadilha da Pobreza / Escassez**: Destravar ideias em gestação que precisam de recursos e autonomia (15% Solutions, Troika Consulting, Helping Heuristics, Social Network Webbing).
-      - **Destruição Criativa & Limpeza**: Desapego de práticas e reuniões contraproducentes, eliminando o que é obsoleto (TRIZ, Min Specs, Drawing Together).
       - **Maturidade & Armadilha da Rigidez**: Reconhecer a estagnação e o excesso de burocracia, provocando renovação (Ecocycle Planning, Panarchy, What I Need From You).
-      - **Debriefing & Síntese Sistêmica**: Extrair inteligência coletiva e compromissos rápidos (W3 - What So What Now What, 25/10 Crowd Sourcing, Open Space).
+      - **Destruição Criativa & Limpeza**: Desapego de práticas e reuniões contraproducentes, eliminando o que é obsoleto (TRIZ, Min Specs, Drawing Together).
+      - **Armadilha da Pobreza (Escassez)**: Destravar iniciativas em gestação que carecem de foco, autonomia ou recursos (15% Solutions, Troika Consulting, Helping Heuristics).
+      - **Armadilha da Rigidez**: Evitar a perda de vitalidade em processos consolidados.
 
-      ## 2. RECOMENDAÇÕES PARA EVOLUÇÃO EM STRINGS (Gaps & Próximos Passos)
-      Mapeie os pontos de atenção e recomende encadeamentos (Strings) específicos para o participante praticar:
-      - Como evoluir da aplicação de ferramentas isoladas para o desenho fluído de Strings de Facilitação.
-      - 2 ou 3 combinações de Strings recomendadas para o participante testar em seus desafios corporativos reais (ex: alinhamento de lideranças, desobstrução de projetos ou workshops estratégicos).
+      ## 2. EVOLUÇÃO COMO FACILITADOR EM STRINGS (Gaps & Próximos Passos)
+      Mapeie os pontos de atenção baseando-se no nível demonstrado (Padawan, Jedi ou Yoda) e recomende encadeamentos (Strings) específicos para o participante praticar:
+      - Como consolidar o nível atual e se preparar para o próximo estágio.
+      - 2 ou 3 combinações de Strings recomendadas para os desafios corporativos do participante (ex: alinhamento de equipes, desobstrução de gargalos ou workshops de planejamento).
 
       ## 3. PLANO DE IMPACTO SISTÊMICO NAS EQUIPES
       Como este facilitador pode aplicar o Ecocycle Planning e as Estruturas Libertadoras para transformar reuniões corporativas monótonas em sessões de alta cocriação, distribuindo a liderança e garantindo que 100% dos participantes tenham voz sem sobrecarregar ninguém.

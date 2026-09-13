@@ -52,6 +52,10 @@ import {
   ReferenceLine
 } from 'recharts';
 import { AIPower, AI_POWERS, CATEGORIES } from '../data/powers';
+import { ALL_CHALLENGES } from '../data/challenges';
+import { calculateEcocycleDomainStats, calculateFacilitatorEvolution, EcocycleDomainStat, FacilitatorEvolutionStat } from '../utils/progression';
+import { useTranslation } from 'react-i18next';
+import { ecocycleTranslations } from '../i18n';
 import { auth } from '../lib/firebase';
 import { TeamStats, UserProfile, QuizStats, QuizAttemptRecord } from '../types';
 
@@ -76,9 +80,53 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   userProfile,
   onWatchVideo
 }) => {
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<'individual' | 'team'>('individual');
   const individualGradId = useMemo(() => `area-grad-energy-${Math.random().toString(36).substring(2, 9)}`, []);
   const teamGradId = useMemo(() => `area-grad-team-${Math.random().toString(36).substring(2, 9)}`, []);
+
+  const currentLang = i18n.language?.startsWith('es')
+    ? 'es'
+    : i18n.language?.startsWith('en')
+    ? 'en'
+    : 'pt-BR';
+
+  const getPhaseTranslatedName = (concept: string, fallback: string) => {
+    const trans = ecocycleTranslations[currentLang] || ecocycleTranslations['pt-BR'];
+    switch (concept) {
+      case 'GESTAÇÃO': return trans.gestation;
+      case 'NASCIMENTO': return trans.birth;
+      case 'MATURIDADE': return trans.maturity;
+      case 'DESTRUIÇÃO_CRIATIVA': return trans.creativeDestruction;
+      case 'ARMADILHA_DA_POBREZA': return trans.povertyTrap;
+      case 'ARMADILHA_DA_RIGIDEZ': return trans.rigidityTrap;
+      default: return fallback;
+    }
+  };
+
+  const getFacilitatorRoleText = (lvl: any) => {
+    if (currentLang === 'es') {
+      return lvl.level === 'PADAWAN' 
+        ? 'Strings Básicas (1 EL Clave)' 
+        : lvl.level === 'JEDI' 
+        ? 'Encadenamientos Dobles de Estructuras' 
+        : 'Arquitectura Estratégica de Strings';
+    }
+    if (currentLang === 'en') {
+      return lvl.level === 'PADAWAN' 
+        ? 'Basic Strings (1 Key LS)' 
+        : lvl.level === 'JEDI' 
+        ? 'Dual Structure Combinations' 
+        : 'Strategic String Architecture';
+    }
+    return lvl.pedagogicalRole;
+  };
+
+  const ecocycleFooterText = currentLang === 'es'
+    ? 'El Ecocycle Planning armoniza Gestación, Nacimiento, Madurez, Destrucción Creativa y la prevención de las Trampas de la Pobreza (Escasez) y de la Rigidez a través de Strings deliberadas.'
+    : currentLang === 'en'
+    ? 'Ecocycle Planning harmonizes Gestation, Birth, Maturity, Creative Destruction, and the prevention of the Poverty Trap (Scarcity) and Rigidity Trap through deliberate Strings.'
+    : 'O Ecocycle Planning harmoniza Gestação, Nascimento, Maturidade, Destruição Criativa e a prevenção das Armadilhas da Pobreza (Escassez) e da Rigidez através de Strings deliberadas.';
 
   // Integrated AI diagnostic report generator State
   const [relatorio, setRelatorio] = useState<string | null>(null);
@@ -243,49 +291,17 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
     return starterPoints;
   }, [userQuizStats, currentEnergy]);
 
-  // Performance by Ecocycle Phase
-  const ecocyclePhaseData = useMemo(() => [
-    { subject: 'Nascimento & Conexão', accuracy: 92, fullMark: 100, structures: 'Impromptu, 1-2-4-All' },
-    { subject: 'Armadilha da Pobreza', accuracy: 85, fullMark: 100, structures: '15% Solutions, Troika' },
-    { subject: 'Destruição Criativa', accuracy: 88, fullMark: 100, structures: 'TRIZ, Min Specs' },
-    { subject: 'Maturidade & Rigidez', accuracy: 78, fullMark: 100, structures: 'Conversation Café, Ecocycle' },
-    { subject: 'Debriefing & Síntese', accuracy: 74, fullMark: 100, structures: 'W3, 25/10 Crowd' }
-  ], []);
+  // Ecocycle Planning & Strings Domain Stats (real calculation from quiz history + metadata)
+  const history = useMemo(() => userProfile?.quizStats?.history || [], [userProfile?.quizStats?.history]);
+  const completedList = useMemo(() => userProfile?.completedQuizzes || [], [userProfile?.completedQuizzes]);
 
-  // Level Performance & Badges for participant
-  const completedList = userProfile?.completedQuizzes || [];
-  const levelProgressData = [
-    {
-      level: 'PADAWAN',
-      title: 'Nível 1 • Padawan',
-      subtitle: 'Montagem de Strings Básicas (1 EL Chave)',
-      accuracy: 90,
-      isCompleted: completedList.includes('PADAWAN') || score >= 2000,
-      color: 'from-emerald-500/20 to-emerald-500/5',
-      borderColor: 'border-emerald-500/30',
-      textColor: 'text-emerald-400'
-    },
-    {
-      level: 'JEDI',
-      title: 'Nível 2 • Jedi',
-      subtitle: 'Encadeamentos Duplos de Estruturas',
-      accuracy: 78,
-      isCompleted: completedList.includes('JEDI') || score >= 5000,
-      color: 'from-blue-500/20 to-blue-500/5',
-      borderColor: 'border-blue-500/30',
-      textColor: 'text-blue-400'
-    },
-    {
-      level: 'YODA',
-      title: 'Nível 3 • Yoda',
-      subtitle: 'Strings Avançadas com Ecocycle Planning',
-      accuracy: 65,
-      isCompleted: completedList.includes('YODA') || score >= 10000,
-      color: 'from-purple-500/20 to-purple-500/5',
-      borderColor: 'border-purple-500/30',
-      textColor: 'text-purple-400'
-    }
-  ];
+  const ecocycleDomainStats = useMemo(() => {
+    return calculateEcocycleDomainStats(history, ALL_CHALLENGES);
+  }, [history]);
+
+  const facilitatorEvolution = useMemo(() => {
+    return calculateFacilitatorEvolution(history, completedList);
+  }, [history, completedList]);
 
   // -------------------------------------------------------------
   // 2. TEAM / GENERAL QUIZ STATS
@@ -370,7 +386,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           completedMissions,
           skillsSurvey: userProfile?.skillsSurvey || {},
           quizEnergy: currentEnergy,
-          quizAccuracy: accuracyRate
+          quizAccuracy: accuracyRate,
+          completedQuizzes: completedList,
+          currentRank: currentRank.name,
+          ecocycleDomainStats,
+          facilitatorEvolution
         }),
       });
 
@@ -768,10 +788,10 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           </div>
 
           {/* ========================================================================= */}
-          {/* LEVEL BREAKDOWN & ECOCYCLE PLANNING MASTERY                               */}
+          {/* EVOLUÇÃO COMO FACILITADOR & DOMÍNIO NO ECOCYCLE & STRINGS                 */}
           {/* ========================================================================= */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* 1. Progress across Quiz Levels (Padawan, Jedi, Yoda) */}
+            {/* 1. Evolução de Competência do Facilitador */}
             <div className="p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-zello-orange/20 flex items-center justify-center text-zello-orange">
@@ -779,53 +799,71 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 </div>
                 <div>
                   <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                    Níveis de Desafio
+                    {t('ecocycle.evolutionTitle', 'EVOLUÇÃO COMO FACILITADOR')}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                    Status nas Trilhas do Quiz
+                    Competência Demonstrada nos Quizzes
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                {levelProgressData.map((lvl) => (
-                  <div
-                    key={lvl.level}
-                    className={`p-4 rounded-2xl border bg-gradient-to-r ${lvl.color} ${lvl.borderColor} space-y-2`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className={`text-xs font-black uppercase tracking-wider ${lvl.textColor}`}>
-                        {lvl.title}
-                      </span>
-                      {lvl.isCompleted ? (
-                        <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                          <CheckCircle2 size={11} /> Concluído
+                {facilitatorEvolution.map((lvl) => {
+                  const cardGradients = {
+                    PADAWAN: 'from-emerald-500/15 to-emerald-500/5 border-emerald-500/30 text-emerald-400',
+                    JEDI: 'from-blue-500/15 to-blue-500/5 border-blue-500/30 text-blue-400',
+                    YODA: 'from-purple-500/15 to-purple-500/5 border-purple-500/30 text-purple-400'
+                  };
+                  const styling = cardGradients[lvl.level] || 'from-white/10 to-white/5 border-white/10 text-white';
+
+                  return (
+                    <div
+                      key={lvl.level}
+                      className={`p-4 rounded-2xl border bg-gradient-to-r ${styling} space-y-2`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black uppercase tracking-wider text-white">
+                          Nível {lvl.level === 'PADAWAN' ? '1 • Padawan' : lvl.level === 'JEDI' ? '2 • Jedi' : '3 • Yoda'}
                         </span>
-                      ) : (
-                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 bg-white/10 px-2 py-0.5 rounded-full">
-                          Em Progresso
-                        </span>
+                        {lvl.isCompleted ? (
+                          <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                            <CheckCircle2 size={11} /> 100% Concluído
+                          </span>
+                        ) : lvl.isUnlocked ? (
+                          <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
+                            Em Progresso
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
+                            Bloqueado
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-300 font-medium">
+                        {getFacilitatorRoleText(lvl)}
+                      </p>
+                      <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 pt-1">
+                        <span>Assertividade Real</span>
+                        <span className="text-white font-black tabular-nums">{lvl.accuracy}%</span>
+                      </div>
+                      <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-zello-orange to-amber-400 rounded-full transition-all duration-500"
+                          style={{ width: `${lvl.accuracy}%` }}
+                        />
+                      </div>
+                      {lvl.bestScore > 0 && (
+                        <div className="text-[9px] text-slate-400 font-mono text-right">
+                          Melhor Pontuação: <span className="text-zello-orange font-bold">{lvl.bestScore.toLocaleString()} pts</span>
+                        </div>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-300 font-medium">
-                      {lvl.subtitle}
-                    </p>
-                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 pt-1">
-                      <span>Assertividade Estimada</span>
-                      <span className="text-white font-black">{lvl.accuracy}%</span>
-                    </div>
-                    <div className="h-1.5 bg-black/30 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-zello-orange rounded-full"
-                        style={{ width: `${lvl.accuracy}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
-            {/* 2. Mastery by Ecocycle Planning Phases in Quizzes */}
+            {/* 2. Domínio no Ecocycle & Strings */}
             <div className="lg:col-span-2 p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -834,27 +872,27 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   </div>
                   <div>
                     <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                      Domínio no Ecocycle Planning
+                      {t('ecocycle.domainTitle', 'DOMÍNIO NO ECOCYCLE & STRINGS')}
                     </h4>
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      Desempenho por Macro-Fase nos Quizzes
+                      Desempenho Pedagógico por Fases e Armadilhas do Ecociclo
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/10">
-                  5 Fases Testadas
+                <span className="text-xs font-bold text-cyan-300 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+                  6 Fases & Armadilhas Mapeadas
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                {ecocyclePhaseData.map((phase) => (
+                {ecocycleDomainStats.map((phase) => (
                   <div 
-                    key={phase.subject}
-                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-2 hover:border-white/15 transition-all"
+                    key={phase.concept}
+                    className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-2.5 hover:border-white/15 transition-all"
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black text-white uppercase tracking-wider">
-                        {phase.subject}
+                        {getPhaseTranslatedName(phase.concept, phase.name)}
                       </span>
                       <span className="text-sm font-black text-zello-orange tabular-nums">
                         {phase.accuracy}%
@@ -862,19 +900,24 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     </div>
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-zello-orange to-amber-400 rounded-full" 
+                        className={`h-full ${phase.color} rounded-full transition-all duration-500`} 
                         style={{ width: `${phase.accuracy}%` }}
                       />
                     </div>
-                    <p className="text-[10px] text-slate-400 font-medium truncate">
-                      Exemplos: {phase.structures}
-                    </p>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium">
+                      <span className="truncate max-w-[200px]" title={phase.structuresExample}>
+                        Exemplos: {phase.structuresExample}
+                      </span>
+                      <span className="font-mono text-[9px] text-slate-500 shrink-0 ml-2">
+                        {phase.totalQuestions > 0 ? `${phase.correctCount}/${phase.totalQuestions} acertos` : 'Padrão'}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
 
               <p className="text-xs text-slate-400 italic text-center pt-2">
-                O Ecocycle Planning equilibra Gestação, Nascimento, Maturidade e Destruição Criativa. Suas escolhas no quiz demonstram onde você atua com maior clareza.
+                {ecocycleFooterText}
               </p>
             </div>
           </div>

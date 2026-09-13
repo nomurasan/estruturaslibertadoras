@@ -27,6 +27,7 @@ import { AuthScreen } from './components/AuthScreen';
 import { OnboardingScreen } from './components/OnboardingScreen';
 import { signOut } from 'firebase/auth';
 import { DashboardSection } from './components/DashboardSection';
+import { getRank, RANKS, RankInfo, recordQuizAttemptScore, calculateTotalXP, normalizeUserProfile } from './utils/progression';
 
 // Modular child components
 import { Navigation } from './components/Navigation';
@@ -61,48 +62,17 @@ interface UserProfile {
   surveyCompleted?: boolean;
   skillsSurvey?: Record<string, { current: number; target: number }>;
   completedQuizzes?: string[];
+  bestScores?: Record<string, number>;
+  preferredLanguage?: 'pt-BR' | 'es' | 'en';
   quizStats?: QuizStats;
 }
-
-interface RankInfo {
-  name: string;
-  image: string;
-  description: string;
-  color: string;
-}
-
-const RANKS: Record<string, RankInfo> = {
-  PADAWAN: {
-    name: 'Padawan',
-    image: 'https://static.wikia.nocookie.net/starwars/images/5/59/ObiWan.png',
-    description: 'Dia 1: Descobrindo a IA e suas habilidades iniciais.',
-    color: 'text-orange-400'
-  },
-  JEDI: {
-    name: 'Jedi',
-    image: 'https://static.wikia.nocookie.net/starwars/images/3/3d/LukeSkywalker.png',
-    description: 'Dia 2: Aplicando a IA no trabalho e processos do dia a dia.',
-    color: 'text-orange-500'
-  },
-  YODA: {
-    name: 'Mestre Yoda',
-    image: 'https://static.wikia.nocookie.net/starwars/images/d/d6/Yoda_SWSB.png',
-    description: 'Dia 3: Pensando a IA de forma estratégica e imaginando o futuro.',
-    color: 'text-emerald-400'
-  }
-};
-
-const getRank = (xp: number): RankInfo => {
-  if (xp <= 3000) return RANKS.PADAWAN;
-  if (xp <= 7500) return RANKS.JEDI;
-  return RANKS.YODA;
-};
 
 export default function App() {
   const [user, loading, error] = useAuthState(auth);
   const [gameState, setGameState] = useState<GameState>('home');
   const [selectedLevel, setSelectedLevel] = useState<'PADAWAN' | 'JEDI' | 'YODA' | null>(null);
   const [currentChallengeIndex, setCurrentChallengeIndex] = useState(0);
+  const [roundScore, setRoundScore] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedSkillIds, setSelectedSkillIds] = useState<number[]>([]);
   const [isAnsweredCorrectly, setIsAnsweredCorrectly] = useState(false);
@@ -183,7 +153,7 @@ export default function App() {
     });
   };
 
-  const currentRank = getRank(score);
+  const currentRank = getRank(completedQuizzes);
   
   const [teamStats, setTeamStats] = useState<TeamStats | null>(null);
 
@@ -558,10 +528,11 @@ export default function App() {
             data.isAdmin = true;
           }
           
-          setUserProfile(data);
-          setScore(data.xp || 0);
-          setUnlockedPowers(data.unlockedPowers || []);
-          setCompletedQuizzes(data.completedQuizzes || []);
+          const normalized = normalizeUserProfile(data);
+          setUserProfile(normalized);
+          setScore(normalized.xp || 0);
+          setUnlockedPowers(normalized.unlockedPowers || []);
+          setCompletedQuizzes(normalized.completedQuizzes || []);
         } else {
           // Document does not exist in Firestore yet, provide fallback to avoid locking user out
           setUserProfile(fallbackProfile);
@@ -832,6 +803,44 @@ export default function App() {
     );
   };
 
+  const handleResetUserProgress = async (targetUserId: string) => {
+    if (!userProfile?.isAdmin) {
+      triggerAlert('Você precisa de privilégios de administrador para realizar esta ação.', 'Acesso Negado', 'error');
+      return;
+    }
+
+    triggerConfirm(
+      'Tem certeza que deseja ZERAR O PROGRESSO deste participante? Todo o XP acumulado será zerado, os quizzes concluídos serão removidos e o participante retornará ao nível PADAWAN.',
+      async () => {
+        try {
+          const userRef = doc(db, 'users', targetUserId);
+          await updateDoc(userRef, {
+            xp: 0,
+            completedQuizzes: [],
+            bestScores: { PADAWAN: 0, JEDI: 0, YODA: 0 },
+            unlockedPowers: [],
+            currentMissionIndex: 0,
+            quizStats: {
+              energy: 50,
+              totalAnswered: 0,
+              totalCorrect: 0,
+              totalIncorrect: 0,
+              currentStreak: 0,
+              bestStreak: 0,
+              history: []
+            },
+            lastActive: serverTimestamp()
+          });
+          triggerAlert('Progresso do participante zerado com sucesso! Nível redefinido para PADAWAN.', 'Sucesso', 'success');
+        } catch (error: any) {
+          console.error('Error resetting user progress:', error);
+          triggerAlert('Erro ao zerar progresso: ' + error.message, 'Erro', 'error');
+        }
+      },
+      'Zerar Progresso'
+    );
+  };
+
   const handleCleanupUsers = async () => {
     if (!userProfile?.companyId || !userProfile.isAdmin) return;
     
@@ -935,6 +944,7 @@ export default function App() {
     setSelectedLevel(level);
     setCurrentChallengeIndex(0);
     setCorrectQuizAnswersCount(0); // Reset correct answers counter
+    setRoundScore(0); // Reset points for this quiz attempt
     setTimeLeft(60);
     setIsActive(true);
     setIsAnswered(false);
@@ -1006,7 +1016,6 @@ export default function App() {
     }
     
     // Sync points and unlocks
-    let newScore = score;
     let newUnlockedList = [...unlockedPowers];
 
     if (isCorrect) {
@@ -1014,7 +1023,7 @@ export default function App() {
       // Points calculation: Base 1000 + Time Bonus (up to 500)
       const timeBonus = Math.floor((timeLeft / 60) * 500);
       const pointsEarned = 1000 + timeBonus;
-      newScore = score + pointsEarned;
+      setRoundScore(prev => prev + pointsEarned);
 
       // Unlock all correct skills
       currentChallenge.correctSkillIds.forEach(id => {
@@ -1024,7 +1033,6 @@ export default function App() {
         }
       });
 
-      setScore(newScore);
       setUnlockedPowers(newUnlockedList);
     }
 
@@ -1060,7 +1068,8 @@ export default function App() {
       energyChange: energyDelta,
       energyAfter: newEnergy,
       timestamp: Date.now(),
-      structuresInvolved: involvedStructures
+      structuresInvolved: involvedStructures,
+      ecocycleConcepts: currentChallenge.ecocycleConcepts || []
     };
 
     const newHistory = [...(prevQuizStats.history || []).slice(-29), newAttempt];
@@ -1079,14 +1088,12 @@ export default function App() {
     try {
       const userDocRef = doc(db, 'users', user.uid);
       await updateDoc(userDocRef, {
-        xp: newScore,
         unlockedPowers: newUnlockedList,
         quizStats: updatedQuizStats,
         lastActive: serverTimestamp()
       });
       setUserProfile(prev => prev ? {
         ...prev,
-        xp: newScore,
         unlockedPowers: newUnlockedList,
         quizStats: updatedQuizStats
       } : prev);
@@ -1108,24 +1115,45 @@ export default function App() {
       setTimeLeft(60);
       setIsActive(true);
     } else {
+      // Calculate final score for this level and update bestScores & total XP
+      const finalRoundScore = roundScore;
+      const currentBestScores = userProfile?.bestScores || { PADAWAN: 0, JEDI: 0, YODA: 0 };
+      const { bestScores: updatedScores, totalXP: totalXp } = recordQuizAttemptScore(
+        currentBestScores,
+        selectedLevel || 'PADAWAN',
+        finalRoundScore
+      );
+
       // Save 100% correctness results to unlock progression levels
       const totalCorrect = correctQuizAnswersCount;
       const totalQuestions = levelChallenges.length;
+      let updatedQuizzes = [...completedQuizzes];
+      const is100Percent = totalCorrect === totalQuestions && totalQuestions > 0;
       
-      if (totalCorrect === totalQuestions && totalQuestions > 0 && selectedLevel) {
-        if (!completedQuizzes.includes(selectedLevel)) {
-          const updatedQuizzes = [...completedQuizzes, selectedLevel];
+      if (is100Percent && selectedLevel) {
+        if (!updatedQuizzes.includes(selectedLevel)) {
+          updatedQuizzes.push(selectedLevel);
           setCompletedQuizzes(updatedQuizzes);
-          try {
-            const userDocRef = doc(db, 'users', user.uid);
-            await updateDoc(userDocRef, {
-              completedQuizzes: updatedQuizzes,
-              lastActive: serverTimestamp()
-            });
-          } catch (err) {
-            handleFirestoreError(err, OperationType.UPDATE, `users/${user.uid}`);
-          }
         }
+      }
+
+      setScore(totalXp);
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        await updateDoc(userDocRef, {
+          xp: totalXp,
+          bestScores: updatedScores,
+          completedQuizzes: updatedQuizzes,
+          lastActive: serverTimestamp()
+        });
+        setUserProfile(prev => prev ? {
+          ...prev,
+          xp: totalXp,
+          bestScores: updatedScores,
+          completedQuizzes: updatedQuizzes
+        } : prev);
+      } catch (err) {
+        handleFirestoreError(err, OperationType.UPDATE, `users/${user.uid}`);
       }
       setGameState('results');
     }
@@ -1206,12 +1234,12 @@ export default function App() {
         gameState={gameState}
         setGameState={setGameState}
         score={score}
+        completedQuizzes={userProfile?.completedQuizzes || []}
         currentCompany={currentCompany}
         isAdmin={!!userProfile?.isAdmin}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
         onLogout={() => signOut(auth)}
-        currentRank={currentRank}
       />
 
       {/* Main Content */}
@@ -1440,7 +1468,8 @@ export default function App() {
                         </div>
 
                         <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden backdrop-blur-md">
-                          <div className="overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar">
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar">
                             <table className="w-full text-left">
                               <thead className="bg-white/5 sticky top-0 z-20 backdrop-blur-md">
                                 <tr key="global-users-header-row-st">
@@ -1472,8 +1501,8 @@ export default function App() {
                                       </div>
                                     </td>
                                     <td className="p-8 text-center">
-                                      <div className={`text-xs font-black uppercase italic ${getRank(u.xp || 0).color}`}>
-                                        {getRank(u.xp || 0).name}
+                                      <div className={`text-xs font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                                        {getRank(u.completedQuizzes).name}
                                       </div>
                                     </td>
                                     <td className="p-8 text-center">
@@ -1493,11 +1522,19 @@ export default function App() {
                                       </button>
                                     </td>
                                     <td className="p-8 text-right">
-                                      <div className="flex items-center justify-end gap-3">
+                                      <div className="flex items-center justify-end gap-2">
+                                        <button
+                                          onClick={() => handleResetUserProgress(u.userId)}
+                                          disabled={u.userId === user?.uid}
+                                          className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
+                                          title="Zerar Progresso (Reset para Padawan e 0 XP)"
+                                        >
+                                          <LucideIcons.RotateCcw size={18} />
+                                        </button>
                                         <button
                                           onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                                           disabled={u.userId === user?.uid}
-                                          className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20"
+                                          className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
                                           title={u.isAdmin ? "Demitir Admin" : "Tornar Admin"}
                                         >
                                           <LucideIcons.Shield size={18} />
@@ -1505,7 +1542,7 @@ export default function App() {
                                         <button
                                           onClick={() => handleDeleteUser(u.userId)}
                                           disabled={u.userId === user?.uid}
-                                          className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20"
+                                          className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
                                           title="Excluir Usuário"
                                         >
                                           <LucideIcons.UserMinus size={18} />
@@ -1526,6 +1563,88 @@ export default function App() {
                                 )}
                               </tbody>
                             </table>
+                          </div>
+
+                          {/* Mobile Cards View */}
+                          <div className="md:hidden divide-y divide-white/5 p-4 space-y-4">
+                            {allUsers.map((u, idx) => (
+                              <div
+                                key={`global-list-usr-card-m-${u.userId || 'u'}-${idx}`}
+                                className="p-5 bg-white/[0.03] border border-white/10 rounded-2xl space-y-4"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-sm shrink-0">
+                                    {u.email?.[0].toUpperCase() || '?'}
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="text-sm font-bold text-white truncate">{u.email}</div>
+                                    <div className="text-[10px] text-slate-500 font-mono truncate">ID: {u.userId}</div>
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 block">Nível (Rank)</span>
+                                    <span className={`font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                                      {getRank(u.completedQuizzes).name}
+                                    </span>
+                                  </div>
+                                  <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
+                                    <span className="text-[9px] uppercase font-bold text-slate-500 block">XP Acumulado</span>
+                                    <span className="font-black text-zello-orange italic">
+                                      {u.xp || 0} XP
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs pt-1">
+                                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    {availableCompanies.find(c => c.id === u.companyId)?.name || 'Sem Turma'}
+                                  </div>
+                                  <button
+                                    onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                                    disabled={u.userId === user?.uid}
+                                    className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                                      u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
+                                    }`}
+                                  >
+                                    {u.isAdmin ? 'ADMIN' : 'PARTICIPANTE'}
+                                  </button>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                                  <button
+                                    onClick={() => handleResetUserProgress(u.userId)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.RotateCcw size={12} />
+                                    Zerar
+                                  </button>
+                                  <button
+                                    onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.Shield size={12} />
+                                    {u.isAdmin ? 'Demitir' : 'Promover'}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteUser(u.userId)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.UserMinus size={12} />
+                                    Excluir
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                            {allUsers.length === 0 && (
+                              <div className="p-12 text-center text-slate-500 text-xs font-bold uppercase tracking-wider">
+                                Nenhum usuário cadastrado no sistema
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1713,7 +1832,8 @@ export default function App() {
                              <LucideIcons.Users size={20} />
                           </div>
                         </div>
-                        <div className="overflow-x-auto">
+                        {/* Desktop Table View */}
+                        <div className="hidden md:block overflow-x-auto">
                           <table className="w-full text-left table-auto">
                             <thead className="bg-white/5">
                               <tr key="company-users-header-row">
@@ -1746,8 +1866,8 @@ export default function App() {
                                   </td>
                                   <td className="p-4 sm:p-6 text-center">
                                     <div className="flex flex-col items-center justify-center">
-                                      <div className={`text-[10px] font-black uppercase italic tracking-wider ${getRank(u.xp || 0).color}`}>
-                                        {getRank(u.xp || 0).name}
+                                      <div className={`text-[10px] font-black uppercase italic tracking-wider ${getRank(u.completedQuizzes).color}`}>
+                                        {getRank(u.completedQuizzes).name}
                                       </div>
                                       <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-zello-orange/10 rounded-full text-zello-orange text-[9px] font-black italic">
                                         {u.xp || 0} XP
@@ -1757,6 +1877,14 @@ export default function App() {
                                   {userProfile.isAdmin && (
                                     <td className="p-4 sm:p-6">
                                       <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                                        <button
+                                          onClick={() => handleResetUserProgress(u.userId)}
+                                          disabled={u.userId === user?.uid}
+                                          title="Zerar Progresso (Reset para Padawan e 0 XP)"
+                                          className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all disabled:opacity-30 flex items-center justify-center"
+                                        >
+                                          <LucideIcons.RotateCcw size={14} />
+                                        </button>
                                         <button
                                           onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                                           disabled={u.userId === user?.uid}
@@ -1792,6 +1920,78 @@ export default function App() {
                               )}
                             </tbody>
                           </table>
+                        </div>
+
+                        {/* Mobile Cards View */}
+                        <div className="md:hidden divide-y divide-white/5 p-4 space-y-3">
+                          {companyUsers.map((u, idx) => (
+                            <div
+                              key={`company-user-card-m-${u.userId || 'u'}-${idx}`}
+                              className="p-4 bg-white/[0.03] border border-white/10 rounded-2xl space-y-3"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-xs shrink-0">
+                                  {u.email?.[0].toUpperCase() || '?'}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="text-xs font-bold text-white truncate">{u.email}</div>
+                                  <div className="text-[9px] text-slate-500 font-mono">UID: {u.userId.slice(0, 8)}...</div>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange/20 text-zello-orange border border-zello-orange/30' : 'bg-slate-800 text-slate-400 border border-white/5'}`}>
+                                  {u.isAdmin ? 'ADMIN' : 'USER'}
+                                </span>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                                <div className="p-2 bg-black/20 rounded-xl border border-white/5">
+                                  <span className="text-[8px] uppercase font-bold text-slate-500 block">Nível (Rank)</span>
+                                  <span className={`text-[10px] font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                                    {getRank(u.completedQuizzes).name}
+                                  </span>
+                                </div>
+                                <div className="p-2 bg-black/20 rounded-xl border border-white/5">
+                                  <span className="text-[8px] uppercase font-bold text-slate-500 block">XP Acumulado</span>
+                                  <span className="text-[10px] font-black text-zello-orange italic">
+                                    {u.xp || 0} XP
+                                  </span>
+                                </div>
+                              </div>
+
+                              {userProfile.isAdmin && (
+                                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                                  <button
+                                    onClick={() => handleResetUserProgress(u.userId)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-1 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.RotateCcw size={11} />
+                                    Zerar
+                                  </button>
+                                  <button
+                                    onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-1 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.Shield size={11} />
+                                    {u.isAdmin ? 'Demitir' : 'Promover'}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteUser(u.userId)}
+                                    disabled={u.userId === user?.uid}
+                                    className="py-2 px-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
+                                  >
+                                    <LucideIcons.UserMinus size={11} />
+                                    Excluir
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                          {companyUsers.length === 0 && (
+                            <div className="p-8 text-center text-slate-500 text-xs italic">
+                              Nenhum outro participante encontrado nesta turma.
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
