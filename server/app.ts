@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import apiRouter from "./routes/api";
 import {
   correlationIdMiddleware,
@@ -35,6 +34,8 @@ export async function createApplication() {
 
   // Vite middleware setup (Asset & SPA serving)
   if (process.env.NODE_ENV !== "production") {
+    // Dynamic import keeps Vite (a dev-only dependency) out of the production bundle's require graph
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",

@@ -77,7 +77,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
             CONTROLE DE <span className="text-zello-orange">ACESSO CORPORATIVO</span>
           </h2>
           <p className="text-slate-400 font-medium">
-            Gerencie e autorize colaboradores, crie turmas e acompanhe a evolução de XP.
+            {t('admin.subtitle', { defaultValue: 'Gerencie e autorize colaboradores, crie turmas e acompanhe a evolução de XP.' })}
           </p>
         </div>
       </div>
@@ -90,17 +90,17 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">
-              Editar Nome da Turma
+              {t('admin.editCompanyTitle', { defaultValue: 'Editar Nome da Turma' })}
             </h3>
             <p className="text-sm text-slate-500 font-medium font-sans">
-              Insira o novo nome para identificar esta organização na plataforma.
+              {t('admin.editCompanyDesc', { defaultValue: 'Insira o novo nome para identificar esta organização na plataforma.' })}
             </p>
           </div>
 
           <div className="space-y-4">
             <input
               type="text"
-              placeholder="Ex: Organização"
+              placeholder={t('admin.companyNamePlaceholder', { defaultValue: 'Ex: Organização' })}
               value={editingCompany.name}
               onChange={(e) => {
                 setEditingCompany({ ...editingCompany, name: e.target.value });
@@ -118,7 +118,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               {isRegisteringCompany ? (
                 <LucideIcons.Loader2 className="animate-spin" size={20} />
               ) : (
-                'Salvar Alterações'
+                t('admin.saveChanges', { defaultValue: 'Salvar Alterações' })
               )}
             </button>
             <button
@@ -127,7 +127,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               }}
               className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 transition-all cursor-pointer"
             >
-              Voltar
+              {t('admin.back', { defaultValue: 'Voltar' })}
             </button>
           </div>
         </div>
@@ -138,10 +138,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/5 p-6 rounded-[32px] border border-white/10 select-none">
                 <div className="space-y-1">
                   <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">
-                    Empresas &amp; Turmas
+                    {t('admin.companiesTitle', { defaultValue: 'Empresas & Turmas' })}
                   </h2>
                   <p className="text-sm text-slate-500 font-medium">
-                    Turmas cadastradas na plataforma.
+                    {t('admin.companiesSubtitle', { defaultValue: 'Turmas cadastradas na plataforma.' })}
                   </p>
                 </div>
               </div>
@@ -161,19 +161,19 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           <button
                             onClick={() => setEditingCompany(comp)}
                             className="p-3 bg-white/5 rounded-xl hover:bg-white/10 text-slate-500 hover:text-white transition-all cursor-pointer"
-                            title="Editar"
+                            title={t('admin.editTooltip', { defaultValue: 'Editar' })}
                           >
                             <LucideIcons.Settings size={16} />
                           </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (confirm('Deseja realmente remover esta empresa/turma?')) {
+                              if (confirm(t('admin.confirmDeleteCompany', { defaultValue: 'Deseja realmente remover esta empresa/turma?' }))) {
                                 handleDeleteCompany(comp.id);
                               }
                             }}
                             className="p-3 bg-white/5 rounded-xl hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-all cursor-pointer"
-                            title="Excluir"
+                            title={t('admin.deleteTooltip', { defaultValue: 'Excluir' })}
                           >
                             <LucideIcons.Trash2 size={16} />
                           </button>
@@ -199,7 +199,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       }}
                       className="relative z-10 w-full mt-8 py-4 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl group-hover:bg-zello-orange group-hover:border-zello-orange transition-all flex items-center justify-center gap-3 cursor-pointer"
                     >
-                      Selecionar esta Turma
+                      {t('admin.selectCompany', { defaultValue: 'Selecionar esta Turma' })}
                       <LucideIcons.ChevronRight size={14} />
                     </button>
 
@@ -219,20 +219,20 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               <div className="space-y-2 text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
                   <LucideIcons.Users size={12} />
-                  Diretório Global
+                  {t('admin.directory', { defaultValue: 'Diretório Global' })}
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter leading-none">
-                  TODOS OS <span className="text-zello-orange">PARTICIPANTES</span>
+                  {t('admin.allParticipantsPrefix', { defaultValue: 'TODOS OS' })} <span className="text-zello-orange">{t('admin.allParticipantsHighlight', { defaultValue: 'PARTICIPANTES' })}</span>
                 </h2>
                 <p className="text-sm text-slate-500 font-medium">
-                  Lista de todos os usuários que acessaram a plataforma e seus níveis de acesso.
+                  {t('admin.allParticipantsDesc', { defaultValue: 'Lista de todos os usuários que acessaram a plataforma e seus níveis de acesso.' })}
                 </p>
               </div>
 
               <div className="flex gap-4">
                 <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">
-                    TOTAL DE USUÁRIOS
+                    {t('admin.totalUsers', { defaultValue: 'TOTAL DE USUÁRIOS' })}
                   </span>
                   <div className="text-2xl font-black text-white tabular-nums italic">
                     {allUsers.length}
@@ -240,7 +240,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                 </div>
                 <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">
-                    ADMINS
+                    {t('admin.totalAdmins', { defaultValue: 'ADMINS' })}
                   </span>
                   <div className="text-2xl font-black text-zello-orange tabular-nums italic">
                     {allUsers.filter((u) => u.isAdmin).length}
@@ -316,11 +316,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           <button
                             onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                             disabled={u.userId === user?.uid}
-                            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${
-                              u.isAdmin
-                                ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]'
-                                : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'
-                            }`}
+                            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${u.isAdmin
+                              ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]'
+                              : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'
+                              }`}
                           >
                             {u.isAdmin ? t('admin.roleAdmin', { defaultValue: 'ADMINISTRADOR' }) : t('admin.roleParticipant', { defaultValue: 'PARTICIPANTE' })}
                           </button>
@@ -415,9 +414,8 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       <button
                         onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                         disabled={u.userId === user?.uid}
-                        className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                          u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
-                        }`}
+                        className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
+                          }`}
                       >
                         {u.isAdmin ? t('admin.roleAdminShort', { defaultValue: 'ADMIN' }) : t('admin.roleParticipantShort', { defaultValue: 'PARTICIPANTE' })}
                       </button>
