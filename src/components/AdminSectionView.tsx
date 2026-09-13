@@ -330,8 +330,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                             {handleResetUserProgress && (
                               <button
                                 onClick={() => handleResetUserProgress(u.userId)}
-                                disabled={u.userId === user?.uid}
-                                className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
+                                className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all cursor-pointer"
                                 title={t('admin.resetProgress', { defaultValue: 'ZERAR PROGRESSO' })}
                               >
                                 <LucideIcons.RotateCcw size={18} />
@@ -428,8 +427,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       {handleResetUserProgress && (
                         <button
                           onClick={() => handleResetUserProgress(u.userId)}
-                          disabled={u.userId === user?.uid}
-                          className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
+                          className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                         >
                           <LucideIcons.RotateCcw size={12} />
                           {t('admin.resetShort', { defaultValue: 'Zerar' })}

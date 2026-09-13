@@ -227,7 +227,9 @@ export default function App() {
       : query(collection(db, 'users'));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const teamUsers = querySnapshot.docs.map(doc => ({ ...doc.data(), userId: doc.id } as UserProfile));
+      const teamUsers = querySnapshot.docs.map(doc => 
+        normalizeUserProfile({ ...doc.data(), userId: doc.id } as UserProfile) as UserProfile
+      );
       
       // Calculate Team Stats
       const totalXp = teamUsers.reduce((sum, u) => sum + (u.xp || 0), 0);
@@ -445,10 +447,13 @@ export default function App() {
     // Security rules will filter based on permissions
     const q = query(collection(db, 'users'));
     const unsubscribe = onSnapshot(q, (snap) => {
-      const users = snap.docs.map(doc => ({
-        ...doc.data(),
-        userId: doc.id
-      } as UserProfile));
+      const users = snap.docs.map(doc => {
+        const raw = {
+          ...doc.data(),
+          userId: doc.id
+        } as UserProfile;
+        return normalizeUserProfile(raw) as UserProfile;
+      });
       // Deduplicate by userId
       const uniqueUsers = Array.from(new Map(users.map(u => [u.userId, u])).values());
       setAllUsers(uniqueUsers);
@@ -559,6 +564,15 @@ export default function App() {
           setScore(normalized.xp || 0);
           setUnlockedPowers(normalized.unlockedPowers || []);
           setCompletedQuizzes(normalized.completedQuizzes || []);
+
+          // Auto-heal legacy database state: if Firestore has legacy un-normalized XP or lacks bestScores, sync it
+          if (data.xp !== normalized.xp || !data.bestScores) {
+            updateDoc(userDocRef, {
+              xp: normalized.xp,
+              bestScores: normalized.bestScores,
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn("Failed to auto-heal profile in firestore:", e));
+          }
         } else {
           // Document does not exist in Firestore yet, provide fallback to avoid locking user out
           setUserProfile(fallbackProfile);
@@ -857,6 +871,29 @@ export default function App() {
             },
             lastActive: serverTimestamp()
           });
+
+          if (user && targetUserId === user.uid) {
+            setScore(0);
+            setCompletedQuizzes([]);
+            setUnlockedPowers([]);
+            setUserProfile(prev => prev ? {
+              ...prev,
+              xp: 0,
+              completedQuizzes: [],
+              bestScores: { PADAWAN: 0, JEDI: 0, YODA: 0 },
+              unlockedPowers: [],
+              quizStats: {
+                energy: 50,
+                totalAnswered: 0,
+                totalCorrect: 0,
+                totalIncorrect: 0,
+                currentStreak: 0,
+                bestStreak: 0,
+                history: []
+              }
+            } : prev);
+          }
+
           triggerAlert('Progresso do participante zerado com sucesso! Nível redefinido para PADAWAN.', 'Sucesso', 'success');
         } catch (error: any) {
           console.error('Error resetting user progress:', error);

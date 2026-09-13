@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { AI_POWERS } from '../data/powers';
 import { useAIReport } from '../hooks/useAIReport';
+import { normalizeUserProfile } from '../utils/progression';
 
 interface DashboardContextType {
   teamStats: TeamStats | null;
@@ -46,10 +47,12 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
-        const teamUsers = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          userId: doc.id,
-        }) as UserProfile);
+        const teamUsers = querySnapshot.docs.map((doc) => 
+          normalizeUserProfile({
+            ...doc.data(),
+            userId: doc.id,
+          }) as UserProfile
+        );
 
         setCompanyUsersList(teamUsers);
 
