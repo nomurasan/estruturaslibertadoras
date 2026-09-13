@@ -359,7 +359,7 @@ export default function App() {
         { id: '1', name: '1-2-4-All', correctCount: 34, incorrectCount: 3, accuracy: 92, category: 'Nascimento / Engajamento' },
         { id: '8', name: 'TRIZ', correctCount: 31, incorrectCount: 4, accuracy: 88, category: 'Destruição Criativa' },
         { id: '2', name: 'Impromptu Networking', correctCount: 29, incorrectCount: 6, accuracy: 83, category: 'Abertura & Conexão' },
-        { id: '5', name: '15% Solutions', correctCount: 26, incorrectCount: 7, accuracy: 79, category: 'Armadilha da Escassez' },
+        { id: '5', name: '15% Solutions', correctCount: 26, incorrectCount: 7, accuracy: 79, category: 'Armadilha da Pobreza' },
         { id: '11', name: 'What, So What, Now What? (W3)', correctCount: 22, incorrectCount: 8, accuracy: 73, category: 'Debriefing Sistêmico' },
         { id: '31', name: 'Ecocycle Planning', correctCount: 16, incorrectCount: 11, accuracy: 59, category: 'Diagnóstico de Portfólio' },
         { id: '32', name: 'Panarchy', correctCount: 13, incorrectCount: 12, accuracy: 52, category: 'Multiníveis & Escala' }

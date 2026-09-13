@@ -29,8 +29,8 @@ export const ALL_CHALLENGES: Challenge[] = [
   {
     id: 2,
     level: 'PADAWAN',
-    title: 'String: Resgatando da Armadilha da Escassez',
-    scenario: 'Durante o Ecocycle Planning, a equipe posicionou 8 iniciativas promissoras presas na Armadilha da Escassez, sob o argumento recorrente de que "a diretoria não aprovou verba extra". Qual estrutura deve entrar logo após no fluxo da String para focar no que cada membro tem liberdade, autonomia e recursos próprios para agir no dia seguinte?',
+    title: 'String: Resgatando da Armadilha da Pobreza',
+    scenario: 'Durante o Ecocycle Planning, a equipe posicionou 8 iniciativas promissoras presas na Armadilha da Pobreza, sob o argumento recorrente de que "a diretoria não aprovou verba extra". Qual estrutura deve entrar logo após no fluxo da String para focar no que cada membro tem liberdade, autonomia e recursos próprios para agir no dia seguinte?',
     correctSkillIds: [5], // 5: 15% Solutions
     incorrectSkillIds: [22, 14, 24, 27, 34],
     bestChoiceName: '15% Solutions',
@@ -39,8 +39,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura/Mapeamento) ➔ Ecocycle Planning ➔ 15% Solutions (Ativação de autonomia imediata)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Troika Consulting (#6) pode ser acoplada em seguida para que os colegas enriqueçam e desafiem positivamente essas soluções a 15%.',
-    ecocyclePhase: 'Armadilha da Escassez',
-    explanation: '15% Solutions (#5) é extremamente coerente para responder à Armadilha da Escassez no Ecocycle Planning. Ela devolve o protagonismo ao grupo, concentrando a energia no que é viável sem depender de orçamentos adicionais.'
+    ecocyclePhase: 'Armadilha da Pobreza',
+    explanation: '15% Solutions (#5) é extremamente coerente para responder à Armadilha da Pobreza no Ecocycle Planning. Ela devolve o protagonismo ao grupo, concentrando a energia no que é viável sem depender de orçamentos adicionais.'
   },
 
   // Desafio 3
@@ -111,7 +111,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: 'Antes do Ecocycle Planning (Construção do norte estratégico e critério de escolha)',
     stringSequence: '9 Whys (#3) ➔ Ecocycle Planning (#12)',
     anotherPossibility: 'Purpose to Practice (P2P) (#33) pode complementar caso a equipe precise desdobrar o propósito descoberto em princípios e estruturas organizacionais.',
-    ecocyclePhase: 'Fase preparatória / Alinhamento de Renovação',
+    ecocyclePhase: 'Fase preparatória / Gestação e Propósito',
     explanation: '9 Whys (#3) traz clareza ao propósito raiz. Sem essa referência compartilhada, o grupo tem dificuldade em encontrar consenso sobre o que deve ser sustentado ou descontinuado no Ecocycle Planning.'
   },
 
@@ -138,7 +138,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     id: 8,
     level: 'PADAWAN',
     title: 'String: Consultoria Rápida para Projetos Travados',
-    scenario: 'Após mapear o Ecocycle Planning, 6 líderes com projetos presos na Armadilha da Escassez precisam de aconselhamento imediato de seus pares. Qual estrutura organiza a sala em trios de 10 minutos por rodada, onde o responsável expõe o desafio, senta de costas para escutar a conversa dos colegas e sai com novos caminhos?',
+    scenario: 'Após mapear o Ecocycle Planning, 6 líderes com projetos presos na Armadilha da Pobreza precisam de aconselhamento imediato de seus pares. Qual estrutura organiza a sala em trios de 10 minutos por rodada, onde o responsável expõe o desafio, senta de costas para escutar a conversa dos colegas e sai com novos caminhos?',
     correctSkillIds: [6], // 6: Troika Consulting
     incorrectSkillIds: [17, 21, 29, 31, 33],
     bestChoiceName: 'Troika Consulting',
@@ -147,8 +147,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura/Mapeamento) ➔ Ecocycle Planning ➔ Troika Consulting (Aconselhamento prático entre pares)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Troika Consulting (#6)',
     anotherPossibility: 'Wise Crowds (#7) é uma opção complementar caso o desafio seja sistêmico e precise de um conselho consultivo maior em vez de trios.',
-    ecocyclePhase: 'Armadilha da Escassez',
-    explanation: 'Troika Consulting (#6) é muito aderente para destravar iniciativas na Armadilha da Escassez. Em menos de 30 minutos, múltiplos líderes recebem orientações práticas e frescas de seus colegas.'
+    ecocyclePhase: 'Armadilha da Pobreza',
+    explanation: 'Troika Consulting (#6) é muito aderente para destravar iniciativas na Armadilha da Pobreza. Em menos de 30 minutos, múltiplos líderes recebem orientações práticas e frescas de seus colegas.'
   },
 
   // Desafio 9
@@ -156,7 +156,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     id: 9,
     level: 'PADAWAN',
     title: 'String: Semeadura Rápida para a Gestação',
-    scenario: 'O Ecocycle Planning apontou um vazio preocupante no quadrante de Renovação e Gestação: a empresa não tem novos projetos no pipeline para o futuro. Você quer que um grupo de 70 pessoas gere e selecione democraticamente as 10 melhores e mais ousadas ideias em apenas 25 minutos com pontuação anônima. Qual estrutura acoplar na String?',
+    scenario: 'O Ecocycle Planning apontou poucas iniciativas posicionadas em Gestação: a empresa não tem novos projetos no pipeline para o futuro. Você quer que um grupo de 70 pessoas gere e selecione democraticamente as 10 melhores e mais ousadas ideias em apenas 25 minutos com pontuação anônima. Qual estrutura acoplar na String?',
     correctSkillIds: [13], // 13: 25/10 Crowdsourcing
     incorrectSkillIds: [9, 14, 18, 26, 28],
     bestChoiceName: '25/10 Crowdsourcing',
@@ -165,8 +165,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura/Mapeamento) ➔ Ecocycle Planning ➔ 25/10 Crowdsourcing (Nutrição do quadrante de Gestação)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 25/10 Crowdsourcing (#13)',
     anotherPossibility: '1-2-4-All (#1) pode ser usado como alternativa mais reflexiva se o tempo for maior ou o grupo menor.',
-    ecocyclePhase: 'Gestação / Renovação',
-    explanation: '25/10 Crowdsourcing (#13) funciona de forma notável para abastecer a fase de Renovação do Ecocycle Planning, aproveitando a inteligência coletiva de grupos grandes em tempo reduzido.'
+    ecocyclePhase: 'Gestação',
+    explanation: '25/10 Crowdsourcing (#13) funciona de forma notável para abastecer a fase de Gestação do Ecocycle Planning, aproveitando a inteligência coletiva de grupos grandes em tempo reduzido.'
   },
 
   // Desafio 10
@@ -183,8 +183,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura/Mapeamento) ➔ Ecocycle Planning ➔ What I Need From You (WINFY) (Pactuação de dependências interdepartamentais)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'Integrated~Autonomy (#29) pode ser utilizada caso o atrito venha de um conflito estrutural entre centralização e liberdade local.',
-    ecocyclePhase: 'Armadilha da Escassez / Fronteira entre áreas',
-    explanation: 'What I Need From You (WINFY) (#30) desata bloqueios relacionais entre áreas que retêm projetos na Armadilha da Escassez do Ecocycle Planning, substituindo reuniões evasivas por acordos de serviço claros.'
+    ecocyclePhase: 'Armadilha da Pobreza / Fronteira entre áreas',
+    explanation: 'What I Need From You (WINFY) (#30) desata bloqueios relacionais entre áreas que retêm projetos na Armadilha da Pobreza do Ecocycle Planning, substituindo reuniões evasivas por acordos de serviço claros.'
   },
 
   // =========================================================================
@@ -207,7 +207,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: 'TRIZ (Antes do Ecocycle Planning) ➔ Ecocycle Planning (Durante) ➔ 15% Solutions (Depois)',
     stringSequence: 'TRIZ (#8) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Min Specs (#19) poderia ser inserido entre o Ecocycle Planning e o 15% Solutions (#5) para podar regras antes dos planos individuais.',
-    ecocyclePhase: 'Destruição Criativa e Armadilha da Escassez',
+    ecocyclePhase: 'Destruição Criativa e Armadilha da Pobreza',
     explanation: 'A sequência TRIZ ➔ Ecocycle Planning ➔ 15% Solutions é uma String muito coerente para situações de desapego, análise do portfólio e ativação de ações autônomas, preparando o terreno e garantindo execução prática.'
   },
 
@@ -233,8 +233,8 @@ export const ALL_CHALLENGES: Challenge[] = [
   {
     id: 13,
     level: 'JEDI',
-    title: 'String para Resgatar da Armadilha da Escassez',
-    scenario: 'Após o exercício do Ecocycle Planning, diversas iniciativas inovadoras foram identificadas como presas na Armadilha da Escassez. Para montar uma String pós-Ecocycle Planning de resgate, você precisa: (1) primeiro, focar no que cada líder de projeto pode fazer com sua própria autonomia de 15%, e (2) em seguida, colocá-los em trios de consultoria rápida entre pares para refinar essas ações ouvindo os colegas de costas. Quais 2 estruturas compõem essa String de socorro?',
+    title: 'String para Resgatar da Armadilha da Pobreza',
+    scenario: 'Após o exercício do Ecocycle Planning, diversas iniciativas inovadoras foram identificadas como presas na Armadilha da Pobreza. Para montar uma String pós-Ecocycle Planning de resgate, você precisa: (1) primeiro, focar no que cada líder de projeto pode fazer com sua própria autonomia de 15%, e (2) em seguida, colocá-los em trios de consultoria rápida entre pares para refinar essas ações ouvindo os colegas de costas. Quais 2 estruturas compõem essa String de socorro?',
     correctSkillIds: [5, 6], // 5: 15% Solutions + 6: Troika Consulting
     incorrectSkillIds: [15, 20, 29, 34],
     bestChoiceName: '15% Solutions (#5) e Troika Consulting (#6)',
@@ -243,7 +243,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ 15% Solutions (Depois 1) ➔ Troika Consulting (Depois 2)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 15% Solutions (#5) ➔ Troika Consulting (#6)',
     anotherPossibility: 'Wise Crowds (#7) pode ser uma alternativa à Troika caso os desafios envolvam conhecimentos técnicos muito especializados.',
-    ecocyclePhase: 'Armadilha da Escassez',
+    ecocyclePhase: 'Armadilha da Pobreza',
     explanation: '15% Solutions (#5) ativa o protagonismo pessoal dos donos dos projetos travados, e Troika Consulting (#6) mobiliza a colaboração ágil de colegas para expandir e refinar esses primeiros passos.'
   },
 
@@ -258,10 +258,10 @@ export const ALL_CHALLENGES: Challenge[] = [
     bestChoiceName: 'Min Specs (#19) e What I Need From You (WINFY) (#30)',
     whyItWorks: 'Min Specs elimina regulamentos obsoletos que travam a agilidade interna, e What I Need From You (WINFY) estabelece acordos de cooperação explícitos e sem desculpas entre diferentes diretorias.',
     scenarioClue: '“podar as regras para especificações mínimas... e articular pedidos diretos de ajuda com respostas categóricas”',
-    inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Min Specs (Destravando Rigidez) ➔ What I Need From You (WINFY) (Destravando Escassez entre áreas)',
+    inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Min Specs (Destravando Rigidez) ➔ What I Need From You (WINFY) (Destravando Pobreza entre áreas)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Min Specs (#19) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'TRIZ (#8) poderia preparar o terreno do Min Specs, ajudando o grupo a rir dos regulamentos excessivos.',
-    ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Escassez',
+    ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Pobreza',
     explanation: 'Min Specs (#19) atua na poda de restrições desnecessárias da Rigidez, enquanto What I Need From You (WINFY) (#30) remove o gargalo de cooperação entre áreas que impedia projetos de decolarem.'
   },
 
@@ -270,7 +270,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     id: 15,
     level: 'JEDI',
     title: 'String de Inovação Aberta e Governança de Novos Projetos',
-    scenario: 'O mapa do Ecocycle Planning revelou que o portfólio está envelhecido e carece de apostas na Renovação. Você desenha uma String onde: (1) primeiro, um grande grupo gera e ranqueia democraticamente as 10 ideias mais ousadas com pontuação anônima, e (2) para a ideia mais votada, o time projeta os 5 elementos essenciais de estruturação (Propósito, Princípios, Participantes, Estrutura e Práticas). Quais 2 estruturas formam essa String de inovação?',
+    scenario: 'O mapa do Ecocycle Planning revelou que o portfólio está envelhecido e com poucas iniciativas posicionadas em Gestação. Você desenha uma String onde: (1) primeiro, um grande grupo gera e ranqueia democraticamente as 10 ideias mais ousadas com pontuação anônima, e (2) para a ideia mais votada, o time projeta os 5 elementos essenciais de estruturação (Propósito, Princípios, Participantes, Estrutura e Práticas). Quais 2 estruturas formam essa String de inovação?',
     correctSkillIds: [13, 33], // 13: 25/10 Crowdsourcing + 33: Purpose to Practice (P2P)
     incorrectSkillIds: [4, 17, 23, 27],
     bestChoiceName: '25/10 Crowdsourcing (#13) e Purpose to Practice (P2P) (#33)',
@@ -279,8 +279,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ 25/10 Crowdsourcing (Geração de ideias) ➔ Purpose to Practice (P2P) (Estruturação)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ 25/10 Crowdsourcing (#13) ➔ Purpose to Practice (P2P) (#33)',
     anotherPossibility: '1-2-4-All (#1) pode anteceder o 25/10 Crowdsourcing (#13) para amadurecer as perguntas provocadoras sobre o futuro.',
-    ecocyclePhase: 'Renovação e Gestação',
-    explanation: '25/10 Crowdsourcing (#13) semeia propostas ousadas na Renovação do Ecocycle Planning, e Purpose to Practice (P2P) (#33) traduz a aposta principal em governança e modelo de operação claros.'
+    ecocyclePhase: 'Gestação',
+    explanation: '25/10 Crowdsourcing (#13) semeia propostas ousadas na Gestação do Ecocycle Planning, e Purpose to Practice (P2P) (#33) traduz a aposta principal em governança e modelo de operação claros.'
   },
 
   // Desafio 16
@@ -333,7 +333,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: 'Wicked Questions (Antes do Ecocycle Planning ou Durante) ➔ Ecocycle Planning ➔ Integrated~Autonomy (Depois)',
     stringSequence: 'Wicked Questions (#4) ➔ Ecocycle Planning (#12) ➔ Integrated~Autonomy (#29)',
     anotherPossibility: 'Min Specs (#19) pode apoiar o Integrated~Autonomy definindo as regras mínimas inegociáveis que a sede exige.',
-    ecocyclePhase: 'Tensões entre Maturidade e Renovação',
+    ecocyclePhase: 'Tensões entre Maturidade e Gestação',
     explanation: 'Wicked Questions (#4) nomeia a tensão polarizada de forma construtiva, e Integrated~Autonomy (#29) oferece a arquitetura operacional para que autonomia local e integração central coexistam.'
   },
 
@@ -411,7 +411,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: 'Appreciative Interviews (Abertura apreciativa) ➔ Ecocycle Planning ➔ What, So What, Now What? (W3) (Reflexão) ➔ 15% Solutions (Ação)',
     stringSequence: 'Appreciative Interviews (#16) ➔ Ecocycle Planning (#12) ➔ What, So What, Now What? (W3) (#11) ➔ 15% Solutions (#5)',
     anotherPossibility: 'Conversation Café (#14) poderia anteceder o What, So What, Now What? (W3) (#11) caso o luto ainda exija desabafo emocional antes da análise de fatos.',
-    ecocyclePhase: 'Renovação e Travessia da Destruição Criativa',
+    ecocyclePhase: 'Travessia da Destruição Criativa para a Gestação',
     explanation: 'Appreciative Interviews (#16) restaura a confiança psicológica, o Ecocycle Planning situa a realidade do portfólio, What, So What, Now What? (W3) (#11) constrói sentido coletivo e 15% Solutions (#5) sela o compromisso de reconstrução.'
   },
 
@@ -420,16 +420,16 @@ export const ALL_CHALLENGES: Challenge[] = [
     id: 23,
     level: 'YODA',
     title: 'String de Destravamento Múltiplo de Armadilhas',
-    scenario: 'Durante o Ecocycle Planning, ficou evidente que a empresa tem gargalos tanto na Rigidez (por regulamentos obsoletos) quanto na Escassez (por desarticulação entre áreas e líderes inseguros). Para desenhar a intervenção pós-Ecocycle Planning na String, você precisa: (1) podar as regras ao mínimo essencial, (2) formalizar pedidos diretos e respostas categóricas entre diretorias, e (3) organizar os donos de projetos em trios de consultoria rápida de 10 minutos. Quais 3 estruturas formam essa sequência?',
+    scenario: 'Durante o Ecocycle Planning, ficou evidente que a empresa tem gargalos tanto na Rigidez (por regulamentos obsoletos) quanto na Pobreza (por desarticulação entre áreas e líderes inseguros). Para desenhar a intervenção pós-Ecocycle Planning na String, você precisa: (1) podar as regras ao mínimo essencial, (2) formalizar pedidos diretos e respostas categóricas entre diretorias, e (3) organizar os donos de projetos em trios de consultoria rápida de 10 minutos. Quais 3 estruturas formam essa sequência?',
     correctSkillIds: [19, 30, 6], // 19: Min Specs + 30: WINFY + 6: Troika Consulting
     incorrectSkillIds: [2, 13, 24],
     bestChoiceName: 'Min Specs (#19), What I Need From You (WINFY) (#30) e Troika Consulting (#6)',
-    whyItWorks: 'Min Specs desobstrui a Rigidez cortando regulamentos inflados; What I Need From You (WINFY) resolve o impasse interdepartamental da Escassez garantindo suporte explícito; e Troika Consulting capacita os líderes no refinamento de seus planos de ação.',
+    whyItWorks: 'Min Specs desobstrui a Rigidez cortando regulamentos inflados; What I Need From You (WINFY) resolve o impasse interdepartamental da Pobreza garantindo suporte explícito; e Troika Consulting capacita os líderes no refinamento de seus planos de ação.',
     scenarioClue: '“podar as regras ao mínimo essencial... formalizar pedidos diretos e respostas categóricas entre diretorias... e organizar donos de projetos em trios de consultoria de 10 minutos”',
-    inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Min Specs (Podando Rigidez) ➔ What I Need From You (WINFY) (Pactuando Escassez) ➔ Troika Consulting (Mentoria entre pares)',
+    inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Min Specs (Podando Rigidez) ➔ What I Need From You (WINFY) (Pactuando Pobreza) ➔ Troika Consulting (Mentoria entre pares)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Min Specs (#19) ➔ What I Need From You (WINFY) (#30) ➔ Troika Consulting (#6)',
     anotherPossibility: '15% Solutions (#5) pode ser realizada antes da Troika Consulting (#6) para que cada líder traga sua proposta inicial pronta para receber conselho.',
-    ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Escassez',
+    ecocyclePhase: 'Armadilha da Rigidez e Armadilha da Pobreza',
     explanation: 'Esta combinação ataca os dois nós críticos do Ecocycle Planning: Min Specs (#19) desengessa a governança interna, What I Need From You (WINFY) (#30) garante cooperação entre departamentos e Troika Consulting (#6) oferece mentoria prática imediata.'
   },
 
@@ -438,7 +438,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     id: 24,
     level: 'YODA',
     title: 'String de Inovação a partir da Destruição Criativa',
-    scenario: 'O produto mais antigo da empresa foi enviado para a Destruição Criativa no Ecocycle Planning e agora precisa ser substituído por uma aposta inovadora. A String pós-Ecocycle Planning deve: (1) formular a pergunta paradoxal entre estabilidade e disrupção, (2) gerar e ranquear democraticamente as 10 ideias mais ousadas com pontuação anônima rápida, e (3) estruturar a governança e práticas operacionais completas da nova aposta vencedora. Quais 3 estruturas compõem essa arquitetura?',
+    scenario: 'O produto mais antigo da empresa foi enviado para a Destruição Criativa no Ecocycle Planning e agora precisa ser substituído por uma aposta inovadora em Gestação. A String pós-Ecocycle Planning deve: (1) formular a pergunta paradoxal entre estabilidade e disrupção, (2) gerar e ranquear democraticamente as 10 ideias mais ousadas com pontuação anônima rápida, e (3) estruturar a governança e práticas operacionais completas da nova aposta vencedora. Quais 3 estruturas compõem essa arquitetura?',
     correctSkillIds: [4, 13, 33], // 4: Wicked Questions + 13: 25/10 Crowdsourcing + 33: Purpose to Practice (P2P)
     incorrectSkillIds: [9, 18, 28],
     bestChoiceName: 'Wicked Questions (#4), 25/10 Crowdsourcing (#13) e Purpose to Practice (P2P) (#33)',
@@ -447,8 +447,8 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Wicked Questions (Enquadramento) ➔ 25/10 Crowdsourcing (Ideação) ➔ Purpose to Practice (P2P) (Governança)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Wicked Questions (#4) ➔ 25/10 Crowdsourcing (#13) ➔ Purpose to Practice (P2P) (#33)',
     anotherPossibility: 'Design Storyboards (#21) pode ilustrar o plano cronológico de lançamento derivado de Purpose to Practice (P2P) (#33).',
-    ecocyclePhase: 'Destruição Criativa ➔ Renovação ➔ Nascimento',
-    explanation: 'Wicked Questions (#4) desafia o pensamento convencional, 25/10 Crowdsourcing (#13) traz ideias ousadas na Renovação, e Purpose to Practice (P2P) (#33) estabelece as bases sólidas para a nova aposta emergir com governança clara.'
+    ecocyclePhase: 'Destruição Criativa ➔ Gestação ➔ Nascimento',
+    explanation: 'Wicked Questions (#4) desafia o pensamento convencional, 25/10 Crowdsourcing (#13) traz ideias ousadas na Gestação, e Purpose to Practice (P2P) (#33) estabelece as bases sólidas para a nova aposta emergir com governança clara.'
   },
 
   // Desafio 25
@@ -519,7 +519,7 @@ export const ALL_CHALLENGES: Challenge[] = [
     inStringRole: '1-2-4-All (Abertura) ➔ Ecocycle Planning ➔ Generative Relationships STAR (Diagnóstico) ➔ Conversation Café (Escuta) ➔ What I Need From You (WINFY) (Acordos)',
     stringSequence: '1-2-4-All (#1) ➔ Ecocycle Planning (#12) ➔ Generative Relationships STAR (#26) ➔ Conversation Café (#14) ➔ What I Need From You (WINFY) (#30)',
     anotherPossibility: 'Heard, Seen, Respected (HSR) (#23) poderia atuar como etapa de acolhimento inicial em pares antes do Conversation Café (#14).',
-    ecocyclePhase: 'Cura de atritos e destravamento da Armadilha da Escassez',
+    ecocyclePhase: 'Cura de atritos e destravamento da Armadilha da Pobreza',
     explanation: 'Generative Relationships STAR (#26) diagnostica os vetores relacionais fragilizados, Conversation Café (#14) restabelece a confiança na fala, e What I Need From You (WINFY) (#30) fecha acordos de serviço categóricos.'
   },
 
@@ -545,8 +545,8 @@ export const ALL_CHALLENGES: Challenge[] = [
   {
     id: 30,
     level: 'YODA',
-    title: 'Renovação Sistêmica com Propósito e Desvios Positivos',
-    scenario: 'Você vai facilitar o ciclo de renovação institucional de uma organização em um encontro estratégico. A String em torno do Ecocycle Planning precisa: (1) cavar o propósito inegociável da entidade através de sucessivos porquês em duplas, (2) investigar e valorizar desvios positivos e práticas já bem-sucedidas encontradas pelas equipes operacionais, e (3) fechar o encontro garantindo que cada participante assuma um compromisso pessoal dentro de sua margem de 15% de autonomia. Quais 3 estruturas completam essa String?',
+    title: 'Desenho Sistêmico com Propósito e Desvios Positivos',
+    scenario: 'Você vai facilitar o ciclo de alinhamento e evolução institucional de uma organização em um encontro estratégico. A String em torno do Ecocycle Planning precisa: (1) cavar o propósito inegociável da entidade através de sucessivos porquês em duplas, (2) investigar e valorizar desvios positivos e práticas já bem-sucedidas encontradas pelas equipes operacionais, e (3) fechar o encontro garantindo que cada participante assuma um compromisso pessoal dentro de sua margem de 15% de autonomia. Quais 3 estruturas completam essa String?',
     correctSkillIds: [3, 9, 5], // 3: 9 Whys + 9: DAD + 5: 15% Solutions
     incorrectSkillIds: [4, 10, 31],
     bestChoiceName: '9 Whys (#3), Discovery & Action Dialogue (DAD) (#9) e 15% Solutions (#5)',

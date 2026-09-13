@@ -193,7 +193,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
       {
         name: 'P2',
         questionNum: 2,
-        title: 'String: Resgatando da Armadilha da Escassez',
+        title: 'String: Resgatando da Armadilha da Pobreza',
         level: 'PADAWAN',
         isCorrect: true,
         energy: 80,
@@ -246,7 +246,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   // Performance by Ecocycle Phase
   const ecocyclePhaseData = useMemo(() => [
     { subject: 'Nascimento & Conexão', accuracy: 92, fullMark: 100, structures: 'Impromptu, 1-2-4-All' },
-    { subject: 'Armadilha da Escassez', accuracy: 85, fullMark: 100, structures: '15% Solutions, Troika' },
+    { subject: 'Armadilha da Pobreza', accuracy: 85, fullMark: 100, structures: '15% Solutions, Troika' },
     { subject: 'Destruição Criativa', accuracy: 88, fullMark: 100, structures: 'TRIZ, Min Specs' },
     { subject: 'Maturidade & Rigidez', accuracy: 78, fullMark: 100, structures: 'Conversation Café, Ecocycle' },
     { subject: 'Debriefing & Síntese', accuracy: 74, fullMark: 100, structures: 'W3, 25/10 Crowd' }
@@ -307,7 +307,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
     { id: '1', name: '1-2-4-All', correctCount: 34, incorrectCount: 3, accuracy: 92, category: 'Nascimento / Engajamento' },
     { id: '8', name: 'TRIZ', correctCount: 31, incorrectCount: 4, accuracy: 88, category: 'Destruição Criativa' },
     { id: '2', name: 'Impromptu Networking', correctCount: 29, incorrectCount: 6, accuracy: 83, category: 'Abertura & Conexão' },
-    { id: '5', name: '15% Solutions', correctCount: 26, incorrectCount: 7, accuracy: 79, category: 'Armadilha da Escassez' },
+    { id: '5', name: '15% Solutions', correctCount: 26, incorrectCount: 7, accuracy: 79, category: 'Armadilha da Pobreza' },
     { id: '11', name: 'What, So What, Now What? (W3)', correctCount: 22, incorrectCount: 8, accuracy: 73, category: 'Debriefing Sistêmico' },
     { id: '31', name: 'Ecocycle Planning', correctCount: 16, incorrectCount: 11, accuracy: 59, category: 'Diagnóstico de Portfólio' },
     { id: '32', name: 'Panarchy', correctCount: 13, incorrectCount: 12, accuracy: 52, category: 'Multiníveis & Escala' }

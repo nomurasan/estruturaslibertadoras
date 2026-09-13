@@ -102,7 +102,7 @@ export interface Challenge {
   inStringRole?: string;            // Papel na String (Antes / Durante / Depois do Ecocycle)
   stringSequence?: string;          // Sequência visual sugerida (ex: TRIZ ➔ Ecocycle ➔ 15%)
   anotherPossibility?: string;      // 4. Outra possibilidade (EL complementar quando aplicável)
-  ecocyclePhase?: string;           // Ponto do Ecociclo (ex: Gestação, Armadilha da Escassez, etc.)
+  ecocyclePhase?: string;           // Ponto do Ecociclo (ex: Gestação, Armadilha da Pobreza, etc.)
 }
 
 export interface AIPower {

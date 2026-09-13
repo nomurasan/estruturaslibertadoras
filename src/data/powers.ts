@@ -223,7 +223,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Capacidade de conviver e operar em cenários complexos e contraditórios.',
       'Geração de soluções inovadoras que equilibram ambos os lados.'
     ],
-    ecocycleConnection: 'Tenciona as fronteiras do Ecocycle Planning, especialmente a tensão entre a conservação na Maturidade e a inovação na Renovação.',
+    ecocycleConnection: 'Tenciona as fronteiras do Ecocycle Planning, especialmente a tensão entre a conservação na Maturidade e a inovação na Gestação.',
     input: 'As maiores tensões ou dilemas vivenciados na organização.',
     process: 'Identificação de lados opostos ➔ Redação da fórmula "Como podemos X E AO MESMO TEMPO Y?" ➔ Validação coletiva.',
     output: 'Perguntas paradoxais precisas que desbloqueiam a estratégia.',
@@ -244,13 +244,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     englishTitle: '15% Solutions',
     objective: 'Focar imediatamente no que cada indivíduo tem a liberdade, autonomia e recursos para realizar sem precisar de aprovação superior.',
     applicationContext: 'Sempre que um time se queixa de falta de verba, burocracia ou permissão da diretoria para agir.',
-    practicalExample: 'Após mapear projetos na Armadilha da Escassez: "Qual é o seu 15% que você pode fazer amanhã de manhã para dar o primeiro passo nesta ideia?"',
+    practicalExample: 'Após mapear projetos na Armadilha da Pobreza: "Qual é o seu 15% que você pode fazer amanhã de manhã para dar o primeiro passo nesta ideia?"',
     expectedBenefits: [
       'Resgate instantâneo do protagonismo e senso de agência.',
       'Quebra da paralisia analítica e do vitimismo corporativo.',
       'Avanço de iniciativas paradas sem depender de orçamentos extras.'
     ],
-    ecocycleConnection: 'A estrutura de ouro para escapar da Armadilha da Escassez no Ecocycle Planning e acionar o primeiro passo em projetos travados.',
+    ecocycleConnection: 'A estrutura de ouro para escapar da Armadilha da Pobreza no Ecocycle Planning e acionar o primeiro passo em projetos travados.',
     input: 'Um desafio, iniciativa ou gargalo diagnosticado no Ecocycle.',
     process: '5 min de reflexão individual listando ações a 15% ➔ Compartilhamento em duplas ou quartetos para validação e enriquecimento.',
     output: 'Lista de compromissos concretos e executáveis no dia seguinte.',
@@ -260,7 +260,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Focar no que você tem autonomia para fazer agora sem aprovações externas.',
     fullDescription: 'Focar no que cada indivíduo pode realizar imediatamente dentro da sua margem de autonomia e liberdade.',
-    cases: ['Destravamento da Armadilha da Escassez', 'Fechamento de planos de ação no Ecocycle', 'Superação de bloqueios burocráticos']
+    cases: ['Destravamento da Armadilha da Pobreza', 'Fechamento de planos de ação no Ecocycle', 'Superação de bloqueios burocráticos']
   },
 
   // 6. TROIKA CONSULTING
@@ -271,13 +271,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     englishTitle: 'Troika Consulting',
     objective: 'Obter conselhos rápidos, francos e práticos de dois colegas atuando como consultores em rodadas estruturadas de 10 minutos.',
     applicationContext: 'Quando donos de projetos enfrentam impasses práticos e precisam de visões frescas sem reuniões intermináveis.',
-    practicalExample: 'O cliente expõe seu projeto travado na Armadilha da Escassez (1 min), os consultores fazem perguntas rápidas (1-2 min), o cliente vira de costas e apenas escuta o debate dos consultores (4-5 min), e depois agradece e compartilha aprendizados.',
+    practicalExample: 'O cliente expõe seu projeto travado na Armadilha da Pobreza (1 min), os consultores fazem perguntas rápidas (1-2 min), o cliente vira de costas e apenas escuta o debate dos consultores (4-5 min), e depois agradece e compartilha aprendizados.',
     expectedBenefits: [
       'Escuta profunda sem a tentação de se justificar ou rebater.',
       'Conselhos rápidos, desinteressados e acionáveis.',
       'Cultura de ajuda mútua e apoio contínuo entre pares.'
     ],
-    ecocycleConnection: 'Acelera a transição de projetos presos nas Armadilhas do Ecocycle (Escassez ou Rigidez), dando suporte prático ao responsável pelo projeto.',
+    ecocycleConnection: 'Acelera a transição de projetos presos nas Armadilhas do Ecocycle (Pobreza ou Rigidez), dando suporte prático ao responsável pelo projeto.',
     input: 'Um desafio individual ou de projeto bem formulado.',
     process: 'Trios (1 cliente e 2 consultores) em rodadas cronometradas com o cliente ouvindo de costas ➔ Alternância de papéis.',
     output: 'Novas ideias, soluções inovadoras e passos concretos para o cliente.',
@@ -298,13 +298,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     englishTitle: 'Wise Crowds',
     objective: 'Aproveitar a sabedoria de um grupo maior de consultores multidisciplinares para aconselhar um cliente sobre um desafio complexo.',
     applicationContext: 'Para projetos de alto impacto que envolvem múltiplas áreas e precisam de aconselhamento de diversas especialidades ao mesmo tempo.',
-    practicalExample: 'O líder de uma iniciativa que está saindo da Renovação no Ecocycle recebe consultoria de 5 a 8 pessoas de finanças, jurídico, vendas e operações.',
+    practicalExample: 'O líder de uma iniciativa que está saindo da Gestação no Ecocycle recebe consultoria de 5 a 8 pessoas de finanças, jurídico, vendas e operações.',
     expectedBenefits: [
       'Visão sistêmica 360 graus para projetos estratégicos.',
       'Identificação precoce de riscos operacionais e regulatórios.',
       'Fortalecimento de iniciativas corporativas de grande escala.'
     ],
-    ecocycleConnection: 'Aconselha os grandes projetos do Ecocycle Planning na transição da Renovação para o Nascimento sustentável.',
+    ecocycleConnection: 'Aconselha os grandes projetos do Ecocycle Planning na transição da Gestação para o Nascimento sustentável.',
     input: 'Apresentação clara de um desafio estratégico complexo.',
     process: 'Cliente expõe o desafio ➔ Perguntas de clarificação ➔ Cliente senta de costas e escuta o debate do grupo ➔ Reflexão final.',
     output: 'Plano refinado com contribuições de múltiplas áreas.',
@@ -358,7 +358,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Soluções comprovadas e de custo zero já adaptadas à cultura.',
       'Rápida difusão comunitária de boas práticas.'
     ],
-    ecocycleConnection: 'Identifica como determinadas equipes furaram a Armadilha da Escassez no Ecocycle e traz esses aprendizados para as outras iniciativas.',
+    ecocycleConnection: 'Identifica como determinadas equipes furaram a Armadilha da Pobreza no Ecocycle e traz esses aprendizados para as outras iniciativas.',
     input: 'Um problema crônico que a maioria não consegue resolver, mas alguns poucos conseguem.',
     process: 'Roteiro estruturado de 7 perguntas facilitado em pequenos círculos de diálogo.',
     output: 'Práticas ocultas reveladas e plano de adoção voluntária.',
@@ -368,7 +368,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Descobrir soluções práticas já existentes na linha de frente (desvios positivos).',
     fullDescription: 'Descobrir e adotar práticas positivas que já funcionam no ambiente real sem precisar de recursos externos.',
-    cases: ['Superação da Armadilha da Escassez no Ecocycle', 'Disseminação de práticas de ponta', 'Soluções de baixo custo']
+    cases: ['Superação da Armadilha da Pobreza no Ecocycle', 'Disseminação de práticas de ponta', 'Soluções de baixo custo']
   },
 
   // 10. SHIFT & SHARE
@@ -431,13 +431,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     category: 'Estratégia & Propósito',
     title: 'Ecocycle Planning (Planejamento Ecociclo)',
     englishTitle: 'Ecocycle Planning',
-    objective: 'Mapear o portfólio completo de atividades e relacionamentos através do ciclo de vida biológico e suas armadilhas, equilibrando sustentabilidade e renovação.',
-    applicationContext: 'O núcleo estratégico da facilitação! Para avaliar onde os projetos estão (Gestação, Nascimento, Maturidade, Destruição Criativa) e destravar as Armadilhas da Escassez e Rigidez.',
-    practicalExample: 'Uma equipe mapeia 40 iniciativas em um diagrama em formato de infinito: descobre que 65% estão retidas na Rigidez, 20% na Escassez e quase nada na Renovação, reorganizando os investimentos.',
+    objective: 'Mapear o portfólio completo de atividades e relacionamentos através do ciclo de vida biológico e suas armadilhas, equilibrando sustentabilidade e novos investimentos.',
+    applicationContext: 'O núcleo estratégico da facilitação! Para avaliar onde os projetos estão (Gestação, Nascimento, Maturidade, Destruição Criativa) e destravar as Armadilhas da Pobreza e Rigidez.',
+    practicalExample: 'Uma equipe mapeia 40 iniciativas em um diagrama em formato de infinito: descobre que 65% estão retidas na Rigidez, 20% na Pobreza e poucas posicionadas em Gestação, reorganizando os investimentos.',
     expectedBenefits: [
       'Visão sistêmica e ecológica de todo o portfólio.',
-      'Identificação precisa das duas armadilhas organizacionais (Escassez e Rigidez).',
-      'Coragem para podar o obsoleto e liberar recursos para semear o novo.'
+      'Identificação precisa das duas armadilhas organizacionais (Pobreza e Rigidez).',
+      'Coragem para podar o obsoleto e liberar recursos para semear o novo em Gestação.'
     ],
     ecocycleConnection: 'O coração vivo de todo o sistema! É o hub integrador que orienta e contextualiza a aplicação das outras 33 Estruturas Libertadoras.',
     input: 'Lista completa de todos os projetos, rotinas e investimentos da equipe.',
@@ -447,7 +447,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     groupSize: 'Grupos de 6 a 100+ participantes',
     icon: 'Infinity',
     image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-    shortDescription: 'Mapear o portfólio no ciclo vital biológico e equilibrar armadilhas e renovação.',
+    shortDescription: 'Mapear o portfólio no ciclo vital biológico e equilibrar armadilhas e novos investimentos.',
     fullDescription: 'Mapear o portfólio completo de atividades através do ciclo vital biológico (Gestação, Nascimento, Maturidade, Destruição Criativa) e suas armadilhas.',
     cases: ['Revisão anual de portfólio de projetos', 'Alocação estratégica de investimentos', 'Planejamento de capacidade de squads']
   },
@@ -466,7 +466,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Energia física contagiante e atmosfera de diversão.',
       'Eliminação do viés de autoria através de pontuação anônima.'
     ],
-    ecocycleConnection: 'Nutre a fase de Gestação e Renovação do Ecocycle Planning quando o mapa revela falta de projetos inovadores no pipeline.',
+    ecocycleConnection: 'Nutre a fase de Gestação do Ecocycle Planning quando o mapa revela falta de projetos inovadores no pipeline.',
     input: 'Um desafio aberto que exige inovação radical.',
     process: 'Escrita da ideia e primeiro passo em cartão ➔ 5 rodadas de troca e pontuação às cegas (1 a 5) ➔ Revelação do Top 10.',
     output: 'As melhores 10 ideias selecionadas pelo coletivo com alta pontuação.',
@@ -547,7 +547,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Mapeamento das competências nucleares da equipe.',
       'Energia e autoconfiança renovadas para novos desafios.'
     ],
-    ecocycleConnection: 'Alimenta a fase de Renovação do Ecocycle Planning resgatando as condições que permitiram a outros projetos atingirem a Maturidade com brilho no passado.',
+    ecocycleConnection: 'Alimenta a fase de Gestação do Ecocycle Planning resgatando as condições que permitiram a outros projetos atingirem a Maturidade com brilho no passado.',
     input: 'Roteiro de perguntas apreciativas sobre momentos de pico de sucesso.',
     process: 'Entrevistas em pares (10 min cada) ➔ Compartilhamento dos padrões em quartetos ➔ Síntese no plenário.',
     output: 'Catálogo vivo das condições que geram alto desempenho na equipe.',
@@ -557,7 +557,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Resgatar histórias de sucesso para identificar as raízes do melhor desempenho.',
     fullDescription: 'Descobrir e amplificar o melhor que existe no grupo através de entrevistas focadas em histórias de realizações extraordinárias.',
-    cases: ['Renovação no Ecocycle Planning', 'Energização de times desmotivados', 'Início de programas de transformação cultural']
+    cases: ['Gestação no Ecocycle Planning', 'Energização de times desmotivados', 'Início de programas de transformação cultural']
   },
 
   // 17. SOCIAL NETWORK WEBBING
@@ -574,7 +574,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Identificação de conectores informais invisíveis.',
       'Plano de engajamento direcionado para acelerar inovações.'
     ],
-    ecocycleConnection: 'Indispensável para resgatar iniciativas na Armadilha da Escassez: mapeia quem detém os recursos, patrocinadores e parceiros para fazer a ideia nascer.',
+    ecocycleConnection: 'Indispensável para resgatar iniciativas na Armadilha da Pobreza: mapeia quem detém os recursos, patrocinadores e parceiros para fazer a ideia nascer.',
     input: 'Objetivo estratégico que depende de colaboração entre áreas.',
     process: 'Mapeamento individual de contatos ➔ Desenho coletivo da rede ➔ Análise de laços fracos e novas pontes a construir.',
     output: 'Grafo relacional do time com ações para conectar nós isolados.',
@@ -584,7 +584,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Mapear visualmente redes e influências para quebrar silos e criar pontes.',
     fullDescription: 'Mapear graficamente relacionamentos e fluxos de influência para mobilizar suporte e destravar projetos.',
-    cases: ['Superação da Armadilha da Escassez', 'Quebra de silos organizacionais', 'Mapeamento de stakeholders estratégicos']
+    cases: ['Superação da Armadilha da Pobreza', 'Quebra de silos organizacionais', 'Mapeamento de stakeholders estratégicos']
   },
 
   // 18. HELPING HEURISTICS
@@ -763,7 +763,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Quebra de defesas intelectuais e raciocínios pré-fabricados.',
       'Compreensão profunda e intuitiva do clima do time.'
     ],
-    ecocycleConnection: 'Permite ilustrar graficamente a sensação de sufoco na Rigidez ou a esperança na Renovação antes de montar o Ecocycle Planning.',
+    ecocycleConnection: 'Permite ilustrar graficamente a sensação de sufoco na Rigidez ou a esperança na Gestação antes de montar o Ecocycle Planning.',
     input: 'Folha de papel e caneta com os 5 símbolos universais.',
     process: 'Desenho individual silencioso ➔ Interpretação cruzada em duplas ➔ Partilha de insights no grupo.',
     output: 'Compreensão intuitiva profunda dos desafios e sentimentos da equipe.',
@@ -935,7 +935,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Redução de reuniões inúteis através de acordos transparentes.',
       'Desbloqueio de dependências críticas entre departamentos.'
     ],
-    ecocycleConnection: 'Desata o principal gargalo da Armadilha da Escassez no Ecocycle: garante acordos firmes entre áreas para viabilizar novas iniciativas.',
+    ecocycleConnection: 'Desata o principal gargalo da Armadilha da Pobreza no Ecocycle: garante acordos firmes entre áreas para viabilizar novas iniciativas.',
     input: 'Demandas e dependências operacionais entre equipes.',
     process: 'Envio de listas de pedidos claros ➔ Análise interna ➔ Resposta formal com Sim, Não, Vou Tentar ou Esclarecimento.',
     output: 'Pacto transparente de entregas mútuas entre departamentos.',
@@ -945,7 +945,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Pedir com clareza o que você precisa de outras áreas e receber respostas diretas.',
     fullDescription: 'Eliminar o jogo de empurra entre departamentos articulando pedidos explícitos com respostas vinculantes.',
-    cases: ['Destravamento da Armadilha da Escassez no Ecocycle', 'Acordos de serviço entre TI e negócios', 'Eliminação de gargalos interdepartamentais']
+    cases: ['Destravamento da Armadilha da Pobreza no Ecocycle', 'Acordos de serviço entre TI e negócios', 'Eliminação de gargalos interdepartamentais']
   },
 
   // 31. OPEN SPACE TECHNOLOGY
@@ -956,13 +956,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     englishTitle: 'Open Space Technology',
     objective: 'Conduzir encontros autogerenciados onde os participantes criam a pauta, lideram as sessões de trabalho e documentam os resultados.',
     applicationContext: 'Para grandes encontros focados em temas complexos e urgentes onde ninguém possui a resposta pronta e todos são responsáveis.',
-    practicalExample: '150 colaboradores criam em 20 minutos uma grade de 16 salas de debate sobre como executar a renovação estratégica apontada no Ecocycle Planning.',
+    practicalExample: '150 colaboradores criam em 20 minutos uma grade de 16 salas de debate sobre como semear novos caminhos apontados no Ecocycle Planning.',
     expectedBenefits: [
       'Mobilização de paixão e responsabilidade descentralizada.',
       'Surgimento de líderes naturais e soluções inovadoras.',
       'Engajamento massivo sem planejamento centralizador prévio.'
     ],
-    ecocycleConnection: 'Mobiliza a inteligência de toda a organização para atacar os focos de Renovação e Destruição Criativa identificados no Ecocycle.',
+    ecocycleConnection: 'Mobiliza a inteligência de toda a organização para atacar os focos de Gestação e Destruição Criativa identificados no Ecocycle.',
     input: 'Um tema central urgente e relevante que mobiliza o grupo.',
     process: 'Criação da agenda no "Mercado de Ideias" ➔ Rodadas em salas paralelas com a "Lei dos Dois Pés" ➔ Notícias e fechamento.',
     output: 'Livro de procedimentos com planos de ação e equipes auto-organizadas.',
@@ -1010,13 +1010,13 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     englishTitle: 'Purpose to Practice (P2P)',
     objective: 'Projetar os 5 elementos fundamentais de uma nova iniciativa: Propósito, Princípios, Participantes, Estrutura e Práticas.',
     applicationContext: 'Lançamento de novas empresas, programas de transformação, alianças estratégicas ou novos departamentos.',
-    practicalExample: 'Equipe define o lançamento de um novo produto que saiu da Renovação no Ecocycle, alinhando passo a passo propósito, princípios e práticas operacionais.',
+    practicalExample: 'Equipe define o lançamento de um novo produto posicionado em Gestação no Ecocycle, alinhando passo a passo propósito, princípios e práticas operacionais.',
     expectedBenefits: [
       'Alinhamento holístico desde o nascimento do projeto.',
       'Prevenção de incoerências entre discurso e ações práticas diárias.',
       'Fundação sólida para governança participativa e ágil.'
     ],
-    ecocycleConnection: 'Estrutura o plano arquitetônico de governança para que projetos na Renovação do Ecocycle façam uma transição segura e sustentável para o Nascimento.',
+    ecocycleConnection: 'Estrutura o plano arquitetônico de governança para que projetos na Gestação do Ecocycle façam uma transição segura e sustentável para o Nascimento.',
     input: 'A oportunidade ou nova iniciativa a ser lançada.',
     process: 'Construção sequencial dos 5 elementos usando 1-2-4-All em cada etapa: Propósito ➔ Princípios ➔ Participantes ➔ Estrutura ➔ Práticas.',
     output: 'Documento fundador completo e alinhado da nova iniciativa.',
@@ -1026,7 +1026,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
     shortDescription: 'Projetar os 5 elementos de uma iniciativa: Propósito, Princípios, Pessoas, Estrutura e Práticas.',
     fullDescription: 'Estruturar uma iniciativa completa desde sua razão de ser até as práticas diárias de execução.',
-    cases: ['Lançamento de projetos que saem da Renovação do Ecocycle', 'Criação de novos departamentos', 'Governança de comunidades']
+    cases: ['Lançamento de projetos que saem da Gestação do Ecocycle', 'Criação de novos departamentos', 'Governança de comunidades']
   },
 
   // 34. MAD TEA | CALM TEA
@@ -1072,7 +1072,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Inclusão silenciosa e confortável para participantes introvertidos.',
       'Clareza pessoal antes de decisões de alto impacto.'
     ],
-    ecocycleConnection: 'Auxilia na fase de Destruição Criativa e Renovação, permitindo desapegar de ruídos mentais para abrir espaço ao essencial.',
+    ecocycleConnection: 'Auxilia na fase de Destruição Criativa e transição para Gestação, permitindo desapegar de ruídos mentais para abrir espaço ao essencial.',
     input: 'Folha de papel, caneta e 4 prompts reflexivos elaborados para a situação.',
     process: 'Desenho da espiral lenta e contínua por 2 min ➔ Resposta aos 4 prompts (1 min cada quadrante) ➔ Breve compartilhamento voluntário em duplas.',
     output: 'Insights pessoais nítidos, calma mental e prontidão para colaborar.',
@@ -1128,7 +1128,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Fortalecimento expressivo da segurança psicológica do time.',
       'Substituição de narrativas tóxicas por gratidão ativa e admiração.'
     ],
-    ecocycleConnection: 'Fortalece o ecossistema na fase de Maturidade e Renovação, oxigenando os laços humanos que sustentam o time.',
+    ecocycleConnection: 'Fortalece o ecossistema na fase de Maturidade e Gestação, oxigenando os laços humanos que sustentam o time.',
     input: 'Trios de colegas e disposição para expressar apreciação sincera.',
     process: 'Colega A fica de costas e escuta ➔ Colegas B e C conversam sobre as forças de A por 3 min ➔ Rotação até que todos tenham sido apreciados.',
     output: 'Ambiente caloroso, laços afetivos consolidados e motivação renovada.',
@@ -1184,7 +1184,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Descentralização do poder e empoderamento de pontes informais.',
       'Desenho consciente de uma arquitetura social mais ágil e fluida.'
     ],
-    ecocycleConnection: 'Reconecta elementos isolados na Armadilha da Escassez, criando pontes para viabilizar novos ciclos de vida.',
+    ecocycleConnection: 'Reconecta elementos isolados na Armadilha da Pobreza, criando pontes para viabilizar novos ciclos de vida.',
     input: 'Mapa de atores da rede e categorias de relacionamento (informação, decisão, apoio, recursos).',
     process: 'Mapeamento individual e em pequenos grupos das conexões existentes ➔ Análise de lacunas ➔ Desenho da rede ideal desejada.',
     output: 'Mapa de rede social atual e plano de ativação de novas conexões estratégicas.',
@@ -1240,7 +1240,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Identificação das sementes de sucesso que já existem hoje.',
       'Alinhamento entre ações táticas de curto prazo e legado duradouro.'
     ],
-    ecocycleConnection: 'Conecta o pico da Renovação com o Nascimento no Ecocycle, antecipando frutos futuros para semear hoje.',
+    ecocycleConnection: 'Conecta a Gestação com o Nascimento no Ecocycle, antecipando frutos futuros para semear hoje.',
     input: 'Um horizonte temporal aspiracional (ex: 2040) e um desafio complexo.',
     process: 'Formação de papéis (anciãos e jovens) ➔ Entrevista retrospectiva simulada ➔ Descoberta de pontos de virada ➔ Registro das ações necessárias hoje.',
     output: 'Roteiro narrativo inspirador e lista de primeiros passos factíveis no presente.',
@@ -1268,7 +1268,7 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
       'Abertura para caminhos inovadores que a mente censurava.',
       'Aumento da coragem e clareza para tomadas de decisão decisivas.'
     ],
-    ecocycleConnection: 'Ajuda a superar a Armadilha da Escassez, rompendo hesitações crônicas e gerando impulso para agir.',
+    ecocycleConnection: 'Ajuda a superar a Armadilha da Pobreza, rompendo hesitações crônicas e gerando impulso para agir.',
     input: 'Um dilema pessoal ou corporativo real onde o participante se sente dividido.',
     process: 'O protagonista senta entre os 2 duendes ➔ Os duendes dialogam e debatem o dilema entre si por 5 min ➔ O protagonista reflete sobre os novos horizontes.',
     output: 'Clareza cristalina sobre os prós e contras e compromisso com o próximo passo.',
