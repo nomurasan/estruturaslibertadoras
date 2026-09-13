@@ -23,9 +23,10 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package-lock.json ./package-lock.json
+COPY --from=builder /app/firebase-applet-config.json* ./
 
 # Install only production dependencies for small footprint and security
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Run with non-privileged system user for security hardening
 USER node

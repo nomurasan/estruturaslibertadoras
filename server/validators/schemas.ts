@@ -1,14 +1,16 @@
 import { z } from "zod";
 
 export const gerarRelatorioSchema = z.object({
-  email: z.string().email(),
-  xp: z.number().int().nonnegative(),
-  unlockedPowers: z.array(z.string()),
-  completedMissions: z.record(z.string(), z.boolean()),
+  email: z.string().optional().default(""),
+  xp: z.number().int().nonnegative().optional().default(0),
+  unlockedPowers: z.array(z.string()).optional().default([]),
+  completedMissions: z.record(z.string(), z.boolean()).optional().default({}),
   skillsSurvey: z.record(z.string(), z.object({
     current: z.number().int().min(1).max(5),
     target: z.number().int().min(1).max(5)
-  })).nullable().optional()
+  })).nullable().optional(),
+  quizEnergy: z.number().optional(),
+  quizAccuracy: z.number().optional()
 });
 
 export const quizFeedbackSchema = z.object({

@@ -25,6 +25,11 @@ export async function createApplication() {
   // Input Sanitization against XSS
   app.use(sanitizationMiddleware);
 
+  // Public Healthcheck endpoint for EasyPanel / Docker / monitoring
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+  });
+
   // REST API routes
   app.use("/api", apiRouter);
 

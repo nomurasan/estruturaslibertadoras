@@ -16,38 +16,53 @@ export async function handleGerarRelatorio(req: AuthenticatedRequest, res: Respo
     return res.status(400).json({ error: "Corpo da requisição inválido.", details: validation.error.format() });
   }
 
-  const { email, xp, unlockedPowers, completedMissions, skillsSurvey } = validation.data;
+  const { email, xp, unlockedPowers, completedMissions, skillsSurvey, quizEnergy, quizAccuracy } = validation.data;
 
   try {
     const prompt = `
-      Você é um Grão-Mestre Jedi em IA e Especialista em Transformação Digital Executiva.
-      Gere um Relatório Diagnóstico de Competências Profissionais Avançadas em IA para este participante, avaliando seu progresso na transição de conhecimento técnico para maturidade de liderança corporativa.
+      Você é o Facilitador Mestre da Ordem das Estruturas Libertadoras e Ecocycle Planning (Mestre Nomura).
+      Gere um Relatório Diagnóstico de Domínio do Ecocycle Planning e Strings de Estruturas Libertadoras para este participante, avaliando seu progresso na jornada de facilitação colaborativa e estratégia sistêmica.
 
       DADOS DO PARTICIPANTE:
-      - Nome/Email: ${email || "Iniciante"}
-      - XP Acumulado: ${xp || 0}
-      - Competências Desbloqueadas: ${JSON.stringify(unlockedPowers || [])}
-      - Missões Concluídas: ${JSON.stringify(completedMissions || {})}
-      - Pesquisa de Habilidades (Auto-avaliação de Maturidade): ${JSON.stringify(skillsSurvey || {})}
+      - Facilitador / Email: ${email || "Mestre Jedi em Formação"}
+      - XP / Pontuação Acumulada: ${xp || 0}
+      - Estruturas Libertadoras Desbloqueadas: ${JSON.stringify(unlockedPowers || [])}
+      - Desafios / Missões Concluídas: ${JSON.stringify(completedMissions || {})}
+      - Energia Atual: ${quizEnergy ?? 100}%
+      - Assertividade Geral: ${quizAccuracy ?? 77}%
 
-      ESTRUTURA DO RELATÓRIO DO CONSELHO JEDI (Gere um relatório formatado em seções claras usando Markdown):
-      1. **MAESTRIA NAS COMPETÊNCIAS PROFISSIONAIS (Diagnóstico)**:
-         Avalie as competências profissionais desbloqueadas do participante (como Comunicação, Produtividade Inteligente, Curadoria, Pensamento Crítico e Segurança/LGPD) e seu XP, traçando o seu nível real de maturidade. Identifique forças no processo decisório e postura analítica.
-      
-      2. **RECOMENDAÇÕES PARA EVOLUÇÃO (Gaps & Trilhas)**:
-         Mapeie oportunidades de desenvolvimento baseando-se nos gaps entre as competências atuais e as metas de maturidade tática corporativa (skillsSurvey) ou o ranking (Padawan/Jedi/Yoda). recomende ações estruturadas fáceis de aplicar para fortalecer as habilidades mais críticas de liderança e ceticismo construtivo.
-      
-      3. **PLANO DE IMPACTO OPERACIONAL SEGURO (LGPD & Eficiência)**:
-         Como este profissional pode disseminar melhores práticas de governança, anonimização de dados, prevenção de vieses e automação inteligente cooperativa em sua equipe e organização, mitigando riscos de reputação.
-      
-      4. **CONSELHO DA ORDEM DOS MESTRES**:
-         Um parecer estratégico altamente executivo e inspirador, que conecte a postura Jedi de zelo, equilíbrio e autodesenvolvimento contínuo aos desafios reais da segurança da informação, ética corporativa e o futuro da inteligência artificial.
+      CONTEXTO DA JORNADA DE FACILITAÇÃO (ESTRUTURAS LIBERTADORAS & ECOCYCLE PLANNING):
+      - Nível 1 (Padawan): Strings Básicas com 1 EL Chave para objetivos pontuais (ex: Impromptu Networking, 1-2-4-All, 15% Solutions).
+      - Nível 2 (Jedi): Encadeamentos Duplos e Triplos de Estruturas (ex: TRIZ ➔ Min Specs, 9 Whys ➔ Troika Consulting, 15% Solutions ➔ 25/10 Crowd Sourcing).
+      - Nível 3 (Yoda): Strings Avançadas integradas ao Ecocycle Planning para destravar portfólios, equipes e organizações (Gestação, Nascimento, Maturidade, Destruição Criativa, superação das Armadilhas da Pobreza/Escassez e da Rigidez).
 
-       Regras adicionais:
-       - O tom deve ser estritamente corporativo, altamente maduro, utilizando metáforas profundas da Ordem Jedi de forma sóbria e equilibrada (sem infantilizar a experiência, direcionando o foco às carreiras de liderança).
-       - Use formatação Markdown rica (negrito para termos chave, listas estruturadas, cabeçalhos de seção com ##).
-       - Responda inteiramente em Português.
-     `;
+      ESTRUTURA OBRIGATÓRIA DO RELATÓRIO DIAGNÓSTICO (Formate em Markdown com títulos ## e tópicos estruturados):
+      
+      ## 1. MAESTRIA NO ECOCYCLE PLANNING & ESTRUTURAS LIBERTADORAS (Diagnóstico)
+      Avalie o perfil do facilitador e sua assertividade nas 5 macro-fases do Ecociclo:
+      - **Nascimento & Conexão**: Capacidade de criar segurança psicológica, engajamento e rede inicial (Impromptu Networking, 1-2-4-All, Conversation Café).
+      - **Armadilha da Pobreza / Escassez**: Destravar ideias em gestação que precisam de recursos e autonomia (15% Solutions, Troika Consulting, Helping Heuristics, Social Network Webbing).
+      - **Destruição Criativa & Limpeza**: Desapego de práticas e reuniões contraproducentes, eliminando o que é obsoleto (TRIZ, Min Specs, Drawing Together).
+      - **Maturidade & Armadilha da Rigidez**: Reconhecer a estagnação e o excesso de burocracia, provocando renovação (Ecocycle Planning, Panarchy, What I Need From You).
+      - **Debriefing & Síntese Sistêmica**: Extrair inteligência coletiva e compromissos rápidos (W3 - What So What Now What, 25/10 Crowd Sourcing, Open Space).
+
+      ## 2. RECOMENDAÇÕES PARA EVOLUÇÃO EM STRINGS (Gaps & Próximos Passos)
+      Mapeie os pontos de atenção e recomende encadeamentos (Strings) específicos para o participante praticar:
+      - Como evoluir da aplicação de ferramentas isoladas para o desenho fluído de Strings de Facilitação.
+      - 2 ou 3 combinações de Strings recomendadas para o participante testar em seus desafios corporativos reais (ex: alinhamento de lideranças, desobstrução de projetos ou workshops estratégicos).
+
+      ## 3. PLANO DE IMPACTO SISTÊMICO NAS EQUIPES
+      Como este facilitador pode aplicar o Ecocycle Planning e as Estruturas Libertadoras para transformar reuniões corporativas monótonas em sessões de alta cocriação, distribuindo a liderança e garantindo que 100% dos participantes tenham voz sem sobrecarregar ninguém.
+
+      ## 4. CONSELHO DA ORDEM DOS MESTRES (Mestre Nomura)
+      Um parecer inspirador e prático de Mestre Nomura, reforçando a sabedoria: "Às vezes aprendemos. Às vezes acertamos. Nas Estruturas Libertadoras não existem fórmulas dogmáticas, mas sim a harmonia viva entre propósito, participantes, restrições e o momento do Ecociclo."
+
+      Regras mandatórias:
+      - Foco 100% em Estruturas Libertadoras, Facilitação e Ecocycle Planning.
+      - Não mencione competências antigas desconectadas (como prompt engineering ou LGPD).
+      - Use tom profissional, maduro, acolhedor e fundamentado na metodologia oficial das Liberating Structures.
+      - Responda em Português com formatação Markdown impecável.
+    `;
 
     const relatorio = await getAIResponse(prompt, {
       endpoint: "/api/gerar-relatorio",
