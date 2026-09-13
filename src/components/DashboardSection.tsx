@@ -88,8 +88,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   const currentLang = i18n.language?.startsWith('es')
     ? 'es'
     : i18n.language?.startsWith('en')
-    ? 'en'
-    : 'pt-BR';
+      ? 'en'
+      : 'pt-BR';
 
   const getPhaseTranslatedName = (concept: string, fallback: string) => {
     const trans = ecocycleTranslations[currentLang] || ecocycleTranslations['pt-BR'];
@@ -106,18 +106,18 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
 
   const getFacilitatorRoleText = (lvl: any) => {
     if (currentLang === 'es') {
-      return lvl.level === 'PADAWAN' 
-        ? 'Strings Básicas (1 EL Clave)' 
-        : lvl.level === 'JEDI' 
-        ? 'Encadenamientos Dobles de Estructuras' 
-        : 'Arquitectura Estratégica de Strings';
+      return lvl.level === 'PADAWAN'
+        ? 'Strings Básicas (1 EL Clave)'
+        : lvl.level === 'JEDI'
+          ? 'Encadenamientos Dobles de Estructuras'
+          : 'Arquitectura Estratégica de Strings';
     }
     if (currentLang === 'en') {
-      return lvl.level === 'PADAWAN' 
-        ? 'Basic Strings (1 Key LS)' 
-        : lvl.level === 'JEDI' 
-        ? 'Dual Structure Combinations' 
-        : 'Strategic String Architecture';
+      return lvl.level === 'PADAWAN'
+        ? 'Basic Strings (1 Key LS)'
+        : lvl.level === 'JEDI'
+          ? 'Dual Structure Combinations'
+          : 'Strategic String Architecture';
     }
     return lvl.pedagogicalRole;
   };
@@ -125,8 +125,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   const ecocycleFooterText = currentLang === 'es'
     ? 'El Ecocycle Planning armoniza Gestación, Nacimiento, Madurez, Destrucción Creativa y la prevención de las Trampas de la Pobreza (Escasez) y de la Rigidez a través de Strings deliberadas.'
     : currentLang === 'en'
-    ? 'Ecocycle Planning harmonizes Gestation, Birth, Maturity, Creative Destruction, and the prevention of the Poverty Trap (Scarcity) and Rigidity Trap through deliberate Strings.'
-    : 'O Ecocycle Planning harmoniza Gestação, Nascimento, Maturidade, Destruição Criativa e a prevenção das Armadilhas da Pobreza (Escassez) e da Rigidez através de Strings deliberadas.';
+      ? 'Ecocycle Planning harmonizes Gestation, Birth, Maturity, Creative Destruction, and the prevention of the Poverty Trap (Scarcity) and Rigidity Trap through deliberate Strings.'
+      : 'O Ecocycle Planning harmoniza Gestação, Nascimento, Maturidade, Destruição Criativa e a prevenção das Armadilhas da Pobreza (Escassez) e da Rigidez através de Strings deliberadas.';
 
   // Integrated AI diagnostic report generator State
   const [relatorio, setRelatorio] = useState<string | null>(null);
@@ -137,8 +137,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   // 1. PARTICIPANT QUIZ & ENERGY CALCULATIONS
   // -------------------------------------------------------------
   const userQuizStats = userProfile?.quizStats;
-  const currentEnergy = typeof userQuizStats?.energy === 'number' 
-    ? userQuizStats.energy 
+  const currentEnergy = typeof userQuizStats?.energy === 'number'
+    ? userQuizStats.energy
     : Math.min(100, Math.max(30, Math.round(score > 0 ? (score / 40) : 65)));
 
   const totalAnswered = userQuizStats?.totalAnswered ?? (score > 0 ? Math.round(score / 1000) : 5);
@@ -152,46 +152,46 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   const energyConfig = useMemo(() => {
     if (currentEnergy >= 80) {
       return {
-        label: 'Sintonia Plena com a Força',
-        subtitle: 'Cristal Kyber Radiante e Estável',
+        label: t('dashboard.energyStates.full.label', { defaultValue: 'Sintonia Plena com a Força' }),
+        subtitle: t('dashboard.energyStates.full.subtitle', { defaultValue: 'Cristal Kyber Radiante e Estável' }),
         badgeBg: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400',
         textColor: 'text-emerald-400',
         barGradient: 'from-emerald-500 to-teal-400',
         icon: Sparkles,
-        advice: 'Você está no ápice do seu fluxo decisório. Avance para as Strings complexas de Yoda!'
+        advice: t('dashboard.energyStates.full.advice', { defaultValue: 'Você está no ápice do seu fluxo decisório. Avance para as Strings complexas de Yoda!' })
       };
     } else if (currentEnergy >= 55) {
       return {
-        label: 'Canalizando a Força',
-        subtitle: 'Cristal Estabilizado em Expansão',
+        label: t('dashboard.energyStates.high.label', { defaultValue: 'Canalizando a Força' }),
+        subtitle: t('dashboard.energyStates.high.subtitle', { defaultValue: 'Cristal Estabilizado em Expansão' }),
         badgeBg: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400',
         textColor: 'text-cyan-400',
         barGradient: 'from-cyan-500 to-blue-400',
         icon: BatteryCharging,
-        advice: 'Boa conexão com as Estruturas Libertadoras. Mantenha a sequência de acertos para atingir a maestria.'
+        advice: t('dashboard.energyStates.high.advice', { defaultValue: 'Boa conexão com as Estruturas Libertadoras. Mantenha a sequência de acertos para atingir a maestria.' })
       };
     } else if (currentEnergy >= 30) {
       return {
-        label: 'Oscilação Energética',
-        subtitle: 'Requer Foco nas Combinações de ELs',
+        label: t('dashboard.energyStates.medium.label', { defaultValue: 'Oscilação Energética' }),
+        subtitle: t('dashboard.energyStates.medium.subtitle', { defaultValue: 'Requer Foco nas Combinações de ELs' }),
         badgeBg: 'bg-amber-500/15 border-amber-500/30 text-amber-400',
         textColor: 'text-amber-400',
         barGradient: 'from-amber-500 to-zello-orange',
         icon: BatteryMedium,
-        advice: 'Atenção aos detalhes dos cenários. Revise as cartas no Deck para recuperar sua energia vital.'
+        advice: t('dashboard.energyStates.medium.advice', { defaultValue: 'Atenção aos detalhes dos cenários. Revise as cartas no Deck para recuperar sua energia vital.' })
       };
     } else {
       return {
-        label: 'Dreno Crítico da Força',
-        subtitle: 'Cristal Kyber Desestabilizado',
+        label: t('dashboard.energyStates.low.label', { defaultValue: 'Dreno Crítico da Força' }),
+        subtitle: t('dashboard.energyStates.low.subtitle', { defaultValue: 'Cristal Kyber Desestabilizado' }),
         badgeBg: 'bg-red-500/15 border-red-500/30 text-red-400',
         textColor: 'text-red-400',
         barGradient: 'from-red-600 to-red-400',
         icon: BatteryLow,
-        advice: 'Erros recentes drenaram sua energia. Consulte o Mestre Nomura e revise as armadilhas do Ecociclo!'
+        advice: t('dashboard.energyStates.low.advice', { defaultValue: 'Erros recentes drenaram sua energia. Consulte o Mestre Nomura e revise as armadilhas do Ecociclo!' })
       };
     }
-  }, [currentEnergy]);
+  }, [currentEnergy, t]);
 
   // Timeline / History of Energy Evolution per Question
   const energyEvolutionData = useMemo(() => {
@@ -395,14 +395,14 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('Houve uma falha na calibração do Holocron ao tentar gerar o relatório.');
+        throw new Error(t('dashboard.aiReport.reportError', { defaultValue: 'Houve uma falha na calibração do Holocron ao tentar gerar o relatório.' }));
       }
 
       const data = await response.json();
       setRelatorio(data.relatorio);
     } catch (err: any) {
       console.error(err);
-      setErrRelatorio(err.message || 'Erro de conexão com o servidor ao carregar relatório');
+      setErrRelatorio(err.message || t('dashboard.aiReport.connectionError', { defaultValue: 'Erro de conexão com o servidor ao carregar relatório' }));
     } finally {
       setIsLoadingRelatorio(false);
     }
@@ -419,22 +419,21 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
               {data.name} • {data.level || 'PADAWAN'}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider flex items-center gap-1 ${
-              data.isCorrect 
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-                : 'bg-red-500/20 text-red-400 border border-red-500/30'
-            }`}>
-              {data.isCorrect ? '✅ Acerto' : '❌ Erro'} ({data.changeText || (isPositive ? '+15%' : '-15%')})
+            <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider flex items-center gap-1 ${data.isCorrect
+              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+              : 'bg-red-500/20 text-red-400 border border-red-500/30'
+              }`}>
+              {data.isCorrect ? `✅ ${t('dashboard.tooltip.hit', { defaultValue: 'Acerto' })}` : `❌ ${t('dashboard.tooltip.error', { defaultValue: 'Erro' })}`} ({data.changeText || (isPositive ? '+15%' : '-15%')})
             </span>
           </div>
           <p className="text-xs font-bold text-white mb-2 leading-snug">{data.title}</p>
           <div className="flex items-center justify-between pt-1 border-t border-white/10">
-            <span className="text-[10px] font-semibold text-slate-400">Energia da Força:</span>
+            <span className="text-[10px] font-semibold text-slate-400">{t('dashboard.tooltip.forceEnergyLabel', { defaultValue: 'Energia da Força:' })}</span>
             <span className="text-sm font-black text-zello-orange tabular-nums">{data.energy}%</span>
           </div>
           {data.structures && (
             <p className="text-[9px] text-slate-400 mt-1.5 font-medium truncate">
-              ELs: <span className="text-white">{data.structures}</span>
+              {t('dashboard.tooltip.structuresLabel', { defaultValue: 'ELs:' })} <span className="text-white">{data.structures}</span>
             </p>
           )}
         </div>
@@ -450,15 +449,14 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         <div className="space-y-3 text-center xl:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zello-orange/10 border border-zello-orange/25 text-zello-orange text-[10px] font-black uppercase tracking-[0.2em]">
             <Activity size={13} className="text-zello-orange" />
-            Central de Inteligência & Diagnóstico
+            {t('dashboard.header.eyebrow', { defaultValue: 'Central de Inteligência & Diagnóstico' })}
           </div>
           <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter leading-tight font-sans">
-            DASHBOARDS <br />
-            <span className="text-zello-orange">DO QUIZ & ENERGIA</span>
+            {t('dashboard.header.title', { defaultValue: 'DASHBOARDS' })} <br />
+            <span className="text-zello-orange">{t('dashboard.header.subtitle', { defaultValue: 'DO QUIZ & ENERGIA' })}</span>
           </h2>
           <p className="text-xs md:text-sm text-slate-400 max-w-xl leading-relaxed font-medium">
-            Acompanhe o pulso vital da Força: cada acerto eleva a energia (+15%) e cada erro a drena (-15%). 
-            Monitore sua precisão individual e a evolução coletiva da turma nas Estruturas Libertadoras.
+            {t('dashboard.header.description', { defaultValue: 'Acompanhe o pulso vital da Força: cada acerto eleva a energia (+15%) e cada erro a drena (-15%). Monitore sua precisão individual e a evolução coletiva da turma nas Estruturas Libertadoras.' })}
           </p>
         </div>
 
@@ -468,7 +466,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             <div className="relative shrink-0">
               <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-zello-orange to-amber-500 opacity-25 blur-md group-hover:opacity-50 transition-opacity"></div>
               <div className="relative w-20 h-20 rounded-full border-2 border-zello-orange overflow-hidden shadow-[0_0_20px_rgba(240,90,40,0.4)] bg-zinc-950 flex items-center justify-center">
-                <img 
+                <img
                   src="/Mestre Nomura.png"
                   alt="Mestre Nomura"
                   referrerPolicy="no-referrer"
@@ -479,15 +477,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 <Zap size={12} className="text-zello-orange fill-zello-orange animate-pulse" />
               </div>
             </div>
-            
+
             <div className="text-center sm:text-left space-y-1.5 flex-1">
               <div className="flex items-center justify-center sm:justify-start gap-2">
-                <span className="text-[9px] bg-zello-orange/20 text-zello-orange border border-zello-orange/30 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">Jedi Mentor</span>
+                <span className="text-[9px] bg-zello-orange/20 text-zello-orange border border-zello-orange/30 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">{t('dashboard.mentor.badge', { defaultValue: 'Jedi Mentor' })}</span>
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               </div>
-              <h4 className="text-base font-black text-white italic uppercase tracking-wider font-sans">Mestre Nomura</h4>
+              <h4 className="text-base font-black text-white italic uppercase tracking-wider font-sans">{t('dashboard.mentor.name', { defaultValue: 'Mestre Nomura' })}</h4>
               <p className="text-xs text-slate-300 font-medium leading-snug">
-                "A Força oscila com suas decisões. Conheça sua energia para dominar o Ecocycle Planning."
+                "{t('dashboard.mentor.message', { defaultValue: 'A Força oscila com suas decisões. Conheça sua energia para dominar o Ecocycle Planning.' })}"
               </p>
               <div className="pt-1">
                 <button
@@ -495,7 +493,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zello-orange hover:bg-zello-orange/90 text-white text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(240,90,40,0.3)] transition-all cursor-pointer group/btn"
                 >
                   <Play size={8} className="fill-white text-white group-hover/btn:scale-110 transition-transform" />
-                  Vídeo do Quiz
+                  {t('dashboard.mentor.videoButton', { defaultValue: 'Vídeo do Quiz' })}
                 </button>
               </div>
             </div>
@@ -507,22 +505,20 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           <div className="flex p-1 bg-white/5 rounded-2xl border border-white/10 w-fit">
             <button
               onClick={() => setActiveTab('individual')}
-              className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${
-                activeTab === 'individual' 
-                  ? 'bg-zello-orange text-white shadow-lg' 
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${activeTab === 'individual'
+                ? 'bg-zello-orange text-white shadow-lg'
+                : 'text-slate-400 hover:text-white'
+                }`}
             >
               <Zap size={13} className={activeTab === 'individual' ? 'fill-white' : ''} />
               {t('dashboard.tabParticipant', { defaultValue: 'Participante' })}
             </button>
             <button
               onClick={() => setActiveTab('team')}
-              className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${
-                activeTab === 'team' 
-                  ? 'bg-zello-orange text-white shadow-lg' 
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${activeTab === 'team'
+                ? 'bg-zello-orange text-white shadow-lg'
+                : 'text-slate-400 hover:text-white'
+                }`}
             >
               <Users size={13} />
               {t('dashboard.tabTeam', { defaultValue: 'Turma (Geral)' })}
@@ -644,8 +640,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 </div>
               </div>
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-emerald-500 rounded-full transition-all duration-700" 
+                <div
+                  className="h-full bg-emerald-500 rounded-full transition-all duration-700"
                   style={{ width: `${accuracyRate}%` }}
                 />
               </div>
@@ -685,7 +681,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           {/* ========================================================================= */}
           <div className="p-6 md:p-8 rounded-3xl bg-white/5 border border-white/15 space-y-6 relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
-            
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -721,42 +717,42 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             {/* Recharts Area Chart for Energy */}
             <div className="h-[340px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart 
-                  data={energyEvolutionData} 
+                <AreaChart
+                  data={energyEvolutionData}
                   margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
                 >
                   <defs>
                     <linearGradient id={individualGradId} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#F05A28" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#F05A28" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#F05A28" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#F05A28" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="#64748b" 
-                    fontSize={11} 
-                    fontWeight="bold" 
+                  <XAxis
+                    dataKey="name"
+                    stroke="#64748b"
+                    fontSize={11}
+                    fontWeight="bold"
                     tickLine={false}
                   />
-                  <YAxis 
-                    stroke="#64748b" 
-                    fontSize={11} 
-                    fontWeight="bold" 
-                    domain={[0, 100]} 
+                  <YAxis
+                    stroke="#64748b"
+                    fontSize={11}
+                    fontWeight="bold"
+                    domain={[0, 100]}
                     ticks={[0, 25, 50, 75, 100]}
                     tickFormatter={(v) => `${v}%`}
                     tickLine={false}
                   />
                   <Tooltip content={<EnergyCustomTooltip />} />
-                  <ReferenceLine y={80} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Maestria 80%', fill: '#10b981', fontSize: 10, position: 'right' }} />
-                  <ReferenceLine y={30} stroke="#ef4444" strokeDasharray="3 3" label={{ value: 'Crítico 30%', fill: '#ef4444', fontSize: 10, position: 'right' }} />
-                  <Area 
-                    type="monotone" 
-                    dataKey="energy" 
-                    stroke="#F05A28" 
-                    strokeWidth={3} 
-                    fillOpacity={1} 
-                    fill={`url(#${individualGradId})`} 
+                  <ReferenceLine y={80} stroke="#10b981" strokeDasharray="3 3" label={{ value: t('dashboard.chart.masteryLine', { defaultValue: 'Maestria 80%' }), fill: '#10b981', fontSize: 10, position: 'right' }} />
+                  <ReferenceLine y={30} stroke="#ef4444" strokeDasharray="3 3" label={{ value: t('dashboard.chart.criticalLine', { defaultValue: 'Crítico 30%' }), fill: '#ef4444', fontSize: 10, position: 'right' }} />
+                  <Area
+                    type="monotone"
+                    dataKey="energy"
+                    stroke="#F05A28"
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill={`url(#${individualGradId})`}
                     dot={(props: any) => {
                       const { cx, cy, payload } = props;
                       const isCorrect = payload.isCorrect;
@@ -782,11 +778,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-zello-orange animate-ping"></span>
                 <span>
-                  <strong>Dica do Cristal:</strong> Mantenha a energia acima de <strong>80%</strong> para manter o Holocron Jedi em harmonia e desbloquear o título de Guardião.
+                  <strong>{t('dashboard.chart.tipLabel', { defaultValue: 'Dica do Cristal:' })}</strong> {t('dashboard.chart.tipText', { defaultValue: 'Mantenha a energia acima de 80% para manter o Holocron Jedi em harmonia e desbloquear o título de Guardião.' })}
                 </span>
               </div>
               <div className="text-[11px] text-slate-500 font-mono">
-                {energyEvolutionData.length} tentativas registradas
+                {energyEvolutionData.length} {t('dashboard.chart.attemptsRegistered', { defaultValue: 'tentativas registradas' })}
               </div>
             </div>
           </div>
@@ -806,7 +802,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     {t('ecocycle.evolutionTitle', 'EVOLUÇÃO COMO FACILITADOR')}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                    Competência Demonstrada nos Quizzes
+                    {t('dashboard.facilitatorEvolution.subtitle', { defaultValue: 'Competência Demonstrada nos Quizzes' })}
                   </p>
                 </div>
               </div>
@@ -827,19 +823,19 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-black uppercase tracking-wider text-white">
-                          Nível {lvl.level === 'PADAWAN' ? '1 • Padawan' : lvl.level === 'JEDI' ? '2 • Jedi' : '3 • Yoda'}
+                          {lvl.level === 'PADAWAN' ? t('dashboard.facilitatorEvolution.levelName.padawan', { defaultValue: 'Nível 1 • Padawan' }) : lvl.level === 'JEDI' ? t('dashboard.facilitatorEvolution.levelName.jedi', { defaultValue: 'Nível 2 • Jedi' }) : t('dashboard.facilitatorEvolution.levelName.yoda', { defaultValue: 'Nível 3 • Yoda' })}
                         </span>
                         {lvl.isCompleted ? (
                           <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                            <CheckCircle2 size={11} /> 100% Concluído
+                            <CheckCircle2 size={11} /> {t('dashboard.facilitatorEvolution.completed', { defaultValue: '100% Concluído' })}
                           </span>
                         ) : lvl.isUnlocked ? (
                           <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
-                            Em Progresso
+                            {t('dashboard.facilitatorEvolution.inProgress', { defaultValue: 'Em Progresso' })}
                           </span>
                         ) : (
                           <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
-                            Bloqueado
+                            {t('dashboard.facilitatorEvolution.locked', { defaultValue: 'Bloqueado' })}
                           </span>
                         )}
                       </div>
@@ -847,7 +843,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                         {getFacilitatorRoleText(lvl)}
                       </p>
                       <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 pt-1">
-                        <span>Assertividade Real</span>
+                        <span>{t('dashboard.facilitatorEvolution.assertividade', { defaultValue: 'Assertividade Real' })}</span>
                         <span className="text-white font-black tabular-nums">{lvl.accuracy}%</span>
                       </div>
                       <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
@@ -858,7 +854,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       </div>
                       {lvl.bestScore > 0 && (
                         <div className="text-[9px] text-slate-400 font-mono text-right">
-                          Melhor Pontuação: <span className="text-zello-orange font-bold">{lvl.bestScore.toLocaleString()} pts</span>
+                          {t('dashboard.facilitatorEvolution.bestScore', { defaultValue: 'Melhor Pontuação:' })} <span className="text-zello-orange font-bold">{lvl.bestScore.toLocaleString()} pts</span>
                         </div>
                       )}
                     </div>
@@ -879,18 +875,18 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       {t('ecocycle.domainTitle', 'DOMÍNIO NO ECOCYCLE & STRINGS')}
                     </h4>
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      Desempenho Pedagógico por Fases e Armadilhas do Ecociclo
+                      {t('dashboard.ecocycleDomain.subtitle', { defaultValue: 'Desempenho Pedagógico por Fases e Armadilhas do Ecociclo' })}
                     </p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-cyan-300 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
-                  6 Fases & Armadilhas Mapeadas
+                  {t('dashboard.ecocycleDomain.badge', { defaultValue: '6 Fases & Armadilhas Mapeadas' })}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 {ecocycleDomainStats.map((phase) => (
-                  <div 
+                  <div
                     key={phase.concept}
                     className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 space-y-2.5 hover:border-white/15 transition-all"
                   >
@@ -903,17 +899,17 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       </span>
                     </div>
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full ${phase.color} rounded-full transition-all duration-500`} 
+                      <div
+                        className={`h-full ${phase.color} rounded-full transition-all duration-500`}
                         style={{ width: `${phase.accuracy}%` }}
                       />
                     </div>
                     <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium">
                       <span className="truncate max-w-[200px]" title={phase.structuresExample}>
-                        Exemplos: {phase.structuresExample}
+                        {t('dashboard.ecocycleDomain.examples', { defaultValue: 'Exemplos:' })} {phase.structuresExample}
                       </span>
                       <span className="font-mono text-[9px] text-slate-500 shrink-0 ml-2">
-                        {phase.totalQuestions > 0 ? `${phase.correctCount}/${phase.totalQuestions} acertos` : 'Padrão'}
+                        {phase.totalQuestions > 0 ? `${phase.correctCount}/${phase.totalQuestions} ${t('dashboard.ecocycleDomain.hitsSuffix', { defaultValue: 'acertos' })}` : t('dashboard.ecocycleDomain.standard', { defaultValue: 'Padrão' })}
                       </span>
                     </div>
                   </div>
@@ -935,10 +931,10 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="flex items-center justify-between">
                 <h4 className="text-lg font-black text-white italic uppercase tracking-tight flex items-center gap-2">
                   <Activity size={18} className="text-zello-orange" />
-                  Histórico Recente de Perguntas
+                  {t('dashboard.history.title', { defaultValue: 'Histórico Recente de Perguntas' })}
                 </h4>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  Últimos Desafios
+                  {t('dashboard.history.subtitle', { defaultValue: 'Últimos Desafios' })}
                 </span>
               </div>
 
@@ -949,9 +945,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                     className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-between gap-4 hover:border-white/15 transition-all"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                        item.isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
-                      }`}>
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${item.isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                        }`}>
                         {item.isCorrect ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
                       </div>
                       <div className="min-w-0">
@@ -960,9 +955,8 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className={`text-xs font-black block tabular-nums ${
-                        item.isCorrect ? 'text-emerald-400' : 'text-red-400'
-                      }`}>
+                      <span className={`text-xs font-black block tabular-nums ${item.isCorrect ? 'text-emerald-400' : 'text-red-400'
+                        }`}>
                         {item.changeText}
                       </span>
                       <span className="text-[9px] font-mono text-slate-500">{item.time}</span>
@@ -975,7 +969,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             {/* Mestre Nomura Advice customized by Energy */}
             <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-zello-orange/15 to-transparent border border-zello-orange/30 space-y-5 relative overflow-hidden flex flex-col justify-between">
               <Quote className="absolute top-6 right-6 text-zello-orange opacity-10 pointer-events-none" size={100} />
-              
+
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center border-2 border-emerald-500/30 overflow-hidden shrink-0">
@@ -983,26 +977,26 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   </div>
                   <div>
                     <span className="text-zello-orange text-[10px] font-black uppercase tracking-widest font-mono">
-                      Feedback do Mentor
+                      {t('dashboard.advice.feedbackLabel', { defaultValue: 'Feedback do Mentor' })}
                     </span>
-                    <h4 className="text-xl font-black text-white italic uppercase font-sans">Mestre Nomura Diz:</h4>
+                    <h4 className="text-xl font-black text-white italic uppercase font-sans">{t('dashboard.advice.title', { defaultValue: 'Mestre Nomura Diz:' })}</h4>
                   </div>
                 </div>
 
                 <p className="text-slate-300 italic font-medium leading-relaxed text-sm">
-                  "{energyConfig.advice} Lembre-se: nas Estruturas Libertadoras não existem respostas decoradas, mas sim a combinação certa entre objetivo, participantes e momento do Ecociclo."
+                  "{energyConfig.advice} {t('dashboard.advice.quoteSuffix', { defaultValue: 'Lembre-se: nas Estruturas Libertadoras não existem respostas decoradas, mas sim a combinação certa entre objetivo, participantes e momento do Ecociclo.' })}"
                 </p>
               </div>
 
               <div className="pt-4 border-t border-white/10 flex flex-wrap gap-2">
                 <span className="px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase text-zello-orange border border-zello-orange/30">
-                  Energia: {currentEnergy}%
+                  {t('dashboard.advice.energyLabel', { defaultValue: 'Energia:' })} {currentEnergy}%
                 </span>
                 <span className="px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase text-zello-orange border border-zello-orange/30">
-                  Precisão: {accuracyRate}%
+                  {t('dashboard.advice.precisionLabel', { defaultValue: 'Precisão:' })} {accuracyRate}%
                 </span>
                 <span className="px-3 py-1 bg-white/5 rounded-full text-[9px] font-black uppercase text-zello-orange border border-zello-orange/30">
-                  Ecocycle Planning
+                  {t('dashboard.advice.ecocycleLabel', { defaultValue: 'Ecocycle Planning' })}
                 </span>
               </div>
             </div>
@@ -1017,14 +1011,14 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 </div>
                 <div>
                   <h5 className="text-zello-orange text-xs font-black uppercase tracking-widest font-mono">
-                    Diagnóstico de Inteligência
+                    {t('dashboard.aiReport.diagnosticLabel', { defaultValue: 'Diagnóstico de Inteligência' })}
                   </h5>
                   <h3 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tight">
-                    Conselho Consultivo de IA & Quiz
+                    {t('dashboard.aiReport.title', { defaultValue: 'Conselho Consultivo de IA & Quiz' })}
                   </h3>
                 </div>
               </div>
-              
+
               {!relatorio && (
                 <button
                   onClick={handleGerarRelatorio}
@@ -1034,12 +1028,12 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   {isLoadingRelatorio ? (
                     <>
                       <Loader2 className="animate-spin" size={14} />
-                      Sincronizando Holocron...
+                      {t('dashboard.aiReport.generating', { defaultValue: 'Sincronizando Holocron...' })}
                     </>
                   ) : (
                     <>
                       <Zap size={14} className="fill-white" />
-                      Gerar Relatório Completo
+                      {t('dashboard.aiReport.generateBtn', { defaultValue: 'Gerar Relatório Completo' })}
                     </>
                   )}
                 </button>
@@ -1051,10 +1045,10 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 <Loader2 className="animate-spin text-zello-orange" size={40} />
                 <div className="text-center">
                   <p className="text-sm font-black uppercase text-slate-300 tracking-wider animate-pulse">
-                    Cruzando dados de energia vital, acertos e cartas libertadoras...
+                    {t('dashboard.aiReport.loadingTitle', { defaultValue: 'Cruzando dados de energia vital, acertos e cartas libertadoras...' })}
                   </p>
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                    Isso leva apenas alguns instantes
+                    {t('dashboard.aiReport.loadingSubtitle', { defaultValue: 'Isso leva apenas alguns instantes' })}
                   </p>
                 </div>
               </div>
@@ -1065,13 +1059,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 <AlertTriangle size={18} />
                 <span>{errRelatorio}</span>
                 <button onClick={handleGerarRelatorio} className="underline font-black uppercase ml-auto hover:text-white cursor-pointer">
-                  Tentar Novamente
+                  {t('dashboard.aiReport.retry', { defaultValue: 'Tentar Novamente' })}
                 </button>
               </div>
             )}
 
             {relatorio && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-6 pt-2 text-left"
@@ -1079,13 +1073,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 <div className="prose prose-invert max-w-none space-y-4 text-slate-300 text-sm leading-relaxed">
                   {renderMarkdown(relatorio)}
                 </div>
-                
+
                 <div className="pt-6 border-t border-white/10">
-                  <button 
+                  <button
                     onClick={() => setRelatorio(null)}
                     className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer"
                   >
-                    Gerar Novo Relatório
+                    {t('dashboard.aiReport.newReport', { defaultValue: 'Gerar Novo Relatório' })}
                   </button>
                 </div>
               </motion.div>
@@ -1093,8 +1087,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
 
             {!relatorio && !isLoadingRelatorio && (
               <p className="text-xs text-slate-400 font-medium">
-                Gere uma análise diagnóstica personalizada avaliando sua pontuação ({score.toLocaleString()} XP), 
-                seu nível atual de Energia da Força ({currentEnergy}%) e recomendações práticas para a facilitação com Ecocycle Planning.
+                {t('dashboard.aiReport.defaultDesc', { xp: score.toLocaleString(), energy: currentEnergy, defaultValue: `Gere uma análise diagnóstica personalizada avaliando sua pontuação (${score.toLocaleString()} XP), seu nível atual de Energia da Força (${currentEnergy}%) e recomendações práticas para a facilitação com Ecocycle Planning.` })}
               </p>
             )}
           </div>
@@ -1115,7 +1108,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3 hover:border-zello-orange/30 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Energia Média Coletiva
+                  {t('dashboard.team.energyAvgTitle', { defaultValue: 'Energia Média Coletiva' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-zello-orange/20 text-zello-orange flex items-center justify-center">
                   <Zap size={16} className="fill-zello-orange" />
@@ -1125,19 +1118,19 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 {collectiveEnergy}%
               </div>
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-zello-orange rounded-full" 
-                  style={{ width: `${collectiveEnergy}%` }} 
+                <div
+                  className="h-full bg-zello-orange rounded-full"
+                  style={{ width: `${collectiveEnergy}%` }}
                 />
               </div>
-              <p className="text-[10px] text-slate-400 font-semibold">Harmonia da turma nos Quizzes</p>
+              <p className="text-[10px] text-slate-400 font-semibold">{t('dashboard.team.energyAvgDesc', { defaultValue: 'Harmonia da turma nos Quizzes' })}</p>
             </div>
 
             {/* 2. Assertividade Coletiva */}
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3 hover:border-emerald-500/30 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Assertividade Coletiva
+                  {t('dashboard.team.accuracyTitle', { defaultValue: 'Assertividade Coletiva' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                   <Target size={16} />
@@ -1147,19 +1140,19 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 {teamAccuracy}%
               </div>
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-emerald-500 rounded-full" 
-                  style={{ width: `${teamAccuracy}%` }} 
+                <div
+                  className="h-full bg-emerald-500 rounded-full"
+                  style={{ width: `${teamAccuracy}%` }}
                 />
               </div>
-              <p className="text-[10px] text-slate-400 font-semibold">{teamTotalCorrect} acertos de {teamTotalAnswered} questões</p>
+              <p className="text-[10px] text-slate-400 font-semibold">{teamTotalCorrect} {t('dashboard.team.accuracyDesc', { total: teamTotalAnswered, defaultValue: `acertos de ${teamTotalAnswered} questões` })}</p>
             </div>
 
             {/* 3. Total de Questões Respondidas */}
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3 hover:border-blue-500/30 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Desafios Enfrentados
+                  {t('dashboard.team.challengesTitle', { defaultValue: 'Desafios Enfrentados' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
                   <BarChart2 size={16} />
@@ -1171,14 +1164,14 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-blue-500 rounded-full" style={{ width: '85%' }} />
               </div>
-              <p className="text-[10px] text-slate-400 font-semibold">Respostas submetidas no Quiz</p>
+              <p className="text-[10px] text-slate-400 font-semibold">{t('dashboard.team.challengesDesc', { defaultValue: 'Respostas submetidas no Quiz' })}</p>
             </div>
 
             {/* 4. Participantes Ativos */}
             <div className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-3 hover:border-amber-500/30 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Participantes Ativos
+                  {t('dashboard.team.activeParticipantsTitle', { defaultValue: 'Participantes Ativos' })}
                 </span>
                 <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
                   <Users size={16} />
@@ -1190,7 +1183,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-amber-500 rounded-full" style={{ width: '100%' }} />
               </div>
-              <p className="text-[10px] text-slate-400 font-semibold">Membros engajados no ecossistema</p>
+              <p className="text-[10px] text-slate-400 font-semibold">{t('dashboard.team.activeParticipantsDesc', { defaultValue: 'Membros engajados no ecossistema' })}</p>
             </div>
           </div>
 
@@ -1206,16 +1199,16 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   </div>
                   <div>
                     <h4 className="text-lg md:text-xl font-black text-white italic uppercase tracking-tight">
-                      Evolução da Energia Coletiva da Turma
+                      {t('dashboard.team.evolutionTitle', { defaultValue: 'Evolução da Energia Coletiva da Turma' })}
                     </h4>
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      Curva de assertividade e harmonia da turma ao longo dos testes
+                      {t('dashboard.team.evolutionDesc', { defaultValue: 'Curva de assertividade e harmonia da turma ao longo dos testes' })}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-xl border border-white/10 text-xs text-slate-300">
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  <span className="font-bold">Energia da Turma</span>
+                  <span className="font-bold">{t('dashboard.team.energyLegend', { defaultValue: 'Energia da Turma' })}</span>
                 </div>
               </div>
 
@@ -1224,30 +1217,30 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   <AreaChart data={teamEvolutionQuizData}>
                     <defs>
                       <linearGradient id={teamGradId} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.35}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.35} />
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="name" stroke="#64748b" fontSize={11} fontWeight="bold" />
                     <YAxis stroke="#64748b" fontSize={11} fontWeight="bold" domain={[0, 100]} tickFormatter={(v) => `${v}%`} />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '16px' }}
                       itemStyle={{ color: '#fff' }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="energy" 
-                      name="Energia Coletiva (%)"
-                      stroke="#3b82f6" 
-                      fillOpacity={1} 
-                      fill={`url(#${teamGradId})`} 
-                      strokeWidth={3} 
+                    <Area
+                      type="monotone"
+                      dataKey="energy"
+                      name={t('dashboard.team.energyName', { defaultValue: 'Energia Coletiva (%)' })}
+                      stroke="#3b82f6"
+                      fillOpacity={1}
+                      fill={`url(#${teamGradId})`}
+                      strokeWidth={3}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
               <p className="text-xs text-slate-400 font-medium text-center italic">
-                A turma demonstrou aceleração no domínio das Estruturas Libertadoras nas rodadas recentes.
+                {t('dashboard.team.evolutionFooter', { defaultValue: 'A turma demonstrou aceleração no domínio das Estruturas Libertadoras nas rodadas recentes.' })}
               </p>
             </div>
 
@@ -1259,19 +1252,19 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 </div>
                 <div>
                   <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                    Domínio por Nível
+                    {t('dashboard.team.masteryByLevel', { defaultValue: 'Domínio por Nível' })}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                    Taxa Coletiva de Acertos
+                    {t('dashboard.team.masteryByLevelDesc', { defaultValue: 'Taxa Coletiva de Acertos' })}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-5">
                 {(teamQuiz?.levelMastery || [
-                  { level: 'PADAWAN', label: 'Nível 1 • Padawan (Strings Simples)', accuracy: 89, completedUsers: 7, totalUsers: 8 },
-                  { level: 'JEDI', label: 'Nível 2 • Jedi (Encadeamentos)', accuracy: 76, completedUsers: 4, totalUsers: 8 },
-                  { level: 'YODA', label: 'Nível 3 • Yoda (Strings com Ecocycle)', accuracy: 64, completedUsers: 2, totalUsers: 8 }
+                  { level: 'PADAWAN', label: t('dashboard.team.levelMastery.padawan', { defaultValue: 'Nível 1 • Padawan (Strings Simples)' }), accuracy: 89, completedUsers: 7, totalUsers: 8 },
+                  { level: 'JEDI', label: t('dashboard.team.levelMastery.jedi', { defaultValue: 'Nível 2 • Jedi (Encadeamentos)' }), accuracy: 76, completedUsers: 4, totalUsers: 8 },
+                  { level: 'YODA', label: t('dashboard.team.levelMastery.yoda', { defaultValue: 'Nível 3 • Yoda (Strings com Ecocycle)' }), accuracy: 64, completedUsers: 2, totalUsers: 8 }
                 ]).map((lvl) => (
                   <div key={lvl.level} className="space-y-2">
                     <div className="flex justify-between items-end">
@@ -1283,13 +1276,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                       </span>
                     </div>
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-zello-orange to-amber-400 rounded-full" 
+                      <div
+                        className="h-full bg-gradient-to-r from-zello-orange to-amber-400 rounded-full"
                         style={{ width: `${lvl.accuracy}%` }}
                       />
                     </div>
                     <div className="flex justify-between text-[10px] text-slate-400 font-medium">
-                      <span>Participantes Concluintes:</span>
+                      <span>{t('dashboard.team.completingParticipants', { defaultValue: 'Participantes Concluintes:' })}</span>
                       <span className="text-white font-bold">{lvl.completedUsers} de {lvl.totalUsers}</span>
                     </div>
                   </div>
@@ -1312,15 +1305,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   </div>
                   <div>
                     <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                      Estruturas Mais Dominadas
+                      {t('dashboard.team.mostMasteredTitle', { defaultValue: 'Estruturas Mais Dominadas' })}
                     </h4>
                     <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest font-mono">
-                      Maior Índice de Acertos no Quiz
+                      {t('dashboard.team.mostMasteredSubtitle', { defaultValue: 'Maior Índice de Acertos no Quiz' })}
                     </p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 rounded-full">
-                  Alta Sintonia
+                  {t('dashboard.team.highSync', { defaultValue: 'Alta Sintonia' })}
                 </span>
               </div>
 
@@ -1343,7 +1336,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 ))}
               </div>
               <p className="text-xs text-slate-400 font-medium italic">
-                A turma compreende com rapidez o uso de TRIZ para destruir hábitos rígidos e 1-2-4-All para inclusão total.
+                {t('dashboard.team.mostMasteredFooter', { defaultValue: 'A turma compreende com rapidez o uso de TRIZ para destruir hábitos rígidos e 1-2-4-All para inclusão total.' })}
               </p>
             </div>
 
@@ -1356,15 +1349,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   </div>
                   <div>
                     <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                      Pontos de Atenção no Ecociclo
+                      {t('dashboard.team.attentionTitle', { defaultValue: 'Pontos de Atenção no Ecociclo' })}
                     </h4>
                     <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest font-mono">
-                      Estruturas com Maior Taxa de Erro
+                      {t('dashboard.team.attentionSubtitle', { defaultValue: 'Estruturas com Maior Taxa de Erro' })}
                     </p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-amber-400 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-full">
-                  Foco de Treino
+                  {t('dashboard.team.trainingFocus', { defaultValue: 'Foco de Treino' })}
                 </span>
               </div>
 
@@ -1387,7 +1380,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 ))}
               </div>
               <p className="text-xs text-slate-400 font-medium italic">
-                Recomendação para o facilitador: aprofundar na distinção entre a Armadilha da Rigidez e da Pobreza no Ecocycle Planning e nas escalas de Panarchy.
+                {t('dashboard.team.attentionFooter', { defaultValue: 'Recomendação para o facilitador: aprofundar na distinção entre a Armadilha da Rigidez e da Pobreza no Ecocycle Planning e nas escalas de Panarchy.' })}
               </p>
             </div>
           </div>
@@ -1401,15 +1394,15 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                 </div>
                 <div>
                   <h4 className="text-lg font-black text-white italic uppercase tracking-tight">
-                    Quadro de Guardiões do Quiz
+                    {t('dashboard.team.leaderboardTitle', { defaultValue: 'Quadro de Guardiões do Quiz' })}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                    Participantes mais sintonizados com a Força
+                    {t('dashboard.team.leaderboardSubtitle', { defaultValue: 'Participantes mais sintonizados com a Força' })}
                   </p>
                 </div>
               </div>
               <span className="text-xs text-slate-400 font-bold bg-white/5 px-3 py-1 rounded-full border border-white/10">
-                Top Participantes
+                {t('dashboard.team.topParticipants', { defaultValue: 'Top Participantes' })}
               </span>
             </div>
 
@@ -1417,11 +1410,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-white/10 text-slate-400 uppercase text-[9px] tracking-widest">
-                    <th className="pb-3 pl-2">Posição & Participante</th>
-                    <th className="pb-3 text-center">Energia da Força</th>
-                    <th className="pb-3 text-center">Precisão</th>
-                    <th className="pb-3 text-center">Acertos</th>
-                    <th className="pb-3 text-right pr-2">XP</th>
+                    <th className="pb-3 pl-2">{t('dashboard.team.tablePosition', { defaultValue: 'Posição & Participante' })}</th>
+                    <th className="pb-3 text-center">{t('dashboard.team.tableEnergy', { defaultValue: 'Energia da Força' })}</th>
+                    <th className="pb-3 text-center">{t('dashboard.team.tablePrecision', { defaultValue: 'Precisão' })}</th>
+                    <th className="pb-3 text-center">{t('dashboard.team.tableHits', { defaultValue: 'Acertos' })}</th>
+                    <th className="pb-3 text-right pr-2">{t('dashboard.team.tableXp', { defaultValue: 'XP' })}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -1433,12 +1426,11 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
                   ]).map((p, idx) => (
                     <tr key={`rank-user-${p.userId}-${idx}`} className="hover:bg-white/[0.02] transition-colors">
                       <td className="py-3 pl-2 font-bold text-white flex items-center gap-3">
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center font-black text-[10px] ${
-                          idx === 0 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center font-black text-[10px] ${idx === 0 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
                           idx === 1 ? 'bg-slate-300/20 text-slate-300 border border-slate-300/30' :
-                          idx === 2 ? 'bg-amber-700/20 text-amber-500 border border-amber-700/30' :
-                          'bg-white/5 text-slate-400'
-                        }`}>
+                            idx === 2 ? 'bg-amber-700/20 text-amber-500 border border-amber-700/30' :
+                              'bg-white/5 text-slate-400'
+                          }`}>
                           {idx + 1}
                         </span>
                         <span className="truncate max-w-[200px]">{p.email}</span>

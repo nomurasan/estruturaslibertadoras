@@ -233,6 +233,8 @@ export const resources = {
       },
       admin: {
         title: "Painel Administrativo",
+        headerTitlePrefix: "CONTROLE DE",
+        headerTitleHighlight: "ACESSO & USUÁRIOS",
         resetProgress: "ZERAR PROGRESSO",
         deleteUser: "EXCLUIR USUÁRIO",
         confirmReset:
@@ -295,20 +297,22 @@ export const resources = {
         emptyWhitelist: "Nenhuma credencial whitelist configurada",
       },
       dashboard: {
-        badge: "Central de Inteligência & Diagnóstico",
-        title1: "DASHBOARDS",
-        titleHighlight: "DO QUIZ & ENERGIA",
-        description:
-          "Acompanhe o pulso vital da Força: cada acerto eleva a energia (+15%) e cada erro a drena (-15%). Monitore sua precisão individual e a evolução coletiva da turma nas Estruturas Libertadoras.",
+        header: {
+          eyebrow: "Central de Inteligência & Diagnóstico",
+          title: "DASHBOARDS",
+          subtitle: "DO QUIZ & ENERGIA",
+          description:
+            "Acompanhe o pulso vital da Força: cada acerto eleva a energia (+15%) e cada erro a drena (-15%). Monitore sua precisão individual e a evolução coletiva da turma nas Estruturas Libertadoras.",
+        },
         mentor: {
           badge: "Jedi Mentor",
           name: "Mestre Nomura",
-          quote:
+          message:
             '"A Força oscila com suas decisões. Conheça sua energia para dominar o Ecocycle Planning."',
-          watchBtn: "Vídeo do Quiz",
+          videoButton: "Vídeo do Quiz",
         },
         tabParticipant: "Participante",
-        tabTeam: "Turma (Geral)",
+        tabTeam: "Grupo (Geral)",
         accumulatedXp: "XP ACUMULADO",
         rankLabel: "PATENTE",
         kyberCrystal: "Cristal Kyber Vital",
@@ -460,6 +464,11 @@ export const resources = {
           tablePrecision: "Precisão",
           tableHits: "Acertos",
           tableXp: "XP",
+          levelMastery: {
+            padawan: "Nível 1 • Padawan (Strings Simples)",
+            jedi: "Nível 2 • Jedi (Encadeamentos)",
+            yoda: "Nível 3 • Yoda (Strings com Ecocycle)",
+          },
         },
       },
       common: {
@@ -677,6 +686,8 @@ export const resources = {
       },
       admin: {
         title: "Panel Administrativo",
+        headerTitlePrefix: "CONTROL DE",
+        headerTitleHighlight: "ACCESO & USUARIOS",
         resetProgress: "REINICIAR PROGRESO",
         deleteUser: "ELIMINAR USUARIO",
         confirmReset:
@@ -739,17 +750,19 @@ export const resources = {
         emptyWhitelist: "Ninguna credencial whitelist configurada",
       },
       dashboard: {
-        badge: "Central de Inteligencia & Diagnóstico",
-        title1: "DASHBOARDS",
-        titleHighlight: "DEL QUIZ & ENERGÍA",
-        description:
-          "Sigue el pulso vital de la Fuerza: cada acierto eleva la energía (+15%) y cada error la drena (-15%). Monitorea tu precisión individual y la evolución colectiva del grupo en las Estructuras Liberadoras.",
+        header: {
+          eyebrow: "Central de Inteligencia & Diagnóstico",
+          title: "DASHBOARDS",
+          subtitle: "DEL QUIZ & ENERGÍA",
+          description:
+            "Sigue el pulso vital de la Fuerza: cada acierto eleva la energía (+15%) y cada error la drena (-15%). Monitorea tu precisión individual y la evolución colectiva del grupo en las Estructuras Liberadoras.",
+        },
         mentor: {
           badge: "Jedi Mentor",
           name: "Maestro Nomura",
-          quote:
+          message:
             '"La Fuerza oscila con tus decisiones. Conoce tu energía para dominar el Ecocycle Planning."',
-          watchBtn: "Video del Quiz",
+          videoButton: "Video del Quiz",
         },
         tabParticipant: "Participante",
         tabTeam: "Grupo (General)",
@@ -904,6 +917,11 @@ export const resources = {
           tablePrecision: "Precisión",
           tableHits: "Aciertos",
           tableXp: "XP",
+          levelMastery: {
+            padawan: "Nivel 1 • Padawan (Strings Simples)",
+            jedi: "Nivel 2 • Jedi (Encadenamientos)",
+            yoda: "Nivel 3 • Yoda (Strings con Ecocycle)",
+          },
         },
       },
       common: {
@@ -1115,6 +1133,8 @@ export const resources = {
       },
       admin: {
         title: "Admin Panel",
+        headerTitlePrefix: "ACCESS &",
+        headerTitleHighlight: "USER CONTROL",
         resetProgress: "RESET PROGRESS",
         deleteUser: "DELETE USER",
         confirmReset:
@@ -1176,20 +1196,22 @@ export const resources = {
         emptyWhitelist: "No whitelist credentials configured",
       },
       dashboard: {
-        badge: "Intelligence & Diagnostics Center",
-        title1: "DASHBOARDS",
-        titleHighlight: "QUIZ & ENERGY",
-        description:
-          "Track the vital pulse of the Force: every correct answer raises energy (+15%) and every mistake drains it (-15%). Monitor your individual accuracy and the collective evolution of the cohort in the Liberating Structures.",
+        header: {
+          eyebrow: "Intelligence & Diagnostics Center",
+          title: "DASHBOARDS",
+          subtitle: "QUIZ & ENERGY",
+          description:
+            "Track the vital pulse of the Force: every correct answer raises energy (+15%) and every mistake drains it (-15%). Monitor your individual accuracy and the collective evolution of the cohort in the Liberating Structures.",
+        },
         mentor: {
           badge: "Jedi Mentor",
           name: "Master Nomura",
-          quote:
+          message:
             '"The Force fluctuates with your decisions. Know your energy to master Ecocycle Planning."',
-          watchBtn: "Quiz Video",
+          videoButton: "Quiz Video",
         },
         tabParticipant: "Participant",
-        tabTeam: "Cohort (Overall)",
+        tabTeam: "Group (Overall)",
         accumulatedXp: "ACCUMULATED XP",
         rankLabel: "RANK",
         kyberCrystal: "Vital Kyber Crystal",
@@ -1341,6 +1363,11 @@ export const resources = {
           tablePrecision: "Accuracy",
           tableHits: "Hits",
           tableXp: "XP",
+          levelMastery: {
+            padawan: "Level 1 • Padawan (Simple Strings)",
+            jedi: "Level 2 • Jedi (Combinations)",
+            yoda: "Level 3 • Yoda (Strings with Ecocycle)",
+          },
         },
       },
       common: {
