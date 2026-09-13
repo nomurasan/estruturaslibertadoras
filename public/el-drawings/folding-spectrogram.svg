@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Folding Spectrogram: A spectrum axis folding in the middle, pairing two opposite perspectives -->
+  <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Spectrum line folding like a curve or book -->
+    <path d="M18 30 C30 30, 48 30, 48 65 C48 76, 52 76, 52 65 C52 30, 70 30, 82 30" stroke-width="4" />
+    
+    <!-- Spectrum endpoints / tick marks -->
+    <line x1="18" y1="22" x2="18" y2="38" stroke-width="3" />
+    <line x1="82" y1="22" x2="82" y2="38" stroke-width="3" />
+    
+    <!-- Person A (Left extreme) -->
+    <circle cx="28" cy="20" r="5" fill="#000000" />
+    <path d="M22 36 C22 28, 34 28, 34 36" stroke-width="3" />
+
+    <!-- Person B (Right extreme) -->
+    <circle cx="72" cy="20" r="5" fill="#000000" />
+    <path d="M66 36 C66 28, 78 28, 78 36" stroke-width="3" />
+
+    <!-- Fold / Meeting Point at Center -->
+    <circle cx="50" cy="74" r="4" fill="#000000" />
+    <!-- Fold arrow indicator -->
+    <path d="M38 48 C44 54, 48 58, 48 64" stroke-width="2.5" stroke-dasharray="3 3" />
+    <path d="M62 48 C56 54, 52 58, 52 64" stroke-width="2.5" stroke-dasharray="3 3" />
+    
+    <!-- Mutual Dialogue Spark at the fold -->
+    <path d="M42 84 L58 84" stroke-width="3.5" />
+    <circle cx="50" cy="84" r="1.5" fill="#000000" />
+  </g>
+</svg>

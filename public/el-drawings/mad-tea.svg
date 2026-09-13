@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Mad Tea | Calm Tea: Two energetic steaming tea cups in dynamic dance -->
+  <g fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left Cup (Mad Tea - dynamic tilt) -->
+    <path d="M18 45 C18 68, 38 72, 42 72 L32 72 C30 72, 26 78, 38 78 L22 78" />
+    <path d="M16 45 L44 45 C44 65, 26 65, 20 54" />
+    <path d="M44 49 C50 49, 52 57, 42 61" />
+    <!-- Steam Left (fast swirls) -->
+    <path d="M24 38 C22 30, 28 26, 25 18" />
+    <path d="M34 38 C32 28, 38 24, 36 16" />
+
+    <!-- Right Cup (Calm Tea - serene) -->
+    <path d="M56 48 L82 48 C82 66, 68 68, 62 68 L76 68 C74 72, 62 76, 78 76" />
+    <path d="M82 52 C88 52, 90 59, 80 63" />
+    <!-- Steam Right (harmonious wave) -->
+    <path d="M66 40 C68 32, 64 26, 67 18" />
+    <path d="M75 40 C77 30, 73 24, 76 16" />
+
+    <!-- Dialogue connection pulse -->
+    <path d="M44 42 C48 38, 52 38, 56 42" stroke-dasharray="2 3" stroke-width="2.5" />
+    <!-- Shared saucer line -->
+    <path d="M14 84 C38 88, 62 88, 86 84" stroke-width="4" />
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Talking with Pixies: A person listening as two dramatic opposing fairy/pixie viewpoints whisper -->
+  <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Center Person (Explorer listening attentively at crossroads) -->
+    <circle cx="50" cy="50" r="8" stroke-width="3.5" fill="#ffffff" />
+    <path d="M34 84 C34 68, 66 68, 66 84" stroke-width="3.5" />
+    <!-- Ears / listening emphasis -->
+    <path d="M41 48 C39 50, 39 52, 41 54" stroke-width="2" />
+    <path d="M59 48 C61 50, 61 52, 59 54" stroke-width="2" />
+
+    <!-- Left Pixie (Audacious / Optimistic / Fiery Pixie) -->
+    <!-- Head and wings -->
+    <circle cx="22" cy="30" r="4.5" fill="#000000" />
+    <path d="M22 35 L22 46 M16 40 L28 40" stroke-width="2.5" />
+    <!-- Pixie wings (fluttering) -->
+    <path d="M18 28 C8 20, 10 36, 18 32" stroke-width="2.5" />
+    <path d="M18 32 C10 36, 12 44, 20 38" stroke-width="2" />
+    <!-- Speech spark to ear -->
+    <path d="M26 36 C32 40, 36 44, 40 46" stroke-width="2" stroke-dasharray="2 3" />
+    <!-- Spark / star above -->
+    <path d="M22 18 L22 22 M20 20 L24 20" stroke-width="2" />
+
+    <!-- Right Pixie (Cautious / Prudent / Devil's advocate Skeptic Pixie) -->
+    <circle cx="78" cy="30" r="4.5" stroke-width="2.5" fill="#ffffff" />
+    <path d="M78 35 L78 46 M72 40 L84 40" stroke-width="2.5" />
+    <!-- Pointy wings / horns -->
+    <path d="M82 28 C92 20, 90 36, 82 32" stroke-width="2.5" />
+    <path d="M82 32 C90 36, 88 44, 80 38" stroke-width="2" />
+    <!-- Speech question spark to ear -->
+    <path d="M74 36 C68 40, 64 44, 60 46" stroke-width="2" stroke-dasharray="2 3" />
+    <!-- Caution mark above -->
+    <line x1="78" y1="18" x2="78" y2="23" stroke-width="2" />
+    <circle cx="78" cy="25" r="1" fill="#000000" />
+  </g>
+</svg>

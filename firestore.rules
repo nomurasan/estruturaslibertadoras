@@ -1,0 +1,134 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny Everything (Zero Trust Policy)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidEmailId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^.+@.+$');
+    }
+
+    // Secure field locks: evaluates if the field is omitted or matches existing state
+    function fieldHasNotChanged(fieldName) {
+      return !(fieldName in request.resource.data) || 
+             (fieldName in resource.data && request.resource.data[fieldName] == resource.data[fieldName]) ||
+             (!(fieldName in resource.data) && (
+               (fieldName == 'isAdmin' && request.resource.data[fieldName] == false) ||
+               (fieldName == 'role' && request.resource.data[fieldName] == 'user')
+             ));
+    }
+
+    // Fetch the user's document database record securely
+    function getUserRecord(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function hasUserRecord(uid) {
+      return exists(/databases/$(database)/documents/users/$(uid));
+    }
+
+    function isGlobalAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'nomura.eduardo@gmail.com') ||
+        (hasUserRecord(request.auth.uid) && getUserRecord(request.auth.uid).get('isAdmin', false) == true)
+      );
+    }
+
+    function isCompanyOwner(companyId) {
+      return isSignedIn() &&
+             exists(/databases/$(database)/documents/companies/$(companyId)) &&
+             get(/databases/$(database)/documents/companies/$(companyId)).data.get('ownerId', '') == request.auth.uid;
+    }
+
+    function isCompanyAdmin(companyId) {
+      return isSignedIn() && (
+        isGlobalAdmin() ||
+        isCompanyOwner(companyId) ||
+        (hasUserRecord(request.auth.uid) && 
+         getUserRecord(request.auth.uid).get('companyId', '') == companyId && 
+         getUserRecord(request.auth.uid).get('isAdmin', false) == true)
+      );
+    }
+
+    // User Profile Rules with Strict Privilege Guardrails
+    match /users/{userId} {
+      // Free and open access for authenticated users to view user profiles, scores, and leaderboards
+      allow get, list: if isSignedIn();
+
+      // Creation: Only the user can create their own profile. Pre-allocate safe default privileges (allow admin for bootstrapped email).
+      allow create: if isOwner(userId) &&
+                     (
+                       request.resource.data.get('isAdmin', false) == false ||
+                       (request.auth.token.email == 'nomura.eduardo@gmail.com' && request.resource.data.get('isAdmin', false) == true)
+                     );
+
+      // Update: User can update profile, but CANNOT self-elevate roles, permissions, or admin state
+      allow update: if isGlobalAdmin() || (
+        isOwner(userId) &&
+        fieldHasNotChanged('isAdmin') &&
+        fieldHasNotChanged('role') &&
+        fieldHasNotChanged('permissions')
+      );
+
+      // Deletion: Strictly administrators only
+      allow delete: if isGlobalAdmin();
+    }
+
+    // Companies Rules
+    match /companies/{companyId} {
+      // Get/List: Any signed-in user can retrieve or list companies (necessary for onboarding and group lists)
+      allow read: if isSignedIn();
+
+      // Create: Allow registered/authenticated users to create companies (setting themselves as owner) or global admins
+      allow create: if isSignedIn() && isValidId(companyId) && (
+        isGlobalAdmin() ||
+        request.resource.data.get('ownerId', '') == request.auth.uid
+      );
+
+      // Update/Delete: Only company owners or company/global admins can update or delete
+      allow update, delete: if isSignedIn() && (
+        isGlobalAdmin() ||
+        isCompanyOwner(companyId)
+      );
+
+      // Company Whitelists Subcollection
+      match /whitelist/{emailId} {
+        // Individual email lookup for registration matching
+        allow get: if isSignedIn() && isValidEmailId(emailId) && (
+          emailId == request.auth.token.email ||
+          isCompanyAdmin(companyId)
+        );
+        // Broad listing of whitelist emails
+        allow list: if isCompanyAdmin(companyId);
+        // Adding or removing emails from the whitelist
+        allow write: if isCompanyAdmin(companyId) && isValidEmailId(emailId);
+      }
+    }
+
+    // Rate Limiter tracking
+    match /rate_limits/{limitId} {
+      allow read, write: if true;
+    }
+
+    // AI Usage Auditing
+    match /ai_usage/{usageId} {
+      allow read: if isGlobalAdmin();
+      allow create: if true;
+    }
+  }
+}

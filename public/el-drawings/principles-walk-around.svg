@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Principles Walk-Around: Walking person visiting posters/pillars with core principles -->
+  <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Circular / walking journey track -->
+    <ellipse cx="50" cy="58" rx="36" ry="24" stroke-width="2.5" stroke-dasharray="4 5" />
+
+    <!-- Station 1 / Pillar top-left (Principle poster) -->
+    <rect x="18" y="16" width="16" height="22" rx="2" stroke-width="3" />
+    <line x1="22" y1="22" x2="30" y2="22" stroke-width="2" />
+    <line x1="22" y1="27" x2="28" y2="27" stroke-width="2" />
+
+    <!-- Station 2 / Pillar top-right (Principle poster) -->
+    <rect x="66" y="16" width="16" height="22" rx="2" stroke-width="3" />
+    <line x1="70" y1="22" x2="78" y2="22" stroke-width="2" />
+    <line x1="70" y1="27" x2="76" y2="27" stroke-width="2" />
+
+    <!-- Station 3 / Poster bottom-center -->
+    <rect x="42" y="68" width="16" height="20" rx="2" stroke-width="3" />
+    <line x1="46" y1="74" x2="54" y2="74" stroke-width="2" />
+
+    <!-- Walking person in center-right in motion -->
+    <circle cx="50" cy="38" r="4.5" fill="#000000" />
+    <path d="M50 43 L48 54 L44 64" stroke-width="3" />
+    <path d="M48 54 L54 63" stroke-width="3" />
+    <path d="M46 47 L40 50" stroke-width="2.5" />
+    <path d="M48 47 L56 45" stroke-width="2.5" />
+
+    <!-- Footstep indicators on the path -->
+    <ellipse cx="32" cy="54" rx="2" ry="1" fill="#000000" transform="rotate(-20 32 54)" />
+    <ellipse cx="38" cy="62" rx="2" ry="1" fill="#000000" transform="rotate(10 38 62)" />
+    <ellipse cx="64" cy="62" rx="2" ry="1" fill="#000000" transform="rotate(-15 64 62)" />
+    <ellipse cx="68" cy="52" rx="2" ry="1" fill="#000000" transform="rotate(25 68 52)" />
+  </g>
+</svg>

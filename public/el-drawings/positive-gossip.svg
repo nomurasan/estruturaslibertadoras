@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Positive Gossip: Two colleagues whispering praise about a third colleague who receives positive vibes -->
+  <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Person 1 (Speaker 1) -->
+    <circle cx="24" cy="46" r="6" stroke-width="3" />
+    <path d="M14 74 C14 62, 34 62, 34 74" stroke-width="3" />
+
+    <!-- Person 2 (Speaker 2 - leaning in happily) -->
+    <circle cx="48" cy="44" r="6" stroke-width="3" />
+    <path d="M38 74 C38 60, 58 60, 58 74" stroke-width="3" />
+
+    <!-- Speech bubble between 1 & 2 filled with positive stars / heart -->
+    <path d="M32 34 C32 24, 46 24, 48 30 C52 24, 64 26, 62 36 C60 40, 52 42, 44 42 L38 46 L38 40 C34 40, 32 38, 32 34 Z" stroke-width="2.5" />
+    <!-- Heart / spark inside bubble -->
+    <path d="M44 32 C42 30, 39 31, 40 34 C41 36, 44 38, 44 38 C44 38, 47 36, 48 34 C49 31, 46 30, 44 32 Z" fill="#000000" stroke="none" />
+
+    <!-- Person 3 (Turned with back listening to the praise, with star & radiating warmth) -->
+    <circle cx="80" cy="42" r="6" stroke-width="3" />
+    <!-- Back posture -->
+    <path d="M70 74 C70 60, 90 60, 90 74" stroke-width="3" />
+    <path d="M78 52 L82 52" stroke-width="2.5" /> <!-- nape / collar -->
+
+    <!-- Radiating star / aura above person 3 -->
+    <path d="M80 20 L80 26 M74 24 L86 24 M76 21 L84 27 M76 27 L84 21" stroke-width="2" />
+    
+    <!-- Waves of positive feedback reaching person 3 -->
+    <path d="M64 48 C68 46, 68 54, 72 52" stroke-width="2.5" stroke-dasharray="2 3" />
+  </g>
+</svg>
