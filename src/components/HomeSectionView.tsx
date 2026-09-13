@@ -40,7 +40,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
         </h1>
         
         <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-          Domine a arte de desenhar <span className="text-white font-bold">Strings com Estruturas Libertadoras</span> para destravar armadilhas (Pobreza e Rigidez), equilibrar portfólios e liderar renovações contínuas.
+          Domine a arte de desenhar <span className="text-white font-bold">Strings com Estruturas Libertadoras</span> para destravar armadilhas (Escassez e Rigidez), equilibrar portfólios e liderar renovações contínuas.
         </p>
 
         <div className="flex justify-center pt-2 w-full">

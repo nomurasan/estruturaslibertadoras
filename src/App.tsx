@@ -2030,18 +2030,18 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-zello-black/95 backdrop-blur-xl"
+              className="fixed inset-0 z-[200] flex items-center justify-center p-2.5 sm:p-4 bg-zello-black/95 backdrop-blur-xl"
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="w-full max-w-[800px] max-h-[88vh] bg-zello-black border-2 border-zello-orange rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(240,90,40,0.3)] flex flex-col"
+                className="w-full max-w-[800px] max-h-[94vh] sm:max-h-[88vh] bg-zello-black border-2 border-zello-orange rounded-3xl sm:rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(240,90,40,0.3)] flex flex-col"
               >
                 {/* Scrollable Container with sequential details */}
                 <div 
                   id="pwr-detail-scroll-container" 
-                  className="flex-1 p-6 md:p-10 overflow-y-auto custom-scrollbar space-y-8 scroll-smooth"
+                  className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar space-y-6 sm:space-y-8 scroll-smooth"
                 >
                   {/* Back Navigation Header */}
                   <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-2">
