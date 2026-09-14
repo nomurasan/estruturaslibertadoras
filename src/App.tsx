@@ -1983,8 +1983,8 @@ export default function App() {
                                             disabled={u.userId === user?.uid}
                                             title={u.isAdmin ? 'Remover Privilégios de Administrador' : 'Tornar Administrador'}
                                             className={`p-2 rounded-xl transition-all disabled:opacity-30 flex items-center justify-center border ${u.isAdmin
-                                                ? 'bg-zello-orange/10 hover:bg-zello-orange/20 text-zello-orange border-zello-orange/20'
-                                                : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border-white/5'
+                                              ? 'bg-zello-orange/10 hover:bg-zello-orange/20 text-zello-orange border-zello-orange/20'
+                                              : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border-white/5'
                                               }`}
                                           >
                                             <LucideIcons.Shield size={14} />
@@ -2688,9 +2688,9 @@ export default function App() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${customAlert.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
-                        customAlert.type === 'error' ? 'bg-red-500/10 text-red-500' :
-                          customAlert.type === 'confirm' ? 'bg-amber-500/10 text-amber-500' :
-                            'bg-zello-orange/10 text-zello-orange'
+                      customAlert.type === 'error' ? 'bg-red-500/10 text-red-500' :
+                        customAlert.type === 'confirm' ? 'bg-amber-500/10 text-amber-500' :
+                          'bg-zello-orange/10 text-zello-orange'
                       }`}>
                       {customAlert.type === 'success' ? <LucideIcons.CheckCircle size={24} /> :
                         customAlert.type === 'error' ? <LucideIcons.AlertTriangle size={24} /> :
