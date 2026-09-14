@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { AIPower } from '../data/powers';
+import { EL_CATEGORIES } from '../data/elCategories';
 import * as LucideIcons from 'lucide-react';
 
 interface SuperPowerCardProps {
@@ -57,6 +58,21 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
               <span className="text-xs sm:text-sm font-black text-white italic tracking-tighter leading-none">#{power.id.padStart(2, '0')}</span>
             </div>
           </div>
+
+          {/* Categories (Matchmaker taxonomy) — discreet badges, wraps on mobile */}
+          {power.categories && power.categories.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {power.categories.map((catKey) => (
+                <span
+                  key={`${power.id}-cat-${catKey}`}
+                  title={EL_CATEGORIES[catKey]?.label}
+                  className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-zello-orange/10 border border-zello-orange/20 text-zello-orange"
+                >
+                  {EL_CATEGORIES[catKey]?.shortLabel}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Official Drawing Canvas Showcase */}
           <div className="relative w-full h-32 sm:h-36 md:h-40 rounded-xl sm:rounded-2xl bg-gradient-to-b from-white to-slate-100 p-2.5 sm:p-3 flex items-center justify-center overflow-hidden border border-white/20 shadow-md group-hover:shadow-[0_0_25px_rgba(240,90,40,0.2)] group-hover:border-zello-orange/40 transition-all duration-300">

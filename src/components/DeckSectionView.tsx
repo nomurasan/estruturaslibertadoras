@@ -4,7 +4,8 @@ import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 import { AI_POWERS, AIPower } from '../data/powers';
-import { getLocalizedPower, CATEGORY_TRANSLATIONS } from '../data/powersLocalization';
+import { getLocalizedPower } from '../data/powersLocalization';
+import { EL_CATEGORY_ORDER, EL_CATEGORIES, ELCategory } from '../data/elCategories';
 import { SuperPowerCard } from './SuperPowerCard';
 
 interface DeckSectionViewProps {
@@ -14,60 +15,8 @@ interface DeckSectionViewProps {
   gameState: GameState;
 }
 
-interface CategoryConfig {
-  key: string;
-  label: string;
-  shortLabel: string;
-  icon: keyof typeof LucideIcons;
-  description: string;
-}
-
-const CATEGORY_ITEMS: CategoryConfig[] = [
-  {
-    key: 'Gerar Ideias & Inovação',
-    label: 'Gerar Ideias & Inovação',
-    shortLabel: 'Ideias & Inovação',
-    icon: 'Sparkles',
-    description: 'Estimular criatividade coletiva, romper bloqueios e engajar 100% dos participantes.'
-  },
-  {
-    key: 'Revelar & Diagnosticar',
-    label: 'Revelar & Diagnosticar',
-    shortLabel: 'Revelar & Diagnóstico',
-    icon: 'Search',
-    description: 'Expor tabus, diagnosticar impasses ocultos e mapear o espectro real de opiniões.'
-  },
-  {
-    key: 'Estratégia & Propósito',
-    label: 'Estratégia & Propósito',
-    shortLabel: 'Estratégia & Propósito',
-    icon: 'Target',
-    description: 'Alinhar propósito essencial, navegar incertezas críticas e desenhar governança viva.'
-  },
-  {
-    key: 'Colaboração & Ajuda',
-    label: 'Colaboração & Ajuda',
-    shortLabel: 'Colaboração & Ajuda',
-    icon: 'Users',
-    description: 'Consultoria mútua e franca entre pares, quebra de silos e fortalecimento de redes.'
-  },
-  {
-    key: 'Ação & Convergência',
-    label: 'Ação & Convergência',
-    shortLabel: 'Ação & Convergência',
-    icon: 'Zap',
-    description: 'Destravar autonomia imediata, prototipar soluções e filtrar regras mínimas.'
-  },
-  {
-    key: 'Conectar & Aquecer',
-    label: 'Conectar & Aquecer',
-    shortLabel: 'Conectar & Aquecer',
-    icon: 'Heart',
-    description: 'Aproximação humana rápida, segurança psicológica e abertura acolhedora.'
-  }
-];
-
 type EditionFilter = 'all' | 'classics' | 'fieldbook';
+type CategoryFilter = ELCategory | 'all';
 type ViewLayoutMode = 'grid' | 'list';
 
 export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
@@ -78,26 +27,26 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'pt';
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [selectedEdition, setSelectedEdition] = useState<EditionFilter>('all');
   const [isMobileCategoryOpen, setIsMobileCategoryOpen] = useState(false);
   const [viewLayout, setViewLayout] = useState<ViewLayoutMode>('grid');
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Localized categories list
+  // Localized categories list (new Deck/Matchmaker taxonomy)
   const localizedCategories = useMemo(() => {
-    return CATEGORY_ITEMS.map((cat) => {
-      const trans = CATEGORY_TRANSLATIONS[cat.key];
-      const label = !currentLang || currentLang.startsWith('pt')
-        ? cat.label
-        : currentLang.startsWith('es')
-        ? trans?.es || cat.label
-        : trans?.en || cat.label;
+    return EL_CATEGORY_ORDER.map((key) => {
+      const cfg = EL_CATEGORIES[key];
+      const isPt = !currentLang || currentLang.startsWith('pt');
+      const label = isPt ? cfg.label : currentLang.startsWith('es') ? cfg.es.label : cfg.en.label;
+      const shortLabel = isPt ? cfg.shortLabel : currentLang.startsWith('es') ? cfg.es.shortLabel : cfg.en.shortLabel;
       return {
-        ...cat,
+        key,
         label,
-        shortLabel: label
+        shortLabel,
+        icon: cfg.icon as keyof typeof LucideIcons,
+        description: cfg.description
       };
     });
   }, [currentLang]);
@@ -121,10 +70,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
       if (selectedEdition === 'classics' && (numId < 1 || numId > 33)) return false;
       if (selectedEdition === 'fieldbook' && (numId < 34 || numId > 43)) return false;
 
-      // Match Category
+      // Match Category (a EL pode pertencer a múltiplas categorias; nunca usar igualdade simples)
       if (selectedCategory !== 'all') {
         const rawPower = AI_POWERS.find((p) => p.id === power.id);
-        if (rawPower?.category !== selectedCategory && power.category !== selectedCategory) {
+        const categories = rawPower?.categories || power.categories || [];
+        if (!categories.includes(selectedCategory)) {
           return false;
         }
       }
@@ -142,8 +92,21 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
         const objectiveMatches = power.objective.toLowerCase().includes(query);
         const categoryMatches = power.category.toLowerCase().includes(query);
         const casesMatches = !!power.cases && power.cases.some((c) => c.toLowerCase().includes(query));
+        const categoriesLabelMatches = (power.categories || []).some((catKey) =>
+          EL_CATEGORIES[catKey]?.label.toLowerCase().includes(query)
+        );
+        const tagsMatches = !!power.tags && power.tags.some((tag) => tag.toLowerCase().includes(query));
 
-        if (!idMatches && !titleMatches && !engTitleMatches && !objectiveMatches && !categoryMatches && !casesMatches) {
+        if (
+          !idMatches &&
+          !titleMatches &&
+          !engTitleMatches &&
+          !objectiveMatches &&
+          !categoryMatches &&
+          !casesMatches &&
+          !categoriesLabelMatches &&
+          !tagsMatches
+        ) {
           return false;
         }
       }
@@ -382,6 +345,12 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">
               <LucideIcons.Filter size={13} className="text-zello-orange" />
               Filtrar por Propósito:
+              <span
+                title="Uma mesma Estrutura Libertadora pode atender a mais de uma finalidade. Por isso, uma carta pode aparecer em diferentes categorias."
+                className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-white/10 text-slate-400 cursor-help shrink-0"
+              >
+                <LucideIcons.Info size={10} />
+              </span>
             </div>
 
             {/* Current Active Indicator Label on Mobile */}
@@ -393,6 +362,9 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               <LucideIcons.ChevronRight size={12} />
             </button>
           </div>
+          <p className="text-[10px] text-slate-500 leading-relaxed">
+            Uma mesma Estrutura Libertadora pode atender a mais de uma finalidade. Por isso, uma carta pode aparecer em diferentes categorias.
+          </p>
 
           {/* DESKTOP / TABLET (>= 768px): WRAPPED CHIPS THAT NEVER OVERFLOW */}
           <div className="hidden md:flex flex-wrap items-center gap-1.5 lg:gap-2">
@@ -409,7 +381,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             </button>
 
             {localizedCategories.map((cat) => {
-              const count = AI_POWERS.filter((p) => p.category === cat.key).length;
+              const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
               const isSelected = selectedCategory === cat.key;
               const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -458,7 +430,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               </button>
 
               {localizedCategories.map((cat) => {
-                const count = AI_POWERS.filter((p) => p.category === cat.key).length;
+                const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
                 const isSelected = selectedCategory === cat.key;
                 const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -584,7 +556,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                 </button>
 
                 {localizedCategories.map((cat) => {
-                  const count = AI_POWERS.filter((p) => p.category === cat.key).length;
+                  const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
                   const isSelected = selectedCategory === cat.key;
                   const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -688,9 +660,15 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                       <span className="text-[10px] font-mono font-black text-zello-orange">
                         #{power.id.padStart(2, '0')}
                       </span>
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-                        • {power.category}
-                      </span>
+                      {power.categories.map((catKey) => (
+                        <span
+                          key={`list-cat-${power.id}-${catKey}`}
+                          title={EL_CATEGORIES[catKey]?.label}
+                          className="text-[8px] font-bold text-slate-400 uppercase tracking-wider bg-white/5 border border-white/10 rounded px-1.5 py-0.2"
+                        >
+                          {EL_CATEGORIES[catKey]?.shortLabel}
+                        </span>
+                      ))}
                       {isFieldbook && (
                         <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">
                           Fieldbook

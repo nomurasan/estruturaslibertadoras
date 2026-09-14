@@ -33,10 +33,18 @@ import {
   Layers,
   Brain
 } from 'lucide-react';
+import { ELCategory } from './elCategories';
 
 export interface AIPower {
   id: string;
+  /** @deprecated Classificação legada usada pelo Quiz. Não usar como taxonomia principal do Deck. */
   category: string;
+  // Taxonomia principal do Deck/Matchmaker — uma EL pode pertencer a mais de uma categoria.
+  categories: ELCategory[];
+  // Conceitos complementares (ex: "Conectar & Aquecer", "Abertura") preservados fora da taxonomia principal.
+  tags?: string[];
+  // true quando a categorização não pôde ser confirmada em fonte documentada do projeto.
+  needsCategoryReview?: boolean;
   title: string;
   englishTitle?: string;
   objective: string;
@@ -124,6 +132,36 @@ export const CATEGORIES: Record<string, { label: string; icon: any }> = {
   'Colaboração & Ajuda': { label: 'Colaboração & Ajuda', icon: Users },
   'Ação & Convergência': { label: 'Ação & Convergência', icon: Zap },
   'Conectar & Aquecer': { label: 'Conectar & Aquecer', icon: Heart }
+};
+
+// Migração determinística da taxonomia legada (acima) para a nova taxonomia principal do
+// Deck/Matchmaker (src/data/elCategories.ts). Reaproveita a classificação já existente no
+// projeto em vez de inventar associações novas por EL.
+const LEGACY_CATEGORY_TO_EL_CATEGORY: Record<string, ELCategory> = {
+  'Gerar Ideias & Inovação': 'REVELAR_GERAR_MELHORAR',
+  'Revelar & Diagnosticar': 'ANALISAR_DIAGNOSTICAR_REFLETIR',
+  'Estratégia & Propósito': 'DESENVOLVER_ESTRATEGIAS',
+  'Colaboração & Ajuda': 'DAR_PEDIR_AJUDA',
+  'Ação & Convergência': 'PLANEJAR',
+  // "Conectar & Aquecer" não tem correspondente direto nas 6 categorias principais; passa a ser
+  // tag complementar. A categoria abaixo segue o exemplo do próprio pedido (Impromptu Networking).
+  'Conectar & Aquecer': 'COMPARTILHAR_DISSEMINAR',
+};
+
+// Exceções revisadas manualmente por instrução explícita, com base no texto já cadastrado da EL
+// (ex: Troika Consulting gera "soluções inovadoras" para o cliente; 15% Solutions destrava o
+// primeiro passo de uma ideia). Categorias adicionais são somadas à categoria base da EL.
+const MANUAL_CATEGORY_ADDITIONS: Record<string, ELCategory[]> = {
+  '5': ['REVELAR_GERAR_MELHORAR'], // 15% Solutions
+  '6': ['REVELAR_GERAR_MELHORAR'], // Troika Consulting
+};
+
+// Tags complementares preservadas a partir da taxonomia legada "Conectar & Aquecer".
+const LEGACY_TAG_ADDITIONS: Record<string, string[]> = {
+  '2': ['conectar', 'aquecer', 'abertura'], // Impromptu Networking
+  '16': ['conectar', 'aquecer'], // Appreciative Interviews
+  '34': ['conectar', 'aquecer', 'abertura'], // Mad Tea | Calm Tea
+  '37': ['conectar', 'aquecer'], // Positive Gossip
 };
 
 const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
@@ -1317,10 +1355,21 @@ const RAW_AI_POWERS: Omit<AIPower, 'drawingUrl'>[] = [
 // Informação de referência da base de conhecimento do aplicativo
 export const CATALOG_REFERENCE_VERSION = 'Catálogo de Estruturas Libertadoras utilizado pelo protótipo: versão de referência setembro/2026.';
 
-export const AI_POWERS: AIPower[] = RAW_AI_POWERS.map((p) => ({
-  ...p,
-  drawingUrl: DRAWING_BY_ID[p.id] || '/el-drawings/1-2-4-all.svg',
-}));
+export const AI_POWERS: AIPower[] = RAW_AI_POWERS.map((p) => {
+  const baseCategory = LEGACY_CATEGORY_TO_EL_CATEGORY[p.category];
+  const extraCategories = MANUAL_CATEGORY_ADDITIONS[p.id] || [];
+  const categories = baseCategory
+    ? Array.from(new Set([baseCategory, ...extraCategories]))
+    : [];
+
+  return {
+    ...p,
+    drawingUrl: DRAWING_BY_ID[p.id] || '/el-drawings/1-2-4-all.svg',
+    categories,
+    tags: LEGACY_TAG_ADDITIONS[p.id],
+    needsCategoryReview: categories.length === 0 ? true : undefined,
+  };
+});
 
 // Alias export for explicit domain clarity
 export const LIBERATING_STRUCTURES = AI_POWERS;
