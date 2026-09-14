@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Schema for Company / Team
 export const CompanySchema = z.object({
   id: z.string(),
-  name: z.string().min(1, 'Nome da turma/empresa é obrigatório'),
+  name: z.string().min(1, "Nome da turma/empresa é obrigatório"),
   ownerId: z.string().optional(),
   createdAt: z.any().optional(),
   logoUrl: z.string().url().optional(),
@@ -13,7 +13,7 @@ export const CompanySchema = z.object({
 // Schema for User Profiles
 export const UserProfileSchema = z.object({
   userId: z.string(),
-  email: z.string().email('E-mail inválido'),
+  email: z.string().email("E-mail inválido"),
   xp: z.number().nonnegative(),
   unlockedPowers: z.array(z.string()),
   currentMissionIndex: z.number().nonnegative(),
@@ -23,10 +23,18 @@ export const UserProfileSchema = z.object({
   lastActive: z.any().optional(),
   createdAt: z.any().optional(),
   surveyCompleted: z.boolean().optional(),
-  skillsSurvey: z.record(z.string(), z.object({
-    current: z.number().min(1).max(5),
-    target: z.number().min(1).max(5),
-  })).optional(),
+  skillsSurvey: z
+    .record(
+      z.string(),
+      z.object({
+        current: z.number().min(1).max(5),
+        target: z.number().min(1).max(5),
+      }),
+    )
+    .optional(),
+  privacyConsent: z.boolean().optional(),
+  privacyConsentVersion: z.string().optional(),
+  privacyConsentAt: z.any().optional(),
 });
 
 // Schema for Missions
@@ -46,7 +54,7 @@ export const MissionSchema = z.object({
 export const QuizResponseSchema = z.object({
   userId: z.string(),
   challengeId: z.number(),
-  level: z.enum(['PADAWAN', 'JEDI', 'YODA']),
+  level: z.enum(["PADAWAN", "JEDI", "YODA"]),
   selectedPowerId: z.string(),
   isCorrect: z.boolean(),
   responseTimeSeconds: z.number().optional(),
@@ -59,8 +67,12 @@ export const AIEvaluationSchema = z.object({
   evaluationId: z.string().optional(),
   userId: z.string(),
   missionId: z.string(),
-  chosenSkills: z.array(z.string()).max(4, 'No máximo 4 habilidades permitidas'),
-  userDraftText: z.string().min(10, 'A justificativa do draft deve conter pelo menos 10 caracteres'),
+  chosenSkills: z
+    .array(z.string())
+    .max(4, "No máximo 4 habilidades permitidas"),
+  userDraftText: z
+    .string()
+    .min(10, "A justificativa do draft deve conter pelo menos 10 caracteres"),
   assistantResponse: z.string(),
   timestamp: z.any().optional(),
 });

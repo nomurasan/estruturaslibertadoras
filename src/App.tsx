@@ -27,9 +27,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, onSnapshot, setDoc, updateDoc, serverTimestamp, collection, query, where, getDocs, deleteDoc, getDoc } from 'firebase/firestore';
 import { AuthScreen } from './components/AuthScreen';
 import { OnboardingScreen } from './components/OnboardingScreen';
+import { PrivacyConsentScreen } from './components/PrivacyConsentScreen';
 import { signOut } from 'firebase/auth';
 import { DashboardSection } from './components/DashboardSection';
 import { getRank, RANKS, RankInfo, recordQuizAttemptScore, calculateTotalXP, normalizeUserProfile } from './utils/progression';
+import { PRIVACY_NOTICE_VERSION } from './constants';
 
 // Modular child components
 import { Navigation } from './components/Navigation';
@@ -180,7 +182,7 @@ export default function App() {
   };
 
   const currentRank = getRank(completedQuizzes);
-  
+
   const [teamStats, setTeamStats] = useState<TeamStats | null>(null);
 
   useEffect(() => {
@@ -227,13 +229,13 @@ export default function App() {
       : query(collection(db, 'users'));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const teamUsers = querySnapshot.docs.map(doc => 
+      const teamUsers = querySnapshot.docs.map(doc =>
         normalizeUserProfile({ ...doc.data(), userId: doc.id } as UserProfile) as UserProfile
       );
-      
+
       // Calculate Team Stats
       const totalXp = teamUsers.reduce((sum, u) => sum + (u.xp || 0), 0);
-      
+
       // Maturity Average
       const maturityMap: Record<string, number> = {
         'Produtividade': 0,
@@ -329,13 +331,13 @@ export default function App() {
         }
       });
 
-      const avgEnergy = activeQuizUsers > 0 
-        ? Math.round(collectiveTotalEnergy / activeQuizUsers) 
+      const avgEnergy = activeQuizUsers > 0
+        ? Math.round(collectiveTotalEnergy / activeQuizUsers)
         : 78;
 
       const totalIncorrect = Math.max(0, collectiveAnswered - collectiveCorrect);
-      const accuracyRate = collectiveAnswered > 0 
-        ? Math.round((collectiveCorrect / collectiveAnswered) * 100) 
+      const accuracyRate = collectiveAnswered > 0
+        ? Math.round((collectiveCorrect / collectiveAnswered) * 100)
         : 82;
 
       // Structure Performance from quiz data or curated baseline
@@ -416,7 +418,7 @@ export default function App() {
       setTeamStats({
         totalXp,
         teamMaturity,
-        teamSkillDist: [], 
+        teamSkillDist: [],
         teamEvolution,
         topSkills,
         quizStats: teamQuizStats
@@ -442,7 +444,7 @@ export default function App() {
   // Sync All Users (Global List for admin)
   useEffect(() => {
     if (gameState !== 'admin') return;
-    
+
     // In admin mode, we can try to load all users
     // Security rules will filter based on permissions
     const q = query(collection(db, 'users'));
@@ -558,7 +560,7 @@ export default function App() {
           if (user.email === 'nomura.eduardo@gmail.com') {
             data.isAdmin = true;
           }
-          
+
           const normalized = normalizeUserProfile(data);
           setUserProfile(normalized);
           setScore(normalized.xp || 0);
@@ -599,20 +601,20 @@ export default function App() {
     const checkAutoJoin = async () => {
       const email = user.email.toLowerCase();
       console.log("Checking if user email is whitelisted in any company:", email);
-      
+
       for (const comp of availableCompanies) {
         try {
           const whitelistDocRef = doc(db, 'companies', comp.id, 'whitelist', email);
           const whitelistSnap = await getDoc(whitelistDocRef);
-          
+
           if (whitelistSnap.exists()) {
             console.log(`Auto-matching found! Whitelisted in company: ${comp.name} (${comp.id})`);
-            
+
             const userRef = doc(db, 'users', user.uid);
             await updateDoc(userRef, {
               companyId: comp.id
             });
-            
+
             triggerAlert(
               `Identificamos que seu e-mail pertence à whitelist da empresa "${comp.name}". O vínculo foi realizado automaticamente!`,
               'Vínculo de Turma Automático',
@@ -643,9 +645,9 @@ export default function App() {
       // Use Firestore auto-generated ID for better compatibility
       const companyRef = doc(collection(db, 'companies'));
       const companyId = companyRef.id;
-      
+
       const cleanAccessCode = newCompanyAccessCode.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-      
+
       await setDoc(companyRef, {
         id: companyId,
         name: newCompanyName.trim(),
@@ -653,12 +655,12 @@ export default function App() {
         ownerId: user.uid,
         createdAt: serverTimestamp()
       });
-      
+
       // Removed: Auto-join the creator as admin of this new company
       // The user must join manually and be promoted by a global admin if needed, 
       // or join if they have the right permission flow.
       // For now, we just join them as a member (optional) or just let them select.
-      
+
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         companyId: companyId,
@@ -669,7 +671,7 @@ export default function App() {
       setNewCompanyAccessCode('');
       setIsCreatingNewCompany(false);
       setAdminShowAllCompanies(false);
-      
+
       triggerAlert(`Organização "${newCompanyName}" registrada com sucesso com o código "${cleanAccessCode}"!\n\nSelecione a turma para começar.`, 'Sucesso', 'success');
     } catch (error: any) {
       console.error('Error creating company:', error);
@@ -685,7 +687,7 @@ export default function App() {
     try {
       const companyRef = doc(db, 'companies', editingCompany.id);
       const cleanAccessCode = (editingCompany.accessCode || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-      
+
       await updateDoc(companyRef, {
         name: editingCompany.name,
         accessCode: cleanAccessCode
@@ -708,22 +710,22 @@ export default function App() {
             console.error("No companyId provided to delete");
             return;
           }
-          
+
           // 1. Clean up user profile link FIRST if matching, to close active listeners on subcollections and prevent permission errors
           if (userProfile?.companyId === companyId && user?.uid) {
             console.log("Cleaning up current user's company link first");
             const userRef = doc(db, 'users', user.uid);
-            await updateDoc(userRef, { 
-              companyId: null, 
+            await updateDoc(userRef, {
+              companyId: null,
               isAdmin: false,
               surveyCompleted: false // Let them onboarding again cleanly
             });
           }
-          
+
           // 2. Perform the deletion on the database
           await deleteDoc(doc(db, 'companies', companyId));
           console.log("Delete call successful");
-          
+
           triggerAlert('Registro excluído com sucesso do banco de dados.', 'Sucesso', 'success');
         } catch (error: any) {
           console.error('Error deleting company:', error);
@@ -765,16 +767,16 @@ export default function App() {
   const handleBulkWhitelist = async () => {
     const companyId = userProfile?.companyId;
     if (!bulkEmailText.trim() || !companyId) return;
-    
+
     setIsBulkLoading(true);
     try {
       const emails = bulkEmailText
         .split(/[\n,;]/)
         .map(e => e.trim().toLowerCase())
         .filter(e => e.includes('@'));
-      
+
       const uniqueEmails = [...new Set(emails)];
-      
+
       for (const email of uniqueEmails) {
         const whitelistRef = doc(db, `companies/${companyId}/whitelist/${email}`);
         await setDoc(whitelistRef, {
@@ -783,7 +785,7 @@ export default function App() {
           addedAt: serverTimestamp()
         });
       }
-      
+
       setBulkEmailText('');
       setIsBulkLoading(false);
       alert(`${uniqueEmails.length} e-mails adicionados com sucesso!`);
@@ -826,7 +828,7 @@ export default function App() {
       return;
     }
     if (targetUserId === user?.uid) return;
-    
+
     triggerConfirm(
       'Tem certeza que deseja EXCLUIR permanentemente este usuário da plataforma? Esta ação removerá sua conta e todo o progresso, e não pode ser desfeita.',
       async () => {
@@ -906,38 +908,38 @@ export default function App() {
 
   const handleCleanupUsers = async () => {
     if (!userProfile?.companyId || !userProfile.isAdmin) return;
-    
+
     try {
       const q = query(collection(db, 'users'), where('companyId', '==', userProfile.companyId));
       const querySnapshot = await getDocs(q);
       const now = Date.now();
       const twoHoursMs = 2 * 60 * 60 * 1000;
-      
+
       const unauthorized = querySnapshot.docs.filter(docSnap => {
         const data = docSnap.data() as UserProfile;
         if (data.isAdmin) return false;
-        
+
         const isWhitelisted = whitelist.includes(data.email?.toLowerCase());
         const createdAt = data.createdAt?.toDate?.()?.getTime() || 0;
         const isOldEnough = (now - createdAt) > twoHoursMs;
-        
+
         return !isWhitelisted && isOldEnough;
       });
-      
+
       if (unauthorized.length === 0) {
         alert("Nenhum usuário não autorizado encontrado para limpeza.");
         return;
       }
-      
+
       if (!confirm(`Foram encontrados ${unauthorized.length} usuários não autorizados (fora da lista por mais de 2h). Deseja removê-los?`)) {
         return;
       }
-      
+
       for (const docSnap of unauthorized) {
         // Delete from Firestore
         await deleteDoc(docSnap.ref);
       }
-      
+
       alert(`${unauthorized.length} usuários removidos com sucesso.`);
     } catch (error) {
       console.error('Error during cleanup:', error);
@@ -947,12 +949,12 @@ export default function App() {
   const handleJoinCompany = async (targetCompanyId?: string) => {
     const cid = targetCompanyId || companyIdToJoin;
     if (!cid || !cid.trim() || !user) return;
-    
+
     setIsJoining(true);
     try {
       const companyRef = doc(db, 'companies', cid);
       const companySnap = await getDoc(companyRef);
-      
+
       if (!companySnap.exists()) {
         triggerAlert("ID de empresa/turma não encontrado.", "Erro", "error");
         return;
@@ -969,7 +971,7 @@ export default function App() {
       if (gameState !== 'admin') {
         setGameState('home');
       }
-      
+
       setCompanyIdToJoin('');
     } catch (error: any) {
       console.error('Error joining company:', error);
@@ -1002,7 +1004,7 @@ export default function App() {
     const available = ALL_CHALLENGES.filter(c => c.level === level);
     const shuffled = [...available].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, questionCount);
-    
+
     setLevelChallenges(selected);
     setSelectedLevel(level);
     setCurrentChallengeIndex(0);
@@ -1042,8 +1044,8 @@ export default function App() {
 
     // Filter selected skills names for feedback
     const selectedPowersList = AI_POWERS.filter(p => selectedSkillIds.includes(Number(p.id)));
-    const selectedAnswerTitle = selectedPowersList.length > 0 
-      ? selectedPowersList.map(p => p.title).join(', ') 
+    const selectedAnswerTitle = selectedPowersList.length > 0
+      ? selectedPowersList.map(p => p.title).join(', ')
       : 'Nenhuma/Tempo Esgotado';
 
     // Call AI Feedback API
@@ -1052,7 +1054,7 @@ export default function App() {
       const idToken = auth.currentUser ? await auth.currentUser.getIdToken() : '';
       const response = await fetch('/api/quiz-feedback', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': idToken ? `Bearer ${idToken}` : '',
         },
@@ -1077,7 +1079,7 @@ export default function App() {
     } finally {
       setIsAiFeedbackLoading(false);
     }
-    
+
     // Sync points and unlocks
     let newUnlockedList = [...unlockedPowers];
 
@@ -1192,7 +1194,7 @@ export default function App() {
       const totalQuestions = levelChallenges.length;
       let updatedQuizzes = [...completedQuizzes];
       const is100Percent = totalCorrect === totalQuestions && totalQuestions > 0;
-      
+
       if (is100Percent && selectedLevel) {
         if (!updatedQuizzes.includes(selectedLevel)) {
           updatedQuizzes.push(selectedLevel);
@@ -1224,7 +1226,7 @@ export default function App() {
 
   const restartGame = async () => {
     if (!user) return;
-    
+
     setScore(0);
     setCurrentChallengeIndex(0);
     setIsAnswered(false);
@@ -1260,6 +1262,23 @@ export default function App() {
     return <AuthScreen />;
   }
 
+  if (userProfile && (!userProfile.privacyConsent || userProfile.privacyConsentVersion !== PRIVACY_NOTICE_VERSION)) {
+    return (
+      <PrivacyConsentScreen
+        version={PRIVACY_NOTICE_VERSION}
+        onAccept={async () => {
+          const userDocRef = doc(db, 'users', user.uid);
+          await updateDoc(userDocRef, {
+            privacyConsent: true,
+            privacyConsentVersion: PRIVACY_NOTICE_VERSION,
+            privacyConsentAt: serverTimestamp(),
+          });
+        }}
+        onDecline={() => signOut(auth)}
+      />
+    );
+  }
+
   if (!userProfile) {
     return (
       <div className="min-h-screen bg-zello-black flex flex-col items-center justify-center p-6 gap-6 text-center">
@@ -1289,100 +1308,100 @@ export default function App() {
   return (
     <AppStateProvider gameState={gameState}>
       <div className="min-h-screen bg-zello-black text-slate-100 flex flex-col relative overflow-hidden font-sans border-t-8 md:border-8 border-zello-black/20">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-zello-orange/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+        {/* Background Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-zello-orange/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
-      {/* Navigation */}
-      <Navigation
-        gameState={gameState}
-        setGameState={setGameState}
-        score={score}
-        completedQuizzes={userProfile?.completedQuizzes || []}
-        currentCompany={currentCompany}
-        isAdmin={!!userProfile?.isAdmin}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-        onLogout={() => signOut(auth)}
-      />
+        {/* Navigation */}
+        <Navigation
+          gameState={gameState}
+          setGameState={setGameState}
+          score={score}
+          completedQuizzes={userProfile?.completedQuizzes || []}
+          currentCompany={currentCompany}
+          isAdmin={!!userProfile?.isAdmin}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+          onLogout={() => signOut(auth)}
+        />
 
-      {/* Main Content */}
-      <main className="flex-1 relative z-10 overflow-y-auto custom-scrollbar pb-32">
-        <AnimatePresence mode="wait">
-          {gameState === 'admin' && (
-            <motion.div
-              key="admin-panel"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="min-h-full p-8 max-w-6xl mx-auto space-y-12"
-            >
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-[10px] font-black uppercase tracking-widest">
-                    <Shield size={12} className="fill-zello-orange" />
-                    Portal do Administrador
+        {/* Main Content */}
+        <main className="flex-1 relative z-10 overflow-y-auto custom-scrollbar pb-32">
+          <AnimatePresence mode="wait">
+            {gameState === 'admin' && (
+              <motion.div
+                key="admin-panel"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="min-h-full p-8 max-w-6xl mx-auto space-y-12"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-[10px] font-black uppercase tracking-widest">
+                      <Shield size={12} className="fill-zello-orange" />
+                      Portal do Administrador
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none text-white uppercase italic">
+                      {userProfile?.companyId && !adminShowAllCompanies && !editingCompany ? 'GESTÃO DA' : 'CONTROLE DE'} <span className="text-zello-orange font-black">{userProfile?.companyId && !adminShowAllCompanies && !editingCompany ? 'TURMA' : 'ACESSO & USUÁRIOS'}</span>
+                    </h1>
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-black tracking-tighter leading-none text-white uppercase italic">
-                    {userProfile?.companyId && !adminShowAllCompanies && !editingCompany ? 'GESTÃO DA' : 'CONTROLE DE'} <span className="text-zello-orange font-black">{userProfile?.companyId && !adminShowAllCompanies && !editingCompany ? 'TURMA' : 'ACESSO & USUÁRIOS'}</span>
-                  </h1>
-                </div>
-                <div className="flex items-center gap-3">
-                  {userProfile?.companyId && !adminShowAllCompanies && (
+                  <div className="flex items-center gap-3">
+                    {userProfile?.companyId && !adminShowAllCompanies && (
+                      <button
+                        onClick={() => setAdminShowAllCompanies(true)}
+                        className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-slate-400 uppercase hover:text-white transition-all flex items-center gap-2"
+                      >
+                        <LucideIcons.List size={14} />
+                        Ver Todas Empresas
+                      </button>
+                    )}
+                    {userProfile?.companyId && adminShowAllCompanies && (
+                      <button
+                        onClick={() => setAdminShowAllCompanies(false)}
+                        className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-slate-400 uppercase hover:text-white transition-all flex items-center gap-2"
+                      >
+                        <LucideIcons.Building size={14} />
+                        Gerenciar Minha Empresa
+                      </button>
+                    )}
                     <button
-                      onClick={() => setAdminShowAllCompanies(true)}
-                      className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-slate-400 uppercase hover:text-white transition-all flex items-center gap-2"
+                      onClick={() => {
+                        if (adminShowAllCompanies && userProfile?.companyId) {
+                          setAdminShowAllCompanies(false);
+                        } else {
+                          setGameState('home');
+                        }
+                      }}
+                      className="p-3 bg-white/5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all"
                     >
-                      <LucideIcons.List size={14} />
-                      Ver Todas Empresas
+                      <LucideIcons.ArrowLeft size={20} />
                     </button>
-                  )}
-                  {userProfile?.companyId && adminShowAllCompanies && (
-                    <button
-                      onClick={() => setAdminShowAllCompanies(false)}
-                      className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-slate-400 uppercase hover:text-white transition-all flex items-center gap-2"
-                    >
-                      <LucideIcons.Building size={14} />
-                      Gerenciar Minha Empresa
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      if (adminShowAllCompanies && userProfile?.companyId) {
-                        setAdminShowAllCompanies(false);
-                      } else {
-                        setGameState('home');
-                      }
-                    }}
-                    className="p-3 bg-white/5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all"
-                  >
-                    <LucideIcons.ArrowLeft size={20} />
-                  </button>
+                  </div>
                 </div>
-              </div>
 
-              {editingCompany ? (
-                <div key="company-form-block-active" className="space-y-8">
-                  <div className="max-w-xl mx-auto p-10 bg-white/5 border border-zello-orange/30 rounded-[40px] space-y-8 text-left shadow-[0_0_50px_rgba(240,90,40,0.1)] relative overflow-hidden">
+                {editingCompany ? (
+                  <div key="company-form-block-active" className="space-y-8">
+                    <div className="max-w-xl mx-auto p-10 bg-white/5 border border-zello-orange/30 rounded-[40px] space-y-8 text-left shadow-[0_0_50px_rgba(240,90,40,0.1)] relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
                       <div className="flex items-center justify-between">
                         <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">
                           Editar Dados da Empresa
                         </h3>
-                        <button 
+                        <button
                           onClick={() => { setEditingCompany(null); }}
                           className="p-2 text-slate-500 hover:text-white transition-colors"
                         >
                           <X size={24} />
                         </button>
                       </div>
-                      
+
                       <div className="space-y-6">
                         <div className="space-y-3">
                           <label className="text-xs font-black text-zello-orange uppercase tracking-[.2em] px-1">Nome da Organização ou Turma</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             autoFocus
                             value={editingCompany ? editingCompany.name : newCompanyName}
-                            onChange={(e) => editingCompany ? setEditingCompany({...editingCompany, name: e.target.value}) : setNewCompanyName(e.target.value)}
+                            onChange={(e) => editingCompany ? setEditingCompany({ ...editingCompany, name: e.target.value }) : setNewCompanyName(e.target.value)}
                             placeholder="Ex: Zello AI Academy"
                             className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white text-lg placeholder:text-slate-600 focus:border-zello-orange focus:bg-white/10 outline-none transition-all"
                           />
@@ -1390,13 +1409,13 @@ export default function App() {
 
                         <div className="space-y-3">
                           <label className="text-xs font-black text-zello-orange uppercase tracking-[.2em] px-1">Código de Acesso Alfanumérico</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             value={editingCompany ? (editingCompany.accessCode || '') : newCompanyAccessCode}
                             onChange={(e) => {
                               const cleanVal = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
                               if (editingCompany) {
-                                setEditingCompany({...editingCompany, accessCode: cleanVal});
+                                setEditingCompany({ ...editingCompany, accessCode: cleanVal });
                               } else {
                                 setNewCompanyAccessCode(cleanVal);
                               }
@@ -1431,9 +1450,9 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-              ) : (!userProfile?.companyId || adminShowAllCompanies) ? (
-                <div key="company-setup-manager-v2" className="space-y-8">
-                  <div className="space-y-8">
+                ) : (!userProfile?.companyId || adminShowAllCompanies) ? (
+                  <div key="company-setup-manager-v2" className="space-y-8">
+                    <div className="space-y-8">
                       {availableCompanies.length > 0 && (
                         <div className="space-y-6">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/5 p-6 rounded-[32px] border border-white/10">
@@ -1445,8 +1464,8 @@ export default function App() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {availableCompanies.map((comp, idx) => (
-                              <div 
-                                key={`company-listing-card-v6-${comp.id}-${idx}-${availableCompanies.length}-${comp.name.substring(0,3)}`}
+                              <div
+                                key={`company-listing-card-v6-${comp.id}-${idx}-${availableCompanies.length}-${comp.name.substring(0, 3)}`}
                                 className="group relative p-8 bg-white/5 border border-white/10 hover:border-zello-orange/50 rounded-[40px] transition-all duration-500 overflow-hidden flex flex-col justify-between min-h-[280px]"
                               >
                                 <div className="relative z-10 space-y-6">
@@ -1474,7 +1493,7 @@ export default function App() {
                                       </button>
                                     </div>
                                   </div>
-                                  
+
                                   <div className="space-y-2">
                                     <h3 className="text-2xl font-black text-white italic uppercase tracking-tight group-hover:text-zello-orange transition-colors">{comp.name}</h3>
                                     <div className="flex flex-wrap items-center gap-2">
@@ -1498,7 +1517,7 @@ export default function App() {
                                   Selecionar esta Turma
                                   <ChevronRight size={14} />
                                 </button>
-                                
+
                                 <LucideIcons.Building className="absolute -bottom-4 -right-4 text-white opacity-[0.02] group-hover:opacity-[0.05] transition-opacity pointer-events-none" size={200} />
                               </div>
                             ))}
@@ -1511,13 +1530,13 @@ export default function App() {
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                           <div className="space-y-2">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
-                               <LucideIcons.Users size={12} />
-                               Diretório Global
+                              <LucideIcons.Users size={12} />
+                              Diretório Global
                             </div>
                             <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter leading-none">TODOS OS <span className="text-zello-orange">PARTICIPANTES</span></h2>
                             <p className="text-sm text-slate-500 font-medium">Lista de todos os usuários que acessaram a plataforma e seus níveis de acesso.</p>
                           </div>
-                          
+
                           <div className="flex gap-4">
                             <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
                               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">TOTAL DE USUÁRIOS</span>
@@ -1533,82 +1552,94 @@ export default function App() {
                         <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden backdrop-blur-md">
                           {/* Desktop Table View */}
                           <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar">
-                            <table className="w-full text-left">
+                            <table className="w-full text-left table-fixed min-w-[900px]">
+                              <colgroup>
+                                <col className="w-[30%]" />
+                                <col className="w-[12%]" />
+                                <col className="w-[10%]" />
+                                <col className="w-[16%]" />
+                                <col className="w-[14%]" />
+                                <col className="w-[18%]" />
+                              </colgroup>
                               <thead className="bg-white/5 sticky top-0 z-20 backdrop-blur-md">
                                 <tr key="global-users-header-row-st">
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest">Participante</th>
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">XP Acumulado</th>
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Rank</th>
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Empresa / Turma</th>
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Atributo</th>
-                                  <th className="p-8 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Participante</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">XP Acumulado</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Rank</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Empresa / Turma</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Atributo</th>
+                                  <th className="p-4 lg:p-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-white/5">
                                 {allUsers.map((u, idx) => (
                                   <tr key={`global-list-usr-row-v6-${u.userId || 'u'}-${u.email || 'e'}-${idx}-${allUsers.length}`} className="hover:bg-white/5 transition-colors group/row">
-                                    <td className="p-8">
-                                      <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-lg shadow-inner">
+                                    <td className="p-4 lg:p-5">
+                                      <div className="flex items-center gap-3 min-w-0">
+                                        <div className="w-10 h-10 shrink-0 rounded-2xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-lg shadow-inner">
                                           {u.email?.[0].toUpperCase() || '?'}
                                         </div>
-                                        <div className="flex flex-col">
-                                          <span className="text-base font-bold text-white group-hover/row:text-zello-orange transition-colors">{u.email}</span>
-                                          <span className="text-[10px] text-slate-500 font-mono tracking-wider opacity-60">ID: {u.userId}</span>
+                                        <div className="flex flex-col min-w-0">
+                                          <span className="text-sm lg:text-base font-bold text-white group-hover/row:text-zello-orange transition-colors truncate" title={u.email}>{u.email}</span>
+                                          <span className="text-[10px] text-slate-500 font-mono tracking-wider opacity-60 truncate">ID: {u.userId}</span>
                                         </div>
                                       </div>
                                     </td>
-                                    <td className="p-8 text-center">
-                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-zello-orange/10 rounded-xl text-zello-orange text-sm font-black tabular-nums italic">
+                                    <td className="p-4 lg:p-5 text-center">
+                                      <div className="inline-flex items-center gap-1 px-3 py-2 bg-zello-orange/10 rounded-xl text-zello-orange text-xs lg:text-sm font-black tabular-nums italic">
                                         {u.xp || 0} XP
                                       </div>
                                     </td>
-                                    <td className="p-8 text-center">
+                                    <td className="p-4 lg:p-5 text-center">
                                       <div className={`text-xs font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
                                         {getRank(u.completedQuizzes).name}
                                       </div>
                                     </td>
-                                    <td className="p-8 text-center">
-                                      <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                    <td className="p-4 lg:p-5 text-center">
+                                      <div className="text-xs font-bold text-slate-400 uppercase tracking-widest truncate">
                                         {availableCompanies.find(c => c.id === u.companyId)?.name || (
                                           <span className="text-slate-600 italic">Sem Turma</span>
                                         )}
                                       </div>
                                     </td>
-                                    <td className="p-8 text-center">
+                                    <td className="p-4 lg:p-5 text-center">
                                       <button
                                         onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                                         disabled={u.userId === user?.uid}
-                                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${u.isAdmin ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]' : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'}`}
+                                        className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${u.isAdmin ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]' : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'}`}
                                       >
-                                        {u.isAdmin ? 'ADMINISTRADOR' : 'PARTICIPANTE'}
+                                        {u.isAdmin ? 'ADMIN' : 'PARTICIPANTE'}
                                       </button>
                                     </td>
-                                    <td className="p-8 text-right">
-                                      <div className="flex items-center justify-end gap-2">
+                                    <td className="p-4 lg:p-5 text-right">
+                                      <div className="flex items-center justify-end gap-1.5">
                                         <button
                                           onClick={() => handleResetUserProgress(u.userId)}
                                           disabled={u.userId === user?.uid}
-                                          className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
+                                          className="p-2.5 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all disabled:opacity-20 cursor-pointer"
                                           title="Zerar Progresso (Reset para Padawan e 0 XP)"
                                         >
-                                          <LucideIcons.RotateCcw size={18} />
+                                          <LucideIcons.RotateCcw size={16} />
                                         </button>
                                         <button
                                           onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                                           disabled={u.userId === user?.uid}
-                                          className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
+                                          className="p-2.5 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
                                           title={u.isAdmin ? "Demitir Admin" : "Tornar Admin"}
                                         >
-                                          <LucideIcons.Shield size={18} />
+                                          <LucideIcons.Shield size={16} />
                                         </button>
                                         <button
-                                          onClick={() => handleDeleteUser(u.userId)}
+                                          onClick={() => {
+                                            if (confirm('Tem certeza que deseja EXCLUIR permanentemente este usuário da plataforma? Esta ação não pode ser desfeita.')) {
+                                              handleDeleteUser(u.userId);
+                                            }
+                                          }}
                                           disabled={u.userId === user?.uid}
-                                          className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
+                                          className="p-2.5 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
                                           title="Excluir Usuário"
                                         >
-                                          <LucideIcons.UserMinus size={18} />
+                                          <LucideIcons.UserMinus size={16} />
                                         </button>
                                       </div>
                                     </td>
@@ -1667,9 +1698,8 @@ export default function App() {
                                   <button
                                     onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                                     disabled={u.userId === user?.uid}
-                                    className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                                      u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
-                                    }`}
+                                    className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
+                                      }`}
                                   >
                                     {u.isAdmin ? 'ADMIN' : 'PARTICIPANTE'}
                                   </button>
@@ -1713,1121 +1743,1119 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-              ) : (
-                <div key={`admin-management-panel-final-${userProfile.companyId}`} className="space-y-10">
-                  {/* Company Info Header */}
-                  <div className="p-8 md:p-12 bg-white/5 border border-white/10 rounded-[40px] flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-2 h-full bg-zello-orange"></div>
-                    <div className="flex items-center gap-8 relative z-10">
-                      <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl">
-                        <LucideIcons.Building size={40} className="text-zello-orange" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <h2 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter">{currentCompany?.name || 'Carregando...'}</h2>
-                          <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${userProfile?.isAdmin ? 'bg-zello-orange text-white shadow-lg shadow-zello-orange/20' : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'}`}>
-                            {userProfile?.isAdmin ? 'Administrador' : 'Observador'}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-4">
-                          <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">IDENTIFICADOR: {userProfile?.companyId}</span>
-                          <div className="w-1 h-1 rounded-full bg-slate-700"></div>
-                          <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">{companyUsers.length} Participantes</span>
-                          {currentCompany?.accessCode && (
-                            <>
-                              <div className="w-1 h-1 rounded-full bg-slate-700"></div>
-                              <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">CÓDIGO DE ACESSO: {currentCompany.accessCode}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row gap-3 relative z-10">
-                      {userProfile?.isAdmin && (
-                        <button
-                          onClick={() => setEditingCompany(currentCompany)}
-                          className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                          <LucideIcons.Settings size={14} className="text-zello-orange" />
-                          Editar Dados da Empresa
-                        </button>
-                      )}
-                      
-                      <button 
-                        onClick={async () => {
-                          if (confirm("Tem certeza que deseja sair desta empresa? Seus dados de XP serão mantidos, mas você perderá o vínculo com a turma.")) {
-                            await updateDoc(doc(db, 'users', user?.uid!), {
-                              companyId: null,
-                              isAdmin: false
-                            });
-                          }
-                        }}
-                        className="px-6 py-3 bg-red-500/5 hover:bg-red-500 border border-red-500/20 text-red-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all relative z-10"
-                      >
-                        Desvincular da Turma
-                      </button>
-                    </div>
-                    
-                    <LucideIcons.ShieldCheck className="absolute -bottom-10 -right-10 text-white opacity-[0.02]" size={280} />
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-1 space-y-8">
-                      {userProfile.isAdmin ? (
-                        <div className="p-8 bg-white/5 border border-white/10 rounded-[40px] space-y-8 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                          <LucideIcons.UserPlus size={120} />
+                ) : (
+                  <div key={`admin-management-panel-final-${userProfile.companyId}`} className="space-y-10">
+                    {/* Company Info Header */}
+                    <div className="p-8 md:p-12 bg-white/5 border border-white/10 rounded-[40px] flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-2 h-full bg-zello-orange"></div>
+                      <div className="flex items-center gap-8 relative z-10">
+                        <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl">
+                          <LucideIcons.Building size={40} className="text-zello-orange" />
                         </div>
                         <div className="space-y-2">
-                          <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Autorizar Acesso</h3>
-                          <p className="text-sm text-slate-500 font-medium">Adicione e-mails à lista de permissão da turma.</p>
-                        </div>
-
-                        <div className="space-y-6">
-                          <div className="flex gap-2">
-                             <input 
-                              type="email" 
-                              value={newWhitelistedEmail}
-                              onChange={(e) => setNewWhitelistedEmail(e.target.value)}
-                              placeholder="colaborador@empresa.com"
-                              className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-4 text-white placeholder:text-slate-600 focus:border-zello-orange/50 outline-none transition-all"
-                            />
-                            <button
-                              onClick={handleAddToWhitelist}
-                              disabled={!newWhitelistedEmail.includes('@')}
-                              className="px-6 bg-zello-orange text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:brightness-110 transition-all disabled:opacity-50"
-                            >
-                              Add
-                            </button>
+                          <div className="flex items-center gap-3">
+                            <h2 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter">{currentCompany?.name || 'Carregando...'}</h2>
+                            <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${userProfile?.isAdmin ? 'bg-zello-orange text-white shadow-lg shadow-zello-orange/20' : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'}`}>
+                              {userProfile?.isAdmin ? 'Administrador' : 'Observador'}
+                            </span>
                           </div>
-                          
-                          <div className="space-y-3">
-                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block px-1">Carga em Lote (CSV/Lista)</label>
-                            <textarea
-                              value={bulkEmailText}
-                              onChange={(e) => setBulkEmailText(e.target.value)}
-                              placeholder="cole e-mails separados por linha..."
-                              className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-4 text-xs text-white placeholder:text-slate-600 focus:border-zello-orange/50 outline-none transition-all resize-none font-mono"
-                            />
-                            <button
-                              onClick={handleBulkWhitelist}
-                              disabled={isBulkLoading || !bulkEmailText.trim()}
-                              className="w-full py-4 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3"
-                            >
-                              {isBulkLoading ? <LucideIcons.Loader2 size={16} className="animate-spin" /> : <LucideIcons.UploadCloud size={16} />}
-                              Processar Lista
-                            </button>
+                          <div className="flex flex-wrap items-center gap-4">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">IDENTIFICADOR: {userProfile?.companyId}</span>
+                            <div className="w-1 h-1 rounded-full bg-slate-700"></div>
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">{companyUsers.length} Participantes</span>
+                            {currentCompany?.accessCode && (
+                              <>
+                                <div className="w-1 h-1 rounded-full bg-slate-700"></div>
+                                <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">CÓDIGO DE ACESSO: {currentCompany.accessCode}</span>
+                              </>
+                            )}
                           </div>
-                        </div>
-                        
-                        <div className="p-6 bg-blue-500/5 border border-blue-500/20 rounded-3xl space-y-3">
-                          <div className="flex items-center gap-2 text-blue-400">
-                             <LucideIcons.Info size={16} />
-                             <span className="text-[10px] font-black uppercase tracking-widest">Segurança</span>
-                          </div>
-                          <p className="text-[11px] text-blue-300/70 font-medium leading-relaxed">
-                            Apenas usuários nesta lista podem acessar a turma após o período de tolerância inicial.
-                          </p>
                         </div>
                       </div>
-                      ) : (
-                        <div className="p-8 bg-zello-orange/5 border border-zello-orange/20 rounded-[40px] space-y-6 text-center">
-                          <LucideIcons.Lock className="text-zello-orange mx-auto" size={40} />
-                          <div className="space-y-2">
-                             <h4 className="text-lg font-black text-white uppercase italic">Modo Visualização</h4>
-                             <p className="text-sm text-slate-500 leading-relaxed font-medium">Você pode ver os participantes da sua turma, mas a gestão da lista de autorizados é exclusiva para administradores.</p>
-                          </div>
-                        </div>
-                      )}
+
+                      <div className="flex flex-col sm:flex-row gap-3 relative z-10">
+                        {userProfile?.isAdmin && (
+                          <button
+                            onClick={() => setEditingCompany(currentCompany)}
+                            className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer"
+                          >
+                            <LucideIcons.Settings size={14} className="text-zello-orange" />
+                            Editar Dados da Empresa
+                          </button>
+                        )}
+
+                        <button
+                          onClick={async () => {
+                            if (confirm("Tem certeza que deseja sair desta empresa? Seus dados de XP serão mantidos, mas você perderá o vínculo com a turma.")) {
+                              await updateDoc(doc(db, 'users', user?.uid!), {
+                                companyId: null,
+                                isAdmin: false
+                              });
+                            }
+                          }}
+                          className="px-6 py-3 bg-red-500/5 hover:bg-red-500 border border-red-500/20 text-red-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all relative z-10"
+                        >
+                          Desvincular da Turma
+                        </button>
+                      </div>
+
+                      <LucideIcons.ShieldCheck className="absolute -bottom-10 -right-10 text-white opacity-[0.02]" size={280} />
                     </div>
 
-                    <div className="lg:col-span-2 space-y-8">
-                       {/* Whitelist List (Admin Only) */}
-                       {userProfile.isAdmin && (
-                         <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden group">
-                          <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/2">
-                            <div className="space-y-1">
-                              <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Whitelist Autorizada</h3>
-                              <p className="text-xs text-slate-500 font-medium">{whitelist.length} e-mails na base de dados</p>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      <div className="lg:col-span-1 space-y-8">
+                        {userProfile.isAdmin ? (
+                          <div className="p-8 bg-white/5 border border-white/10 rounded-[40px] space-y-8 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                              <LucideIcons.UserPlus size={120} />
                             </div>
-                            <button
-                              onClick={handleCleanupUsers}
-                              className="px-6 py-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl text-[10px] font-black uppercase hover:bg-red-500 hover:text-white transition-all flex items-center gap-3"
-                            >
-                              <LucideIcons.ShieldAlert size={14} />
-                              Limpeza de Inativos
-                            </button>
+                            <div className="space-y-2">
+                              <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Autorizar Acesso</h3>
+                              <p className="text-sm text-slate-500 font-medium">Adicione e-mails à lista de permissão da turma.</p>
+                            </div>
+
+                            <div className="space-y-6">
+                              <div className="flex gap-2">
+                                <input
+                                  type="email"
+                                  value={newWhitelistedEmail}
+                                  onChange={(e) => setNewWhitelistedEmail(e.target.value)}
+                                  placeholder="colaborador@empresa.com"
+                                  className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-4 text-white placeholder:text-slate-600 focus:border-zello-orange/50 outline-none transition-all"
+                                />
+                                <button
+                                  onClick={handleAddToWhitelist}
+                                  disabled={!newWhitelistedEmail.includes('@')}
+                                  className="px-6 bg-zello-orange text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:brightness-110 transition-all disabled:opacity-50"
+                                >
+                                  Add
+                                </button>
+                              </div>
+
+                              <div className="space-y-3">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block px-1">Carga em Lote (CSV/Lista)</label>
+                                <textarea
+                                  value={bulkEmailText}
+                                  onChange={(e) => setBulkEmailText(e.target.value)}
+                                  placeholder="cole e-mails separados por linha..."
+                                  className="w-full h-32 bg-white/5 border border-white/10 rounded-2xl p-4 text-xs text-white placeholder:text-slate-600 focus:border-zello-orange/50 outline-none transition-all resize-none font-mono"
+                                />
+                                <button
+                                  onClick={handleBulkWhitelist}
+                                  disabled={isBulkLoading || !bulkEmailText.trim()}
+                                  className="w-full py-4 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+                                >
+                                  {isBulkLoading ? <LucideIcons.Loader2 size={16} className="animate-spin" /> : <LucideIcons.UploadCloud size={16} />}
+                                  Processar Lista
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="p-6 bg-blue-500/5 border border-blue-500/20 rounded-3xl space-y-3">
+                              <div className="flex items-center gap-2 text-blue-400">
+                                <LucideIcons.Info size={16} />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Segurança</span>
+                              </div>
+                              <p className="text-[11px] text-blue-300/70 font-medium leading-relaxed">
+                                Apenas usuários nesta lista podem acessar a turma após o período de tolerância inicial.
+                              </p>
+                            </div>
                           </div>
-                          <div className="p-6 max-h-[350px] overflow-y-auto custom-scrollbar">
-                            {whitelist.length > 0 ? (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {whitelist.slice().sort().map((email, idx) => (
-                                  <div key={`whitelist-email-item-${email}-${idx}-${whitelist.length}`} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group/email hover:border-zello-orange/30 transition-all">
-                                    <span className="text-sm font-bold text-slate-300 truncate mr-4">{email}</span>
-                                    <button 
-                                      onClick={() => handleRemoveFromWhitelist(email)}
-                                      className="p-2 text-slate-600 hover:text-red-400 transition-all sm:opacity-0 group-hover/email:opacity-100"
+                        ) : (
+                          <div className="p-8 bg-zello-orange/5 border border-zello-orange/20 rounded-[40px] space-y-6 text-center">
+                            <LucideIcons.Lock className="text-zello-orange mx-auto" size={40} />
+                            <div className="space-y-2">
+                              <h4 className="text-lg font-black text-white uppercase italic">Modo Visualização</h4>
+                              <p className="text-sm text-slate-500 leading-relaxed font-medium">Você pode ver os participantes da sua turma, mas a gestão da lista de autorizados é exclusiva para administradores.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="lg:col-span-2 space-y-8">
+                        {/* Whitelist List (Admin Only) */}
+                        {userProfile.isAdmin && (
+                          <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden group">
+                            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/2">
+                              <div className="space-y-1">
+                                <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Whitelist Autorizada</h3>
+                                <p className="text-xs text-slate-500 font-medium">{whitelist.length} e-mails na base de dados</p>
+                              </div>
+                              <button
+                                onClick={handleCleanupUsers}
+                                className="px-6 py-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl text-[10px] font-black uppercase hover:bg-red-500 hover:text-white transition-all flex items-center gap-3"
+                              >
+                                <LucideIcons.ShieldAlert size={14} />
+                                Limpeza de Inativos
+                              </button>
+                            </div>
+                            <div className="p-6 max-h-[350px] overflow-y-auto custom-scrollbar">
+                              {whitelist.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                  {whitelist.slice().sort().map((email, idx) => (
+                                    <div key={`whitelist-email-item-${email}-${idx}-${whitelist.length}`} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group/email hover:border-zello-orange/30 transition-all">
+                                      <span className="text-sm font-bold text-slate-300 truncate mr-4">{email}</span>
+                                      <button
+                                        onClick={() => handleRemoveFromWhitelist(email)}
+                                        className="p-2 text-slate-600 hover:text-red-400 transition-all sm:opacity-0 group-hover/email:opacity-100"
+                                      >
+                                        <LucideIcons.XCircle size={18} />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="text-center py-16 space-y-4">
+                                  <LucideIcons.Mail className="text-slate-800 mx-auto" size={40} />
+                                  <p className="text-slate-500 text-sm font-medium italic">Sua lista de autorizados está vazia.</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* User Management Section (Always visible but restricted actions) */}
+                        <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden">
+                          <div className="p-8 border-b border-white/5 bg-white/2 flex items-center justify-between">
+                            <div className="space-y-1">
+                              <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Participantes da Turma</h3>
+                              <p className="text-xs text-slate-500 font-medium">Visualizando usuários ativos na organização</p>
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-500">
+                              <LucideIcons.Users size={20} />
+                            </div>
+                          </div>
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full text-left table-auto">
+                              <thead className="bg-white/5">
+                                <tr key="company-users-header-row">
+                                  <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Colaborador</th>
+                                  <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Progresso</th>
+                                  {userProfile.isAdmin && <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Controles</th>}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-white/5">
+                                {companyUsers.map((u, idx) => (
+                                  <tr key={`company-user-row-mng-v6-${u.userId || 'u'}-${u.email || 'e'}-${idx}-${companyUsers.length}`} className="hover:bg-white/5 transition-colors group/row">
+                                    <td className="p-4 sm:p-6">
+                                      <div className="flex items-center gap-3 sm:gap-4">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-xs sm:text-sm shrink-0">
+                                          {u.email?.[0].toUpperCase() || '?'}
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                          <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-xs sm:text-sm font-bold text-white group-hover/row:text-zello-orange transition-colors truncate max-w-[120px] sm:max-w-[220px]">{u.email}</span>
+                                            <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange/20 text-zello-orange border border-zello-orange/30' : 'bg-slate-800 text-slate-400 border border-white/5'}`}>
+                                              {u.isAdmin ? 'ADMIN' : 'USER'}
+                                            </span>
+                                          </div>
+                                          <span className="text-[9px] text-slate-500 font-mono mt-0.5">UID: {u.userId.slice(0, 8)}...</span>
+                                          <span className="text-[9px] text-slate-500 mt-0.5">
+                                            Último acesso: {u.lastActive?.toDate ? u.lastActive.toDate().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Nunca'}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="p-4 sm:p-6 text-center">
+                                      <div className="flex flex-col items-center justify-center">
+                                        <div className={`text-[10px] font-black uppercase italic tracking-wider ${getRank(u.completedQuizzes).color}`}>
+                                          {getRank(u.completedQuizzes).name}
+                                        </div>
+                                        <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-zello-orange/10 rounded-full text-zello-orange text-[9px] font-black italic">
+                                          {u.xp || 0} XP
+                                        </div>
+                                      </div>
+                                    </td>
+                                    {userProfile.isAdmin && (
+                                      <td className="p-4 sm:p-6">
+                                        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                                          <button
+                                            onClick={() => handleResetUserProgress(u.userId)}
+                                            disabled={u.userId === user?.uid}
+                                            title="Zerar Progresso (Reset para Padawan e 0 XP)"
+                                            className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all disabled:opacity-30 flex items-center justify-center"
+                                          >
+                                            <LucideIcons.RotateCcw size={14} />
+                                          </button>
+                                          <button
+                                            onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                                            disabled={u.userId === user?.uid}
+                                            title={u.isAdmin ? 'Remover Privilégios de Administrador' : 'Tornar Administrador'}
+                                            className={`p-2 rounded-xl transition-all disabled:opacity-30 flex items-center justify-center border ${u.isAdmin
+                                                ? 'bg-zello-orange/10 hover:bg-zello-orange/20 text-zello-orange border-zello-orange/20'
+                                                : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border-white/5'
+                                              }`}
+                                          >
+                                            <LucideIcons.Shield size={14} />
+                                          </button>
+                                          <button
+                                            onClick={() => handleDeleteUser(u.userId)}
+                                            disabled={u.userId === user?.uid}
+                                            title="Excluir Participante da Plataforma"
+                                            className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 hover:border-red-500/30 transition-all disabled:opacity-30 flex items-center justify-center"
+                                          >
+                                            <LucideIcons.UserMinus size={14} />
+                                          </button>
+                                        </div>
+                                      </td>
+                                    )}
+                                  </tr>
+                                ))}
+                                {companyUsers.length === 0 && (
+                                  <tr key="company-users-empty-placeholder-v2">
+                                    <td colSpan={userProfile.isAdmin ? 3 : 2} className="p-20 text-center space-y-4">
+                                      <LucideIcons.Users2 className="text-slate-800 mx-auto" size={48} />
+                                      <p className="text-slate-500 font-medium italic">Nenhum outro participante encontrado nesta turma.</p>
+                                    </td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Mobile Cards View */}
+                          <div className="md:hidden divide-y divide-white/5 p-4 space-y-3">
+                            {companyUsers.map((u, idx) => (
+                              <div
+                                key={`company-user-card-m-${u.userId || 'u'}-${idx}`}
+                                className="p-4 bg-white/[0.03] border border-white/10 rounded-2xl space-y-3"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-xs shrink-0">
+                                    {u.email?.[0].toUpperCase() || '?'}
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="text-xs font-bold text-white truncate">{u.email}</div>
+                                    <div className="text-[9px] text-slate-500 font-mono">UID: {u.userId.slice(0, 8)}...</div>
+                                  </div>
+                                  <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange/20 text-zello-orange border border-zello-orange/30' : 'bg-slate-800 text-slate-400 border border-white/5'}`}>
+                                    {u.isAdmin ? 'ADMIN' : 'USER'}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                                  <div className="p-2 bg-black/20 rounded-xl border border-white/5">
+                                    <span className="text-[8px] uppercase font-bold text-slate-500 block">Nível (Rank)</span>
+                                    <span className={`text-[10px] font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
+                                      {getRank(u.completedQuizzes).name}
+                                    </span>
+                                  </div>
+                                  <div className="p-2 bg-black/20 rounded-xl border border-white/5">
+                                    <span className="text-[8px] uppercase font-bold text-slate-500 block">XP Acumulado</span>
+                                    <span className="text-[10px] font-black text-zello-orange italic">
+                                      {u.xp || 0} XP
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {userProfile.isAdmin && (
+                                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
+                                    <button
+                                      onClick={() => handleResetUserProgress(u.userId)}
+                                      disabled={u.userId === user?.uid}
+                                      className="py-2 px-1 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
                                     >
-                                      <LucideIcons.XCircle size={18} />
+                                      <LucideIcons.RotateCcw size={11} />
+                                      Zerar
+                                    </button>
+                                    <button
+                                      onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
+                                      disabled={u.userId === user?.uid}
+                                      className="py-2 px-1 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
+                                    >
+                                      <LucideIcons.Shield size={11} />
+                                      {u.isAdmin ? 'Demitir' : 'Promover'}
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteUser(u.userId)}
+                                      disabled={u.userId === user?.uid}
+                                      className="py-2 px-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
+                                    >
+                                      <LucideIcons.UserMinus size={11} />
+                                      Excluir
                                     </button>
                                   </div>
-                                ))}
+                                )}
                               </div>
-                            ) : (
-                              <div className="text-center py-16 space-y-4">
-                                <LucideIcons.Mail className="text-slate-800 mx-auto" size={40} />
-                                <p className="text-slate-500 text-sm font-medium italic">Sua lista de autorizados está vazia.</p>
+                            ))}
+                            {companyUsers.length === 0 && (
+                              <div className="p-8 text-center text-slate-500 text-xs italic">
+                                Nenhum outro participante encontrado nesta turma.
                               </div>
                             )}
                           </div>
                         </div>
-                       )}
-
-                       {/* User Management Section (Always visible but restricted actions) */}
-                       <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden">
-                        <div className="p-8 border-b border-white/5 bg-white/2 flex items-center justify-between">
-                          <div className="space-y-1">
-                            <h3 className="text-xl font-black text-white uppercase italic tracking-tight">Participantes da Turma</h3>
-                            <p className="text-xs text-slate-500 font-medium">Visualizando usuários ativos na organização</p>
-                          </div>
-                          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-500">
-                             <LucideIcons.Users size={20} />
-                          </div>
-                        </div>
-                        {/* Desktop Table View */}
-                        <div className="hidden md:block overflow-x-auto">
-                          <table className="w-full text-left table-auto">
-                            <thead className="bg-white/5">
-                              <tr key="company-users-header-row">
-                                <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Colaborador</th>
-                                <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Progresso</th>
-                                {userProfile.isAdmin && <th className="p-4 sm:p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Controles</th>}
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5">
-                              {companyUsers.map((u, idx) => (
-                                <tr key={`company-user-row-mng-v6-${u.userId || 'u'}-${u.email || 'e'}-${idx}-${companyUsers.length}`} className="hover:bg-white/5 transition-colors group/row">
-                                  <td className="p-4 sm:p-6">
-                                    <div className="flex items-center gap-3 sm:gap-4">
-                                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-xs sm:text-sm shrink-0">
-                                        {u.email?.[0].toUpperCase() || '?'}
-                                      </div>
-                                      <div className="flex flex-col min-w-0">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                          <span className="text-xs sm:text-sm font-bold text-white group-hover/row:text-zello-orange transition-colors truncate max-w-[120px] sm:max-w-[220px]">{u.email}</span>
-                                          <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange/20 text-zello-orange border border-zello-orange/30' : 'bg-slate-800 text-slate-400 border border-white/5'}`}>
-                                            {u.isAdmin ? 'ADMIN' : 'USER'}
-                                          </span>
-                                        </div>
-                                        <span className="text-[9px] text-slate-500 font-mono mt-0.5">UID: {u.userId.slice(0, 8)}...</span>
-                                        <span className="text-[9px] text-slate-500 mt-0.5">
-                                          Último acesso: {u.lastActive?.toDate ? u.lastActive.toDate().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Nunca'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td className="p-4 sm:p-6 text-center">
-                                    <div className="flex flex-col items-center justify-center">
-                                      <div className={`text-[10px] font-black uppercase italic tracking-wider ${getRank(u.completedQuizzes).color}`}>
-                                        {getRank(u.completedQuizzes).name}
-                                      </div>
-                                      <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 bg-zello-orange/10 rounded-full text-zello-orange text-[9px] font-black italic">
-                                        {u.xp || 0} XP
-                                      </div>
-                                    </div>
-                                  </td>
-                                  {userProfile.isAdmin && (
-                                    <td className="p-4 sm:p-6">
-                                      <div className="flex items-center justify-end gap-1.5 sm:gap-2">
-                                        <button
-                                          onClick={() => handleResetUserProgress(u.userId)}
-                                          disabled={u.userId === user?.uid}
-                                          title="Zerar Progresso (Reset para Padawan e 0 XP)"
-                                          className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all disabled:opacity-30 flex items-center justify-center"
-                                        >
-                                          <LucideIcons.RotateCcw size={14} />
-                                        </button>
-                                        <button
-                                          onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
-                                          disabled={u.userId === user?.uid}
-                                          title={u.isAdmin ? 'Remover Privilégios de Administrador' : 'Tornar Administrador'}
-                                          className={`p-2 rounded-xl transition-all disabled:opacity-30 flex items-center justify-center border ${
-                                            u.isAdmin 
-                                              ? 'bg-zello-orange/10 hover:bg-zello-orange/20 text-zello-orange border-zello-orange/20' 
-                                              : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border-white/5'
-                                          }`}
-                                        >
-                                          <LucideIcons.Shield size={14} />
-                                        </button>
-                                        <button
-                                          onClick={() => handleDeleteUser(u.userId)}
-                                          disabled={u.userId === user?.uid}
-                                          title="Excluir Participante da Plataforma"
-                                          className="p-2 bg-white/5 border border-white/5 rounded-xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 hover:border-red-500/30 transition-all disabled:opacity-30 flex items-center justify-center"
-                                        >
-                                          <LucideIcons.UserMinus size={14} />
-                                        </button>
-                                      </div>
-                                    </td>
-                                  )}
-                                </tr>
-                              ))}
-                              {companyUsers.length === 0 && (
-                                <tr key="company-users-empty-placeholder-v2">
-                                  <td colSpan={userProfile.isAdmin ? 3 : 2} className="p-20 text-center space-y-4">
-                                      <LucideIcons.Users2 className="text-slate-800 mx-auto" size={48} />
-                                      <p className="text-slate-500 font-medium italic">Nenhum outro participante encontrado nesta turma.</p>
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-
-                        {/* Mobile Cards View */}
-                        <div className="md:hidden divide-y divide-white/5 p-4 space-y-3">
-                          {companyUsers.map((u, idx) => (
-                            <div
-                              key={`company-user-card-m-${u.userId || 'u'}-${idx}`}
-                              className="p-4 bg-white/[0.03] border border-white/10 rounded-2xl space-y-3"
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-xs shrink-0">
-                                  {u.email?.[0].toUpperCase() || '?'}
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <div className="text-xs font-bold text-white truncate">{u.email}</div>
-                                  <div className="text-[9px] text-slate-500 font-mono">UID: {u.userId.slice(0, 8)}...</div>
-                                </div>
-                                <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange/20 text-zello-orange border border-zello-orange/30' : 'bg-slate-800 text-slate-400 border border-white/5'}`}>
-                                  {u.isAdmin ? 'ADMIN' : 'USER'}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                                <div className="p-2 bg-black/20 rounded-xl border border-white/5">
-                                  <span className="text-[8px] uppercase font-bold text-slate-500 block">Nível (Rank)</span>
-                                  <span className={`text-[10px] font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
-                                    {getRank(u.completedQuizzes).name}
-                                  </span>
-                                </div>
-                                <div className="p-2 bg-black/20 rounded-xl border border-white/5">
-                                  <span className="text-[8px] uppercase font-bold text-slate-500 block">XP Acumulado</span>
-                                  <span className="text-[10px] font-black text-zello-orange italic">
-                                    {u.xp || 0} XP
-                                  </span>
-                                </div>
-                              </div>
-
-                              {userProfile.isAdmin && (
-                                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
-                                  <button
-                                    onClick={() => handleResetUserProgress(u.userId)}
-                                    disabled={u.userId === user?.uid}
-                                    className="py-2 px-1 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
-                                  >
-                                    <LucideIcons.RotateCcw size={11} />
-                                    Zerar
-                                  </button>
-                                  <button
-                                    onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
-                                    disabled={u.userId === user?.uid}
-                                    className="py-2 px-1 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
-                                  >
-                                    <LucideIcons.Shield size={11} />
-                                    {u.isAdmin ? 'Demitir' : 'Promover'}
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteUser(u.userId)}
-                                    disabled={u.userId === user?.uid}
-                                    className="py-2 px-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all disabled:opacity-30"
-                                  >
-                                    <LucideIcons.UserMinus size={11} />
-                                    Excluir
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                          {companyUsers.length === 0 && (
-                            <div className="p-8 text-center text-slate-500 text-xs italic">
-                              Nenhum outro participante encontrado nesta turma.
-                            </div>
-                          )}
-                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </motion.div>
-          )}
+                )}
+              </motion.div>
+            )}
 
-          {gameState === 'autoconhecimento' && (
-            <motion.div
-              key="autoconhecimento"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              className="max-w-4xl mx-auto p-6 space-y-8"
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-6">
-                <div>
-                  <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
-                    Vínculo de Turma / Empresa
-                  </h1>
-                  <p className="text-sm text-slate-400 mt-2 font-medium">
-                    Atualize seu vínculo de turma/empresa de forma instantânea.
-                  </p>
+            {gameState === 'autoconhecimento' && (
+              <motion.div
+                key="autoconhecimento"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="max-w-4xl mx-auto p-6 space-y-8"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-6">
+                  <div>
+                    <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
+                      Vínculo de Turma / Empresa
+                    </h1>
+                    <p className="text-sm text-slate-400 mt-2 font-medium">
+                      Atualize seu vínculo de turma/empresa de forma instantânea.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm("ATENÇÃO: Deseja realmente REINICIAR seu perfil do zero?\n\nIsso limpará sua empresa, suas respostas de quizzes e seu XP, enviando você de volta ao cadastro inicial.")) return;
+                        try {
+                          const userDocRef = doc(db, 'users', user!.uid);
+                          await updateDoc(userDocRef, {
+                            companyId: null,
+                            skillsSurvey: null,
+                            surveyCompleted: false,
+                            xp: 0,
+                            unlockedPowers: [],
+                            currentMissionIndex: 0,
+                            missionProgress: {}
+                          });
+                          alert("Perfil reiniciado com sucesso! Redirecionando...");
+                          window.location.reload();
+                        } catch (err: any) {
+                          console.error("Erro ao reiniciar perfil:", err);
+                          alert("Falha ao reiniciar: " + err?.message);
+                        }
+                      }}
+                      className="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-neutral-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-2"
+                    >
+                      <LucideIcons.RefreshCcw size={14} />
+                      Reiniciar Perfil (Do Zero)
+                    </button>
+                    <button
+                      onClick={() => setGameState('home')}
+                      className="px-4 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all"
+                    >
+                      Voltar
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-3 shrink-0">
-                  <button
-                    onClick={async () => {
-                      if (!window.confirm("ATENÇÃO: Deseja realmente REINICIAR seu perfil do zero?\n\nIsso limpará sua empresa, suas respostas de quizzes e seu XP, enviando você de volta ao cadastro inicial.")) return;
+
+                <div className="p-8 rounded-[40px] bg-white/5 border border-white/10 shadow-[0_0_50px_rgba(240,90,40,0.03)] my-4 relative">
+                  <OnboardingScreen
+                    user={user}
+                    availableCompanies={availableCompanies}
+                    isEditMode={true}
+                    initialCompanyId={(userProfile?.companyId && userProfile.companyId !== 'null' && userProfile.companyId !== 'undefined') ? userProfile.companyId : ''}
+                    initialSkillsSurvey={userProfile?.skillsSurvey}
+                    isAdmin={!!userProfile?.isAdmin}
+                    onCancel={() => setGameState('home')}
+                    onComplete={async (companyId, skillsSurvey) => {
+                      if (!companyId || companyId === 'null' || companyId === 'undefined') {
+                        console.error("onComplete called with invalid companyId in profile edit:", companyId);
+                        return;
+                      }
                       try {
                         const userDocRef = doc(db, 'users', user!.uid);
                         await updateDoc(userDocRef, {
-                          companyId: null,
-                          skillsSurvey: null,
-                          surveyCompleted: false,
-                          xp: 0,
-                          unlockedPowers: [],
-                          currentMissionIndex: 0,
-                          missionProgress: {}
+                          companyId,
+                          skillsSurvey,
+                          surveyCompleted: true,
+                          lastActive: serverTimestamp()
                         });
-                        alert("Perfil reiniciado com sucesso! Redirecionando...");
-                        window.location.reload();
+                        alert('Vínculo de empresa salvo com sucesso!');
+                        setGameState('home');
                       } catch (err: any) {
-                        console.error("Erro ao reiniciar perfil:", err);
-                        alert("Falha ao reiniciar: " + err?.message);
+                        console.error("Exception updating profile:", err);
+                        handleFirestoreError(err, OperationType.UPDATE, `users/${user!.uid}`);
                       }
                     }}
-                    className="px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-neutral-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-2"
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {gameState === 'home' && (
+              <HomeSectionView
+                key="home-section-view-call"
+                score={score}
+                setGameState={setGameState}
+                setActiveVideo={setActiveVideo}
+              />
+            )}
+
+            {gameState === 'level-selection' && (
+              <LevelSelectionView
+                key="level-selection-view-call"
+                questionCount={questionCount}
+                setQuestionCount={setQuestionCount}
+                setGameState={setGameState}
+                setActiveVideo={setActiveVideo}
+                startLevel={startLevel}
+                completedQuizzes={completedQuizzes}
+              />
+            )}
+
+            {gameState === 'game' && (
+              <QuizSectionView
+                key="quiz-section-view-call"
+                levelChallenges={levelChallenges}
+                currentChallengeIndex={currentChallengeIndex}
+                currentChallenge={currentChallenge}
+                selectedLevel={selectedLevel}
+                score={score}
+                selectedSkillIds={selectedSkillIds}
+                isAnswered={isAnswered}
+                isAnsweredCorrectly={isAnsweredCorrectly}
+                timeLeft={timeLeft}
+                aiFeedback={aiFeedback}
+                isAiFeedbackLoading={isAiFeedbackLoading}
+                toggleSkillId={toggleSkillId}
+                confirmAnswers={confirmQuizAnswers}
+                nextChallenge={nextChallenge}
+                setActiveVideo={setActiveVideo}
+                currentEnergy={userProfile?.quizStats?.energy ?? 65}
+              />
+            )}
+
+            {gameState === 'deck' && (
+              <DeckSectionView
+                key="deck-section-view-call"
+                setViewingPower={setViewingPower}
+                setGameState={setGameState}
+                setActiveVideo={setActiveVideo}
+                gameState={gameState}
+              />
+            )}
+
+            {gameState === 'dashboards' && (
+              <motion.div
+                key="dashboards-view"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                className="max-w-[1400px] mx-auto p-6 md:p-12 mb-32"
+              >
+                <DashboardSection
+                  score={score}
+                  currentRank={currentRank}
+                  unlockedPowers={unlockedPowers}
+                  teamStats={teamStats}
+                  userProfile={userProfile}
+                  onWatchVideo={(title, url) => setActiveVideo({ title, url })}
+                />
+              </motion.div>
+            )}
+
+            {gameState === 'results' && (
+              <motion.div
+                key="results"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-4xl mx-auto space-y-12 py-12 text-center"
+              >
+                <div className="space-y-6">
+                  <div className="relative inline-block">
+                    <div className="w-48 h-48 rounded-full border-8 border-zello-orange p-2 mx-auto overflow-hidden bg-zello-black/40">
+                      <img
+                        src={currentRank.image}
+                        alt={currentRank.name}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-zello-orange text-white font-black uppercase italic text-lg rounded-xl shadow-[0_4px_20px_rgba(240,90,40,0.4)]">
+                      {currentRank.name}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-white">QUIZ <br className="md:hidden" /> CONCLUÍDO!</h2>
+                    <p className="text-xl text-slate-400 font-medium">Sua sabedoria agora é de um {currentRank.name}.</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-6 max-w-2xl mx-auto">
+                  <div className="flex-1 p-8 rounded-3xl bg-white/5 border border-white/10">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-500">XP Adquirido</span>
+                    <div className="text-5xl font-black text-zello-orange mt-2">{score.toLocaleString()}</div>
+                  </div>
+                  <div className="flex-1 p-8 rounded-3xl bg-white/5 border border-white/10">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-500">Habilidades Coletadas</span>
+                    <div className="text-5xl font-black text-white mt-2">{unlockedPowers.length}</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-4">
+                  <button
+                    onClick={() => setGameState('level-selection')}
+                    className="px-10 py-5 bg-zello-orange text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-[0_0_40px_rgba(240,90,40,0.3)]"
                   >
-                    <LucideIcons.RefreshCcw size={14} />
-                    Reiniciar Perfil (Do Zero)
+                    Jogar Novamente
                   </button>
                   <button
-                    onClick={() => setGameState('home')}
-                    className="px-4 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all"
+                    onClick={() => setGameState('dashboards')}
+                    className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
                   >
-                    Voltar
+                    Ver Dashboard
+                  </button>
+                  <button
+                    onClick={() => setGameState('deck')}
+                    className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
+                  >
+                    Ver Meu Deck
                   </button>
                 </div>
-              </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-              <div className="p-8 rounded-[40px] bg-white/5 border border-white/10 shadow-[0_0_50px_rgba(240,90,40,0.03)] my-4 relative">
-                <OnboardingScreen 
-                  user={user}
-                  availableCompanies={availableCompanies}
-                  isEditMode={true}
-                  initialCompanyId={(userProfile?.companyId && userProfile.companyId !== 'null' && userProfile.companyId !== 'undefined') ? userProfile.companyId : ''}
-                  initialSkillsSurvey={userProfile?.skillsSurvey}
-                  isAdmin={!!userProfile?.isAdmin}
-                  onCancel={() => setGameState('home')}
-                  onComplete={async (companyId, skillsSurvey) => {
-                    if (!companyId || companyId === 'null' || companyId === 'undefined') {
-                      console.error("onComplete called with invalid companyId in profile edit:", companyId);
-                      return;
-                    }
-                    try {
-                      const userDocRef = doc(db, 'users', user!.uid);
-                      await updateDoc(userDocRef, {
-                        companyId,
-                        skillsSurvey,
-                        surveyCompleted: true,
-                        lastActive: serverTimestamp()
-                      });
-                      alert('Vínculo de empresa salvo com sucesso!');
-                      setGameState('home');
-                    } catch (err: any) {
-                      console.error("Exception updating profile:", err);
-                      handleFirestoreError(err, OperationType.UPDATE, `users/${user!.uid}`);
-                    }
-                  }}
-                />
-              </div>
-            </motion.div>
-          )}
-
-          {gameState === 'home' && (
-            <HomeSectionView
-              key="home-section-view-call"
-              score={score}
-              setGameState={setGameState}
-              setActiveVideo={setActiveVideo}
-            />
-          )}
-
-          {gameState === 'level-selection' && (
-            <LevelSelectionView
-              key="level-selection-view-call"
-              questionCount={questionCount}
-              setQuestionCount={setQuestionCount}
-              setGameState={setGameState}
-              setActiveVideo={setActiveVideo}
-              startLevel={startLevel}
-              completedQuizzes={completedQuizzes}
-            />
-          )}
-
-          {gameState === 'game' && (
-            <QuizSectionView
-              key="quiz-section-view-call"
-              levelChallenges={levelChallenges}
-              currentChallengeIndex={currentChallengeIndex}
-              currentChallenge={currentChallenge}
-              selectedLevel={selectedLevel}
-              score={score}
-              selectedSkillIds={selectedSkillIds}
-              isAnswered={isAnswered}
-              isAnsweredCorrectly={isAnsweredCorrectly}
-              timeLeft={timeLeft}
-              aiFeedback={aiFeedback}
-              isAiFeedbackLoading={isAiFeedbackLoading}
-              toggleSkillId={toggleSkillId}
-              confirmAnswers={confirmQuizAnswers}
-              nextChallenge={nextChallenge}
-              setActiveVideo={setActiveVideo}
-              currentEnergy={userProfile?.quizStats?.energy ?? 65}
-            />
-          )}
-
-          {gameState === 'deck' && (
-            <DeckSectionView
-              key="deck-section-view-call"
-              setViewingPower={setViewingPower}
-              setGameState={setGameState}
-              setActiveVideo={setActiveVideo}
-              gameState={gameState}
-            />
-          )}
-
-          {gameState === 'dashboards' && (
-            <motion.div 
-              key="dashboards-view"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              className="max-w-[1400px] mx-auto p-6 md:p-12 mb-32"
-            >
-              <DashboardSection 
-                score={score} 
-                currentRank={currentRank}
-                unlockedPowers={unlockedPowers}
-                teamStats={teamStats}
-                userProfile={userProfile}
-                onWatchVideo={(title, url) => setActiveVideo({ title, url })}
-              />
-            </motion.div>
-          )}
-
-          {gameState === 'results' && (
-            <motion.div 
-              key="results"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="max-w-4xl mx-auto space-y-12 py-12 text-center"
-            >
-              <div className="space-y-6">
-                <div className="relative inline-block">
-                  <div className="w-48 h-48 rounded-full border-8 border-zello-orange p-2 mx-auto overflow-hidden bg-zello-black/40">
-                    <img 
-                      src={currentRank.image} 
-                      alt={currentRank.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-zello-orange text-white font-black uppercase italic text-lg rounded-xl shadow-[0_4px_20px_rgba(240,90,40,0.4)]">
-                    {currentRank.name}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-white">QUIZ <br className="md:hidden"/> CONCLUÍDO!</h2>
-                  <p className="text-xl text-slate-400 font-medium">Sua sabedoria agora é de um {currentRank.name}.</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-6 max-w-2xl mx-auto">
-                <div className="flex-1 p-8 rounded-3xl bg-white/5 border border-white/10">
-                  <span className="text-xs font-black uppercase tracking-widest text-slate-500">XP Adquirido</span>
-                  <div className="text-5xl font-black text-zello-orange mt-2">{score.toLocaleString()}</div>
-                </div>
-                <div className="flex-1 p-8 rounded-3xl bg-white/5 border border-white/10">
-                  <span className="text-xs font-black uppercase tracking-widest text-slate-500">Habilidades Coletadas</span>
-                  <div className="text-5xl font-black text-white mt-2">{unlockedPowers.length}</div>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-4">
-                <button 
-                  onClick={() => setGameState('level-selection')}
-                  className="px-10 py-5 bg-zello-orange text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-[0_0_40px_rgba(240,90,40,0.3)]"
+          <AnimatePresence>
+            {viewingPower && (
+              <motion.div
+                key="power-details-modal"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[200] flex items-center justify-center p-2.5 sm:p-4 bg-zello-black/95 backdrop-blur-xl"
+              >
+                <motion.div
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="w-full max-w-[800px] max-h-[94vh] sm:max-h-[88vh] bg-zello-black border-2 border-zello-orange rounded-3xl sm:rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(240,90,40,0.3)] flex flex-col"
                 >
-                  Jogar Novamente
-                </button>
-                <button 
-                  onClick={() => setGameState('dashboards')}
-                  className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
-                >
-                  Ver Dashboard
-                </button>
-                <button 
-                  onClick={() => setGameState('deck')}
-                  className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:bg-white/10 active:scale-95 transition-all"
-                >
-                  Ver Meu Deck
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  {/* Scrollable Container with sequential details and visible custom scrollbar */}
+                  {(() => {
+                    const activePower = localizedViewingPower || viewingPower;
+                    return (
+                      <div
+                        id="pwr-detail-scroll-container"
+                        onScroll={handleModalScroll}
+                        className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto structure-modal-scrollbar space-y-6 sm:space-y-8 scroll-smooth relative"
+                      >
+                        {/* Back Navigation Header */}
+                        <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-2">
+                          <button
+                            onClick={() => setViewingPower(null)}
+                            className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-zello-orange focus:text-zello-orange transition-colors cursor-pointer outline-none"
+                          >
+                            <LucideIcons.ArrowLeft size={14} />
+                            {t('deck.backToDeck', { defaultValue: 'Voltar ao Deck' })}
+                          </button>
 
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
+                            <span className="text-[9px] font-black text-zello-orange uppercase tracking-[0.2em]">EL</span>
+                            <span className="text-sm font-black text-white italic tracking-tighter">#{activePower.id.padStart(2, '0')}</span>
+                          </div>
+                        </div>
+
+                        {/* Header Info Area with Official Drawing */}
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-white/5">
+                          {/* Official Drawing Canvas Showcase */}
+                          <div className="w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-gradient-to-b from-white to-slate-100 p-4 flex items-center justify-center shrink-0 shadow-[0_0_30px_rgba(240,90,40,0.15)] border-2 border-white/20 relative group">
+                            {activePower.drawingUrl ? (
+                              <img
+                                src={activePower.drawingUrl}
+                                alt={t('deck.officialDrawingOf', { title: activePower.title, defaultValue: `Desenho oficial de ${activePower.title}` })}
+                                className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="text-slate-700 font-mono font-black text-2xl">#{activePower.id}</div>
+                            )}
+                            <div className="absolute bottom-2 px-2 py-0.5 rounded-md bg-black/5 text-[8px] font-mono text-slate-600 font-bold uppercase tracking-wider">
+                              {t('deck.officialDrawing', { defaultValue: 'Desenho Oficial' })}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 text-center sm:text-left flex-1 select-none">
+                            <div className="flex items-center justify-center sm:justify-start gap-2">
+                              <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">
+                                {activePower.category}
+                              </span>
+                              <span className="text-xs font-mono text-slate-500">•</span>
+                              <span className="text-xs font-mono font-bold text-slate-300">
+                                {t('deck.structureNumber', { defaultValue: 'ESTRUTURA' })} #{activePower.id.padStart(2, '0')}
+                              </span>
+                            </div>
+
+                            <h2 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-tight font-sans">
+                              {activePower.title}
+                            </h2>
+
+                            {activePower.englishTitle && (
+                              <p className="text-xs font-mono text-zello-orange/90 font-bold tracking-wide">
+                                {t('deck.originalTitle', { defaultValue: 'Título Original:' })} {activePower.englishTitle}
+                              </p>
+                            )}
+
+                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                              {activePower.timeNeeded && (
+                                <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
+                                  ⏱️ {activePower.timeNeeded}
+                                </span>
+                              )}
+                              {activePower.groupSize && (
+                                <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
+                                  👥 {activePower.groupSize}
+                                </span>
+                              )}
+                            </div>
+
+                            {activePower.objective && (
+                              <p className="text-slate-300 text-sm leading-relaxed font-medium pt-1">
+                                {activePower.objective}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Prominent Scroll Affordance Banner & Indicator */}
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => {
+                              const element = document.getElementById('pwr-detail-section-0');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }}
+                            className="w-full p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-zello-orange/15 via-zello-orange/25 to-zello-orange/15 border-2 border-zello-orange/50 hover:border-zello-orange hover:bg-zello-orange/35 transition-all duration-300 group outline-none shadow-[0_0_30px_rgba(240,90,40,0.25)] cursor-pointer flex flex-col items-center justify-center text-center select-none"
+                            aria-label={t('deck.scrollDownAria', { defaultValue: 'Rolar para ver detalhes completos da estrutura' })}
+                          >
+                            <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+                              <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
+                              <span className="text-[11px] sm:text-xs md:text-sm font-black uppercase tracking-[0.16em] text-white group-hover:text-zello-orange transition-colors">
+                                {t('deck.scrollDownPrompt', { defaultValue: 'Role a tela para baixo • 5 Etapas do Guia Completo de Condução' })}
+                              </span>
+                              <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
+                            </div>
+                            <div className="flex items-center gap-2 mt-1.5 text-[9px] sm:text-[10px] font-mono text-slate-300 font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-zello-orange animate-ping shrink-0" />
+                              <span>{t('deck.scrollDownHint', { defaultValue: 'Use a barra de rolagem laranja à direita ou clique neste banner para avançar' })}</span>
+                            </div>
+                          </button>
+                        </div>
+
+                        {/* Sequential Facilitation Layout */}
+                        <div className="space-y-10 pt-4 pb-12">
+                          {/* 01 — ENTENDA / CONTEXTO */}
+                          {activePower.applicationContext && (
+                            <div id="pwr-detail-section-0" className="space-y-4 text-left">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">01</span>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                  {t('deck.whenToUse', { defaultValue: 'QUANDO UTILIZAR' })}
+                                </h4>
+                              </div>
+                              <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                  {t('deck.applicationContext', { defaultValue: 'Contexto de Aplicação' })}
+                                </p>
+                                <p className="text-slate-300 text-sm leading-relaxed font-semibold">
+                                  {activePower.applicationContext}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 02 — FLUXO DE FACILITAÇÃO (Entrada, Processo, Saída) */}
+                          {(activePower.input || activePower.process || activePower.output) && (
+                            <div className="space-y-4 text-left">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">02</span>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                  {t('deck.facilitationFlow', { defaultValue: 'FLUXO DE FACILITAÇÃO' })}
+                                </h4>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {activePower.input && (
+                                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                    <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                      {t('deck.input', { defaultValue: 'Entrada' })}
+                                    </span>
+                                    <p className="text-xs text-slate-300 leading-relaxed">{activePower.input}</p>
+                                  </div>
+                                )}
+                                {activePower.process && (
+                                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                    <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                      {t('deck.process', { defaultValue: 'Processo' })}
+                                    </span>
+                                    <p className="text-xs text-slate-300 leading-relaxed">{activePower.process}</p>
+                                  </div>
+                                )}
+                                {activePower.output && (
+                                  <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+                                    <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
+                                      {t('deck.output', { defaultValue: 'Saída' })}
+                                    </span>
+                                    <p className="text-xs text-slate-300 leading-relaxed">{activePower.output}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 03 — VEJA UM EXEMPLO */}
+                          {activePower.practicalExample && (
+                            <div id="pwr-detail-section-1" className="space-y-4 text-left">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">03</span>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                  {t('deck.practicalExampleHeading', { defaultValue: 'EXEMPLO PRÁTICO DE CONDUÇÃO' })}
+                                </h4>
+                              </div>
+                              <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                  {t('deck.dynamicInAction', { defaultValue: 'Dinâmica em Ação' })}
+                                </p>
+                                <p className="text-slate-300 text-sm leading-relaxed">
+                                  {activePower.practicalExample}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 04 — EXPERIMENTE / CASOS DE USO */}
+                          {activePower.cases && Array.isArray(activePower.cases) && activePower.cases.length > 0 && (
+                            <div id="pwr-detail-section-2" className="space-y-4 text-left">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">04</span>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                  {t('deck.recommendedCases', { defaultValue: 'CASOS DE USO RECOMENDADOS' })}
+                                </h4>
+                              </div>
+                              <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                  {t('deck.whereToApply', { defaultValue: 'Onde aplicar no dia a dia' })}
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  {activePower.cases.map((useCase, idx) => (
+                                    <div key={`pwr-case-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
+                                      <span className="text-xs text-slate-300">{useCase}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 05 — BENEFÍCIOS */}
+                          {activePower.expectedBenefits &&
+                            Array.isArray(activePower.expectedBenefits) &&
+                            activePower.expectedBenefits.filter(Boolean).length > 0 && (
+                              <div id="pwr-detail-section-3" className="space-y-4 text-left">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">05</span>
+                                  <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
+                                    {t('deck.structureBenefits', { defaultValue: 'BENEFÍCIOS DA ESTRUTURA' })}
+                                  </h4>
+                                </div>
+                                <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
+                                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+                                    {t('deck.expectedImpacts', { defaultValue: 'Impactos Esperados' })}
+                                  </p>
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {activePower.expectedBenefits.filter(Boolean).map((benefit, idx) => (
+                                      <div key={`pwr-benefit-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
+                                        <span className="text-xs text-slate-300">{benefit}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                        </div>
+
+                        {/* Navigation bar between ELs */}
+                        <div className="border-t border-white/5 pt-8 pb-4 flex flex-col items-center gap-6">
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zello-orange/80">
+                            {t('deck.structureNumber', { defaultValue: 'ESTRUTURA LIBERTADORA' })} #{activePower.id.padStart(2, '0')}
+                          </span>
+
+                          <div className="flex items-center justify-between w-full gap-4">
+                            {currentPowerIndex > 0 ? (
+                              <button
+                                onClick={handlePrevPower}
+                                className="px-5 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-zello-orange/50 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-2 outline-none"
+                              >
+                                <LucideIcons.ChevronLeft size={14} />
+                                {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
+                              </button>
+                            ) : (
+                              <button
+                                disabled
+                                className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
+                                aria-disabled="true"
+                              >
+                                <LucideIcons.ChevronLeft size={14} />
+                                {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
+                              </button>
+                            )}
+
+                            {currentPowerIndex < AI_POWERS.length - 1 ? (
+                              <button
+                                onClick={handleNextPower}
+                                className="px-5 py-3 bg-zello-orange hover:brightness-110 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-[0_0_15px_rgba(240,90,40,0.2)] flex items-center gap-2 outline-none"
+                              >
+                                {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
+                                <LucideIcons.ChevronRight size={14} />
+                              </button>
+                            ) : (
+                              <button
+                                disabled
+                                className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
+                                aria-disabled="true"
+                              >
+                                {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
+                                <LucideIcons.ChevronRight size={14} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Floating Prompt Pill when at the top of modal */}
+                        <AnimatePresence>
+                          {showModalScrollHint && (
+                            <div className="sticky bottom-2 left-0 right-0 flex justify-center pointer-events-none z-30 py-1">
+                              <motion.button
+                                initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                                onClick={() => {
+                                  const element = document.getElementById('pwr-detail-section-0');
+                                  if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth' });
+                                  }
+                                }}
+                                className="pointer-events-auto px-4 py-2 rounded-full bg-zello-orange text-white font-black text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-2 shadow-[0_0_25px_rgba(240,90,40,0.8)] border border-white/30 hover:scale-105 active:scale-95 transition-all cursor-pointer select-none"
+                              >
+                                <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
+                                <span>{t('deck.scrollToGuide', { defaultValue: 'Role para o Guia de Facilitação' })}</span>
+                                <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
+                              </motion.button>
+                            </div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </main>
+
+        <footer className="h-16 border-t border-white/5 px-6 md:px-12 flex items-center justify-between text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-zello-black">
+          <div className="hidden md:block">© 2026 ECOCYCLE PLANNING • Estruturas Libertadoras</div>
+          <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              Interface Sincronizada
+            </div>
+            <div className="flex items-center gap-4">
+              <History size={14} className="cursor-pointer hover:text-white transition-colors" />
+              <Shield size={14} className="cursor-pointer hover:text-white transition-colors" />
+            </div>
+          </div>
+        </footer>
+
+        {/* Custom Alert/Confirm Modal Dialog */}
         <AnimatePresence>
-          {viewingPower && (
+          {customAlert && (
             <motion.div
-              key="power-details-modal"
+              key="custom-alert-overlay-root"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] flex items-center justify-center p-2.5 sm:p-4 bg-zello-black/95 backdrop-blur-xl"
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-zello-black/90 backdrop-blur-md"
             >
               <motion.div
-                initial={{ scale: 0.9, y: 20 }}
+                initial={{ scale: 0.95, y: 15 }}
                 animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="w-full max-w-[800px] max-h-[94vh] sm:max-h-[88vh] bg-zello-black border-2 border-zello-orange rounded-3xl sm:rounded-[40px] overflow-hidden shadow-[0_0_100px_rgba(240,90,40,0.3)] flex flex-col"
+                exit={{ scale: 0.95, y: 15 }}
+                className="w-full max-w-md bg-zinc-950 border-2 border-white/10 rounded-[32px] p-8 shadow-[0_0_50px_rgba(240,90,40,0.15)] relative overflow-hidden"
               >
-                {/* Scrollable Container with sequential details and visible custom scrollbar */}
-                {(() => {
-                  const activePower = localizedViewingPower || viewingPower;
-                  return (
-                    <div 
-                      id="pwr-detail-scroll-container" 
-                      onScroll={handleModalScroll}
-                      className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto structure-modal-scrollbar space-y-6 sm:space-y-8 scroll-smooth relative"
-                    >
-                      {/* Back Navigation Header */}
-                      <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-2">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${customAlert.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
+                        customAlert.type === 'error' ? 'bg-red-500/10 text-red-500' :
+                          customAlert.type === 'confirm' ? 'bg-amber-500/10 text-amber-500' :
+                            'bg-zello-orange/10 text-zello-orange'
+                      }`}>
+                      {customAlert.type === 'success' ? <LucideIcons.CheckCircle size={24} /> :
+                        customAlert.type === 'error' ? <LucideIcons.AlertTriangle size={24} /> :
+                          customAlert.type === 'confirm' ? <LucideIcons.HelpCircle size={24} /> :
+                            <LucideIcons.Info size={24} />}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-white uppercase italic tracking-tight">{customAlert.title}</h3>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Notificação do Sistema</span>
+                    </div>
+                  </div>
+
+                  <div className="text-slate-300 font-medium text-sm leading-relaxed whitespace-pre-line">
+                    {customAlert.message}
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    {customAlert.type === 'confirm' ? (
+                      <>
                         <button
-                          onClick={() => setViewingPower(null)}
-                          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-zello-orange focus:text-zello-orange transition-colors cursor-pointer outline-none"
-                        >
-                          <LucideIcons.ArrowLeft size={14} />
-                          {t('deck.backToDeck', { defaultValue: 'Voltar ao Deck' })}
-                        </button>
-                        
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-white/5 border border-white/10">
-                          <span className="text-[9px] font-black text-zello-orange uppercase tracking-[0.2em]">EL</span>
-                          <span className="text-sm font-black text-white italic tracking-tighter">#{activePower.id.padStart(2, '0')}</span>
-                        </div>
-                      </div>
-
-                      {/* Header Info Area with Official Drawing */}
-                      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-white/5">
-                        {/* Official Drawing Canvas Showcase */}
-                        <div className="w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-gradient-to-b from-white to-slate-100 p-4 flex items-center justify-center shrink-0 shadow-[0_0_30px_rgba(240,90,40,0.15)] border-2 border-white/20 relative group">
-                          {activePower.drawingUrl ? (
-                            <img
-                              src={activePower.drawingUrl}
-                              alt={t('deck.officialDrawingOf', { title: activePower.title, defaultValue: `Desenho oficial de ${activePower.title}` })}
-                              className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
-                            />
-                          ) : (
-                            <div className="text-slate-700 font-mono font-black text-2xl">#{activePower.id}</div>
-                          )}
-                          <div className="absolute bottom-2 px-2 py-0.5 rounded-md bg-black/5 text-[8px] font-mono text-slate-600 font-bold uppercase tracking-wider">
-                            {t('deck.officialDrawing', { defaultValue: 'Desenho Oficial' })}
-                          </div>
-                        </div>
-
-                        <div className="space-y-3 text-center sm:text-left flex-1 select-none">
-                          <div className="flex items-center justify-center sm:justify-start gap-2">
-                            <span className="text-xs font-black text-zello-orange uppercase tracking-[0.2em]">
-                              {activePower.category}
-                            </span>
-                            <span className="text-xs font-mono text-slate-500">•</span>
-                            <span className="text-xs font-mono font-bold text-slate-300">
-                              {t('deck.structureNumber', { defaultValue: 'ESTRUTURA' })} #{activePower.id.padStart(2, '0')}
-                            </span>
-                          </div>
-
-                          <h2 className="text-2xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-tight font-sans">
-                            {activePower.title}
-                          </h2>
-
-                          {activePower.englishTitle && (
-                            <p className="text-xs font-mono text-zello-orange/90 font-bold tracking-wide">
-                              {t('deck.originalTitle', { defaultValue: 'Título Original:' })} {activePower.englishTitle}
-                            </p>
-                          )}
-
-                          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-                            {activePower.timeNeeded && (
-                              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
-                                ⏱️ {activePower.timeNeeded}
-                              </span>
-                            )}
-                            {activePower.groupSize && (
-                              <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300 font-semibold">
-                                👥 {activePower.groupSize}
-                              </span>
-                            )}
-                          </div>
-
-                          {activePower.objective && (
-                            <p className="text-slate-300 text-sm leading-relaxed font-medium pt-1">
-                              {activePower.objective}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Prominent Scroll Affordance Banner & Indicator */}
-                      <div className="space-y-2">
-                        <button
-                          onClick={() => {
-                            const element = document.getElementById('pwr-detail-section-0');
-                            if (element) {
-                              element.scrollIntoView({ behavior: 'smooth' });
+                          onClick={async () => {
+                            const originalOnConfirm = customAlert.onConfirm;
+                            setCustomAlert(null);
+                            if (originalOnConfirm) {
+                              await originalOnConfirm();
                             }
                           }}
-                          className="w-full p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-zello-orange/15 via-zello-orange/25 to-zello-orange/15 border-2 border-zello-orange/50 hover:border-zello-orange hover:bg-zello-orange/35 transition-all duration-300 group outline-none shadow-[0_0_30px_rgba(240,90,40,0.25)] cursor-pointer flex flex-col items-center justify-center text-center select-none"
-                          aria-label={t('deck.scrollDownAria', { defaultValue: 'Rolar para ver detalhes completos da estrutura' })}
+                          className="flex-1 py-4 bg-zello-orange hover:bg-zello-orange/90 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-[0_0_15px_rgba(240,90,40,0.25)] transition-all cursor-pointer"
                         >
-                          <div className="flex items-center justify-center gap-2 sm:gap-2.5">
-                            <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
-                            <span className="text-[11px] sm:text-xs md:text-sm font-black uppercase tracking-[0.16em] text-white group-hover:text-zello-orange transition-colors">
-                              {t('deck.scrollDownPrompt', { defaultValue: 'Role a tela para baixo • 5 Etapas do Guia Completo de Condução' })}
-                            </span>
-                            <LucideIcons.ChevronsDown size={18} className="text-zello-orange animate-bounce shrink-0" />
-                          </div>
-                          <div className="flex items-center gap-2 mt-1.5 text-[9px] sm:text-[10px] font-mono text-slate-300 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-zello-orange animate-ping shrink-0" />
-                            <span>{t('deck.scrollDownHint', { defaultValue: 'Use a barra de rolagem laranja à direita ou clique neste banner para avançar' })}</span>
-                          </div>
+                          Confirmar
                         </button>
-                      </div>
-
-                      {/* Sequential Facilitation Layout */}
-                      <div className="space-y-10 pt-4 pb-12">
-                        {/* 01 — ENTENDA / CONTEXTO */}
-                        {activePower.applicationContext && (
-                          <div id="pwr-detail-section-0" className="space-y-4 text-left">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">01</span>
-                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                                {t('deck.whenToUse', { defaultValue: 'QUANDO UTILIZAR' })}
-                              </h4>
-                            </div>
-                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
-                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
-                                {t('deck.applicationContext', { defaultValue: 'Contexto de Aplicação' })}
-                              </p>
-                              <p className="text-slate-300 text-sm leading-relaxed font-semibold">
-                                {activePower.applicationContext}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* 02 — FLUXO DE FACILITAÇÃO (Entrada, Processo, Saída) */}
-                        {(activePower.input || activePower.process || activePower.output) && (
-                          <div className="space-y-4 text-left">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">02</span>
-                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                                {t('deck.facilitationFlow', { defaultValue: 'FLUXO DE FACILITAÇÃO' })}
-                              </h4>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              {activePower.input && (
-                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
-                                    {t('deck.input', { defaultValue: 'Entrada' })}
-                                  </span>
-                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.input}</p>
-                                </div>
-                              )}
-                              {activePower.process && (
-                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
-                                    {t('deck.process', { defaultValue: 'Processo' })}
-                                  </span>
-                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.process}</p>
-                                </div>
-                              )}
-                              {activePower.output && (
-                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                                  <span className="text-[10px] font-mono uppercase tracking-wider text-zello-orange font-bold">
-                                    {t('deck.output', { defaultValue: 'Saída' })}
-                                  </span>
-                                  <p className="text-xs text-slate-300 leading-relaxed">{activePower.output}</p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* 03 — VEJA UM EXEMPLO */}
-                        {activePower.practicalExample && (
-                          <div id="pwr-detail-section-1" className="space-y-4 text-left">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">03</span>
-                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                                {t('deck.practicalExampleHeading', { defaultValue: 'EXEMPLO PRÁTICO DE CONDUÇÃO' })}
-                              </h4>
-                            </div>
-                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-2">
-                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
-                                {t('deck.dynamicInAction', { defaultValue: 'Dinâmica em Ação' })}
-                              </p>
-                              <p className="text-slate-300 text-sm leading-relaxed">
-                                {activePower.practicalExample}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* 04 — EXPERIMENTE / CASOS DE USO */}
-                        {activePower.cases && Array.isArray(activePower.cases) && activePower.cases.length > 0 && (
-                          <div id="pwr-detail-section-2" className="space-y-4 text-left">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">04</span>
-                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                                {t('deck.recommendedCases', { defaultValue: 'CASOS DE USO RECOMENDADOS' })}
-                              </h4>
-                            </div>
-                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
-                                {t('deck.whereToApply', { defaultValue: 'Onde aplicar no dia a dia' })}
-                              </p>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {activePower.cases.map((useCase, idx) => (
-                                  <div key={`pwr-case-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
-                                    <span className="text-xs text-slate-300">{useCase}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* 05 — BENEFÍCIOS */}
-                        {activePower.expectedBenefits && 
-                         Array.isArray(activePower.expectedBenefits) && 
-                         activePower.expectedBenefits.filter(Boolean).length > 0 && (
-                          <div id="pwr-detail-section-3" className="space-y-4 text-left">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl font-black text-zello-orange/30 font-mono leading-none">05</span>
-                              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-zello-orange font-mono">
-                                {t('deck.structureBenefits', { defaultValue: 'BENEFÍCIOS DA ESTRUTURA' })}
-                              </h4>
-                            </div>
-                            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
-                                {t('deck.expectedImpacts', { defaultValue: 'Impactos Esperados' })}
-                              </p>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {activePower.expectedBenefits.filter(Boolean).map((benefit, idx) => (
-                                  <div key={`pwr-benefit-${idx}`} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-zello-orange/20 transition-all font-semibold">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-zello-orange shrink-0 shadow-[0_0_8px_rgba(240,90,40,1)]"></div>
-                                    <span className="text-xs text-slate-300">{benefit}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Navigation bar between ELs */}
-                      <div className="border-t border-white/5 pt-8 pb-4 flex flex-col items-center gap-6">
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zello-orange/80">
-                          {t('deck.structureNumber', { defaultValue: 'ESTRUTURA LIBERTADORA' })} #{activePower.id.padStart(2, '0')}
-                        </span>
-                        
-                        <div className="flex items-center justify-between w-full gap-4">
-                          {currentPowerIndex > 0 ? (
-                            <button
-                              onClick={handlePrevPower}
-                              className="px-5 py-3 bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-zello-orange/50 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-2 outline-none"
-                            >
-                              <LucideIcons.ChevronLeft size={14} />
-                              {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
-                            </button>
-                          ) : (
-                            <button
-                              disabled
-                              className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
-                              aria-disabled="true"
-                            >
-                              <LucideIcons.ChevronLeft size={14} />
-                              {t('deck.prevStructure', { defaultValue: 'Estrutura Anterior' })}
-                            </button>
-                          )}
-
-                          {currentPowerIndex < AI_POWERS.length - 1 ? (
-                            <button
-                              onClick={handleNextPower}
-                              className="px-5 py-3 bg-zello-orange hover:brightness-110 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-[0_0_15px_rgba(240,90,40,0.2)] flex items-center gap-2 outline-none"
-                            >
-                              {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
-                              <LucideIcons.ChevronRight size={14} />
-                            </button>
-                          ) : (
-                            <button
-                              disabled
-                              className="px-5 py-3 bg-white/[0.02] border border-white/5 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl cursor-not-allowed flex items-center gap-2 outline-none"
-                              aria-disabled="true"
-                            >
-                              {t('deck.nextStructure', { defaultValue: 'Próxima Estrutura' })}
-                              <LucideIcons.ChevronRight size={14} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Floating Prompt Pill when at the top of modal */}
-                      <AnimatePresence>
-                        {showModalScrollHint && (
-                          <div className="sticky bottom-2 left-0 right-0 flex justify-center pointer-events-none z-30 py-1">
-                            <motion.button
-                              initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                              onClick={() => {
-                                const element = document.getElementById('pwr-detail-section-0');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth' });
-                                }
-                              }}
-                              className="pointer-events-auto px-4 py-2 rounded-full bg-zello-orange text-white font-black text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-2 shadow-[0_0_25px_rgba(240,90,40,0.8)] border border-white/30 hover:scale-105 active:scale-95 transition-all cursor-pointer select-none"
-                            >
-                              <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
-                              <span>{t('deck.scrollToGuide', { defaultValue: 'Role para o Guia de Facilitação' })}</span>
-                              <LucideIcons.ChevronsDown size={14} className="animate-bounce" />
-                            </motion.button>
-                          </div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })()}
+                        <button
+                          onClick={() => setCustomAlert(null)}
+                          className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-slate-300 font-black uppercase tracking-widest text-xs rounded-xl transition-all cursor-pointer"
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setCustomAlert(null)}
+                        className="w-full py-4 bg-zello-orange hover:bg-zello-orange/90 text-white font-black uppercase tracking-widest text-xs rounded-xl cursor-pointer transition-all font-bold"
+                      >
+                        Ok
+                      </button>
+                    )}
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
 
-      <footer className="h-16 border-t border-white/5 px-6 md:px-12 flex items-center justify-between text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-zello-black">
-        <div className="hidden md:block">© 2026 ECOCYCLE PLANNING • Estruturas Libertadoras</div>
-        <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            Interface Sincronizada
-          </div>
-          <div className="flex items-center gap-4">
-            <History size={14} className="cursor-pointer hover:text-white transition-colors" />
-            <Shield size={14} className="cursor-pointer hover:text-white transition-colors" />
-          </div>
-        </div>
-      </footer>
-
-      {/* Custom Alert/Confirm Modal Dialog */}
-      <AnimatePresence>
-        {customAlert && (
-          <motion.div
-            key="custom-alert-overlay-root"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-zello-black/90 backdrop-blur-md"
-          >
+        {/* Video Tutorial Modal */}
+        <AnimatePresence>
+          {activeVideo && (
             <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              className="w-full max-w-md bg-zinc-950 border-2 border-white/10 rounded-[32px] p-8 shadow-[0_0_50px_rgba(240,90,40,0.15)] relative overflow-hidden"
+              key="active-video-overlay-root"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-zinc-950/95 backdrop-blur-md"
             >
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
-              
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
-                    customAlert.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
-                    customAlert.type === 'error' ? 'bg-red-500/10 text-red-500' :
-                    customAlert.type === 'confirm' ? 'bg-amber-500/10 text-amber-500' :
-                    'bg-zello-orange/10 text-zello-orange'
-                  }`}>
-                    {customAlert.type === 'success' ? <LucideIcons.CheckCircle size={24} /> :
-                     customAlert.type === 'error' ? <LucideIcons.AlertTriangle size={24} /> :
-                     customAlert.type === 'confirm' ? <LucideIcons.HelpCircle size={24} /> :
-                     <LucideIcons.Info size={24} />}
+              <motion.div
+                initial={{ scale: 0.95, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 15 }}
+                className="w-full max-w-5xl h-[82vh] sm:h-[85vh] bg-zinc-900 border border-white/10 rounded-[28px] overflow-hidden shadow-[0_0_50px_rgba(240,90,40,0.3)] relative flex flex-col mx-2 sm:mx-4"
+              >
+                {/* Header with Title and Close button */}
+                <div className="p-4 flex items-center justify-between border-b border-white/5 bg-zinc-900 relative z-10 shrink-0">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-zello-orange/10 flex items-center justify-center text-zello-orange">
+                      <LucideIcons.Play size={16} className="fill-zello-orange text-zello-orange" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-white uppercase italic tracking-wider leading-none">{activeVideo.title}</h3>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mt-1 block">Tutorial em Vídeo</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-black text-white uppercase italic tracking-tight">{customAlert.title}</h3>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Notificação do Sistema</span>
-                  </div>
+                  <button
+                    onClick={() => setActiveVideo(null)}
+                    className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <LucideIcons.X size={16} />
+                  </button>
                 </div>
 
-                <div className="text-slate-300 font-medium text-sm leading-relaxed whitespace-pre-line">
-                  {customAlert.message}
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  {customAlert.type === 'confirm' ? (
-                    <>
-                      <button
-                        onClick={async () => {
-                          const originalOnConfirm = customAlert.onConfirm;
-                          setCustomAlert(null);
-                          if (originalOnConfirm) {
-                            await originalOnConfirm();
-                          }
-                        }}
-                        className="flex-1 py-4 bg-zello-orange hover:bg-zello-orange/90 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-[0_0_15px_rgba(240,90,40,0.25)] transition-all cursor-pointer"
-                      >
-                        Confirmar
-                      </button>
-                      <button
-                        onClick={() => setCustomAlert(null)}
-                        className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-slate-300 font-black uppercase tracking-widest text-xs rounded-xl transition-all cursor-pointer"
-                      >
-                        Cancelar
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => setCustomAlert(null)}
-                      className="w-full py-4 bg-zello-orange hover:bg-zello-orange/90 text-white font-black uppercase tracking-widest text-xs rounded-xl cursor-pointer transition-all font-bold"
-                    >
-                      Ok
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Video Tutorial Modal */}
-      <AnimatePresence>
-        {activeVideo && (
-          <motion.div
-            key="active-video-overlay-root"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-zinc-950/95 backdrop-blur-md"
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              className="w-full max-w-5xl h-[82vh] sm:h-[85vh] bg-zinc-900 border border-white/10 rounded-[28px] overflow-hidden shadow-[0_0_50px_rgba(240,90,40,0.3)] relative flex flex-col mx-2 sm:mx-4"
-            >
-              {/* Header with Title and Close button */}
-              <div className="p-4 flex items-center justify-between border-b border-white/5 bg-zinc-900 relative z-10 shrink-0">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-zello-orange/10 flex items-center justify-center text-zello-orange">
-                    <LucideIcons.Play size={16} className="fill-zello-orange text-zello-orange" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-white uppercase italic tracking-wider leading-none">{activeVideo.title}</h3>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mt-1 block">Tutorial em Vídeo</span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setActiveVideo(null)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <LucideIcons.X size={16} />
-                </button>
-              </div>
-
-              {/* Video Player Box - Expands to occupy all remaining screen vertical height */}
-              <div className="flex-1 w-full bg-black relative flex flex-col lg:flex-row overflow-hidden">
-                {(() => {
-                  let embedUrl = activeVideo.url.trim();
-                  const shortsMatch = embedUrl.match(/(?:youtube\.com|youtu\.be)\/shorts\/([a-zA-Z0-9_-]+)/i);
-                  if (shortsMatch && shortsMatch[1]) {
-                    embedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
-                  } else {
-                    const watchMatch = embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i);
-                    if (watchMatch && watchMatch[1]) {
-                      embedUrl = `https://www.youtube.com/embed/${watchMatch[1]}`;
+                {/* Video Player Box - Expands to occupy all remaining screen vertical height */}
+                <div className="flex-1 w-full bg-black relative flex flex-col lg:flex-row overflow-hidden">
+                  {(() => {
+                    let embedUrl = activeVideo.url.trim();
+                    const shortsMatch = embedUrl.match(/(?:youtube\.com|youtu\.be)\/shorts\/([a-zA-Z0-9_-]+)/i);
+                    if (shortsMatch && shortsMatch[1]) {
+                      embedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
+                    } else {
+                      const watchMatch = embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i);
+                      if (watchMatch && watchMatch[1]) {
+                        embedUrl = `https://www.youtube.com/embed/${watchMatch[1]}`;
+                      }
                     }
-                  }
-                  embedUrl = embedUrl.replace('youtube-nocookie.com', 'youtube.com');
-                  const finalSrc = `${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`;
-                  const isJornada = activeVideo.title.toLowerCase().includes('jornada');
+                    embedUrl = embedUrl.replace('youtube-nocookie.com', 'youtube.com');
+                    const finalSrc = `${embedUrl}${embedUrl.includes('?') ? '&' : '?'}autoplay=1`;
+                    const isJornada = activeVideo.title.toLowerCase().includes('jornada');
 
-                  return (
-                    <>
-                      <div className={`relative flex items-center justify-center bg-black ${isJornada ? 'w-full lg:w-3/5 h-[45vh] lg:h-full shrink-0' : 'w-full h-full'}`}>
-                        <iframe
-                          src={finalSrc}
-                          title={activeVideo.title}
-                          className="w-full h-full border-0 max-w-full max-h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
+                    return (
+                      <>
+                        <div className={`relative flex items-center justify-center bg-black ${isJornada ? 'w-full lg:w-3/5 h-[45vh] lg:h-full shrink-0' : 'w-full h-full'}`}>
+                          <iframe
+                            src={finalSrc}
+                            title={activeVideo.title}
+                            className="w-full h-full border-0 max-w-full max-h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
 
-                      {isJornada && (
-                        <div className="flex-1 bg-zinc-950 border-t lg:border-t-0 lg:border-l border-white/10 p-6 md:p-8 flex flex-col justify-center overflow-y-auto custom-scrollbar select-none text-left">
-                          <div className="space-y-6">
-                            <div className="flex items-center gap-2 text-zello-orange">
-                              <LucideIcons.Compass size={18} className="animate-spin-slow" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Caminho de Aprendizagem</span>
-                            </div>
-                            
-                            <h4 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tight">
-                              SAUDAÇÕES, JOVEM PADAWAN
-                            </h4>
-
-                            <div className="space-y-4 text-xs md:text-sm text-slate-300 font-medium leading-relaxed">
-                              <p>
-                                Jovem Padawan, sua jornada de facilitação é guiada pelas Estruturas Libertadoras.
-                              </p>
-                              <p>
-                                Primeiro, explore o <strong className="text-white font-bold">Deck</strong> e conheça todas as 43 Estruturas Libertadoras oficiais e seus propósitos fundamentais.
-                              </p>
-                              <p>
-                                Depois, enfrente os <strong className="text-white font-bold">Quizzes</strong> e teste sua maestria em encadear Strings estratégicas com o Ecocycle Planning através dos níveis Padawan, Jedi e Yoda.
-                              </p>
-                              
-                              <div className="pt-2 flex items-center gap-2 font-black tracking-widest text-zello-orange uppercase italic">
-                                <span>CONHEÇA</span>
-                                <span>•</span>
-                                <span>PRATIQUE</span>
-                                <span>•</span>
-                                <span>DOMINE</span>
+                        {isJornada && (
+                          <div className="flex-1 bg-zinc-950 border-t lg:border-t-0 lg:border-l border-white/10 p-6 md:p-8 flex flex-col justify-center overflow-y-auto custom-scrollbar select-none text-left">
+                            <div className="space-y-6">
+                              <div className="flex items-center gap-2 text-zello-orange">
+                                <LucideIcons.Compass size={18} className="animate-spin-slow" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Caminho de Aprendizagem</span>
                               </div>
-                              
-                              <p className="text-xs text-slate-500 italic font-semibold pt-2">
-                                "É assim que você desenvolverá seu domínio sobre a facilitação estratégica libertadora."
-                              </p>
+
+                              <h4 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tight">
+                                SAUDAÇÕES, JOVEM PADAWAN
+                              </h4>
+
+                              <div className="space-y-4 text-xs md:text-sm text-slate-300 font-medium leading-relaxed">
+                                <p>
+                                  Jovem Padawan, sua jornada de facilitação é guiada pelas Estruturas Libertadoras.
+                                </p>
+                                <p>
+                                  Primeiro, explore o <strong className="text-white font-bold">Deck</strong> e conheça todas as 43 Estruturas Libertadoras oficiais e seus propósitos fundamentais.
+                                </p>
+                                <p>
+                                  Depois, enfrente os <strong className="text-white font-bold">Quizzes</strong> e teste sua maestria em encadear Strings estratégicas com o Ecocycle Planning através dos níveis Padawan, Jedi e Yoda.
+                                </p>
+
+                                <div className="pt-2 flex items-center gap-2 font-black tracking-widest text-zello-orange uppercase italic">
+                                  <span>CONHEÇA</span>
+                                  <span>•</span>
+                                  <span>PRATIQUE</span>
+                                  <span>•</span>
+                                  <span>DOMINE</span>
+                                </div>
+
+                                <p className="text-xs text-slate-500 italic font-semibold pt-2">
+                                  "É assim que você desenvolverá seu domínio sobre a facilitação estratégica libertadora."
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
-              </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          )}
+        </AnimatePresence>
+      </div>
     </AppStateProvider>
   );
 }

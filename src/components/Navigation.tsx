@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { LogOut, Zap, Menu, X, ChevronRight, Globe } from 'lucide-react';
+import { LogOut, Zap, Menu, X, ChevronRight, Globe, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getRank } from '../utils/progression';
 import { Company, GameState } from '../types';
@@ -34,8 +34,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   const currentLang = i18n.language?.startsWith('es')
     ? 'es'
     : i18n.language?.startsWith('en')
-    ? 'en'
-    : 'pt-BR';
+      ? 'en'
+      : 'pt-BR';
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -79,6 +79,14 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="flex items-center gap-4 md:gap-8 animate-fade-in">
           <div className="hidden md:flex items-center gap-2">
             <button
+              onClick={() => setGameState('home')}
+              className={`p-2 rounded-lg transition-all cursor-pointer ${gameState === 'home' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
+              aria-label={t('nav.home', { defaultValue: 'Início' })}
+              title={t('nav.home', { defaultValue: 'Início' })}
+            >
+              <Home size={16} />
+            </button>
+            <button
               onClick={() => setGameState('deck')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'deck' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
             >
@@ -111,33 +119,30 @@ export const Navigation: React.FC<NavigationProps> = ({
             <Globe size={13} className="text-slate-500 ml-1.5 mr-0.5" />
             <button
               onClick={() => changeLanguage('pt-BR')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'pt-BR'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'pt-BR'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="Português"
             >
               PT
             </button>
             <button
               onClick={() => changeLanguage('es')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'es'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'es'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="Español"
             >
               ES
             </button>
             <button
               onClick={() => changeLanguage('en')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'en'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'en'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="English"
             >
               EN
@@ -258,31 +263,28 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 gap-1">
                   <button
                     onClick={() => changeLanguage('pt-BR')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'pt-BR'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'pt-BR'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     PT
                   </button>
                   <button
                     onClick={() => changeLanguage('es')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'es'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'es'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     ES
                   </button>
                   <button
                     onClick={() => changeLanguage('en')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'en'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'en'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     EN
                   </button>
