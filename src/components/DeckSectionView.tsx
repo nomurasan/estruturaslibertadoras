@@ -218,7 +218,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
       {/* FILTER CONTROLS HUB — ZERO OVERFLOW & FULLY RESPONSIVE */}
       <div className="w-full max-w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-950/85 border border-white/10 p-3.5 sm:p-5 md:p-6 shadow-2xl backdrop-blur-md space-y-3.5 sm:space-y-4">
-        
+
         {/* ROW 1: SEARCH, VIEW SWITCHER & RESULTS COUNTER */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
           {/* Search Input */}
@@ -248,11 +248,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             <div className="flex items-center bg-black/40 p-1 rounded-xl border border-white/10">
               <button
                 onClick={() => setViewLayout('grid')}
-                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                  viewLayout === 'grid'
+                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewLayout === 'grid'
                     ? 'bg-zello-orange text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
-                }`}
+                  }`}
                 title="Visualização em Cards"
                 aria-label="Ver em Cards"
               >
@@ -261,11 +260,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               </button>
               <button
                 onClick={() => setViewLayout('list')}
-                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                  viewLayout === 'list'
+                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewLayout === 'list'
                     ? 'bg-zello-orange text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
-                }`}
+                  }`}
                 title="Visualização em Lista Compacta"
                 aria-label="Ver em Lista"
               >
@@ -304,22 +302,20 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
           <div className="grid grid-cols-3 sm:flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/10 w-full sm:w-auto">
             <button
               onClick={() => setSelectedEdition('all')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
-                selectedEdition === 'all'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'all'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+                }`}
             >
               Todas ({totalCount})
             </button>
 
             <button
               onClick={() => setSelectedEdition('classics')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
-                selectedEdition === 'classics'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'classics'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+                }`}
             >
               <span className="sm:hidden">Clássicas ({classicsCount})</span>
               <span className="hidden sm:inline">33 Clássicas ({classicsCount})</span>
@@ -327,11 +323,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
             <button
               onClick={() => setSelectedEdition('fieldbook')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
-                selectedEdition === 'fieldbook'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'fieldbook'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-              }`}
+                }`}
             >
               <span className="sm:hidden">Fieldbook ({fieldbookCount})</span>
               <span className="hidden sm:inline">10 Fieldbook ({fieldbookCount})</span>
@@ -370,11 +365,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
           <div className="hidden md:flex flex-wrap items-center gap-1.5 lg:gap-2">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                selectedCategory === 'all'
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${selectedCategory === 'all'
                   ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)] ring-1 ring-zello-orange/50'
                   : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
+                }`}
             >
               <LucideIcons.LayoutGrid size={13} />
               <span>Todas ({AI_POWERS.length})</span>
@@ -390,18 +384,16 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                   key={`cat-btn-desk-${cat.key}`}
                   onClick={() => setSelectedCategory(cat.key)}
                   title={cat.description}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                    isSelected
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${isSelected
                       ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)] ring-1 ring-zello-orange/50'
                       : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   <Icon size={13} className={isSelected ? 'text-white' : 'text-zello-orange'} />
                   <span>{cat.shortLabel}</span>
                   <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${
-                      isSelected ? 'bg-white/20 text-white font-bold' : 'bg-white/5 text-slate-400'
-                    }`}
+                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${isSelected ? 'bg-white/20 text-white font-bold' : 'bg-white/5 text-slate-400'
+                      }`}
                   >
                     {count}
                   </span>
@@ -419,11 +411,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             >
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${
-                  selectedCategory === 'all'
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${selectedCategory === 'all'
                     ? 'bg-zello-orange text-white shadow-[0_0_10px_rgba(240,90,40,0.3)]'
                     : 'bg-white/5 border border-white/10 text-slate-300'
-                }`}
+                  }`}
               >
                 <LucideIcons.LayoutGrid size={12} />
                 <span>{t('deck.all', { defaultValue: 'Todas' })} ({totalCount})</span>
@@ -438,11 +429,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                   <button
                     key={`cat-btn-mob-scroll-${cat.key}`}
                     onClick={() => setSelectedCategory(cat.key)}
-                    className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${
-                      isSelected
+                    className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${isSelected
                         ? 'bg-zello-orange text-white shadow-[0_0_10px_rgba(240,90,40,0.3)]'
                         : 'bg-white/5 border border-white/10 text-slate-300'
-                    }`}
+                      }`}
                   >
                     <Icon size={12} className={isSelected ? 'text-white' : 'text-zello-orange'} />
                     <span>{cat.shortLabel}</span>
@@ -542,11 +532,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                     setSelectedCategory('all');
                     setIsMobileCategoryOpen(false);
                   }}
-                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                    selectedCategory === 'all'
+                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${selectedCategory === 'all'
                       ? 'bg-zello-orange text-white border-zello-orange shadow-[0_0_15px_rgba(240,90,40,0.3)]'
                       : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <LucideIcons.LayoutGrid size={16} />
@@ -567,11 +556,10 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                         setSelectedCategory(cat.key);
                         setIsMobileCategoryOpen(false);
                       }}
-                      className={`w-full p-3 rounded-xl border text-left space-y-1 transition-all cursor-pointer ${
-                        isSelected
+                      className={`w-full p-3 rounded-xl border text-left space-y-1 transition-all cursor-pointer ${isSelected
                           ? 'bg-zello-orange text-white border-zello-orange shadow-[0_0_15px_rgba(240,90,40,0.3)]'
                           : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">

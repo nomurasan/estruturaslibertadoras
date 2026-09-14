@@ -23,13 +23,13 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
       onClick={onClick}
     >
       <div className="relative w-full h-full rounded-2xl sm:rounded-[32px] overflow-hidden border border-white/10 bg-zinc-950/90 shadow-2xl transition-all duration-500 group-hover:border-zello-orange/60 group-hover:shadow-[0_0_40px_rgba(240,90,40,0.25)] flex flex-col justify-between">
-        
+
         {/* Subtle Ambient Background Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] via-transparent to-zello-orange/[0.03] pointer-events-none" />
 
         {/* Content Container */}
         <div className="relative h-full p-4 sm:p-5 md:p-6 flex flex-col justify-between z-10 space-y-3.5 sm:space-y-4">
-          
+
           {/* Top Section: Category, Icon & EL Number */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
@@ -86,7 +86,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             ) : (
               <IconComponent size={40} className="text-slate-700" />
             )}
-            
+
             <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/10 border border-black/5 text-[7px] sm:text-[8px] font-mono text-slate-700 font-bold uppercase tracking-wider">
               {t('deck.officialDrawingBadge', { defaultValue: 'Desenho Oficial' })}
             </div>
@@ -97,7 +97,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             <h3 className="text-base sm:text-lg md:text-xl font-black text-white uppercase italic tracking-tighter group-hover:text-zello-orange transition-colors leading-tight font-sans">
               {power.title}
             </h3>
-            
+
             <p className="text-xs text-slate-300 font-medium leading-relaxed line-clamp-3">
               {power.objective}
             </p>
