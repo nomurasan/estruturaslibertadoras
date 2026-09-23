@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+  <!-- Head & Antler Horns (Solid Black) -->
+  <path d="M 180 340 
+           C 150 250, 110 180, 130 90 
+           C 145 30, 200 40, 215 110 
+           C 205 160, 240 180, 235 230 
+           C 255 240, 280 270, 260 330 
+           C 340 320, 660 320, 740 330 
+           C 720 270, 745 240, 765 230 
+           C 760 180, 795 160, 785 110 
+           C 800 40, 855 30, 870 90 
+           C 890 180, 850 250, 820 340 
+           C 940 390, 990 540, 950 710 
+           C 890 890, 720 970, 500 970 
+           C 280 970, 110 890, 50 710 
+           C 10 540, 60 390, 180 340 Z" fill="#000000" />
+
+  <!-- Left Eye: Smaller, positioned around (300, 630) -->
+  <circle cx="300" cy="630" r="120" fill="#ffffff" />
+  <circle cx="270" cy="640" r="50" fill="#000000" />
+
+  <!-- Right Eye: Larger, positioned around (650, 660) -->
+  <circle cx="650" cy="660" r="185" fill="#ffffff" />
+  <circle cx="610" cy="700" r="68" fill="#000000" />
+</svg>

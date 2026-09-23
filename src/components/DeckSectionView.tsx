@@ -4,8 +4,7 @@ import * as LucideIcons from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 import { AI_POWERS, AIPower } from '../data/powers';
-import { getLocalizedPower } from '../data/powersLocalization';
-import { EL_CATEGORY_ORDER, EL_CATEGORIES, ELCategory } from '../data/elCategories';
+import { getLocalizedPower, CATEGORY_TRANSLATIONS } from '../data/powersLocalization';
 import { SuperPowerCard } from './SuperPowerCard';
 
 interface DeckSectionViewProps {
@@ -15,8 +14,60 @@ interface DeckSectionViewProps {
   gameState: GameState;
 }
 
+interface CategoryConfig {
+  key: string;
+  label: string;
+  shortLabel: string;
+  icon: keyof typeof LucideIcons;
+  description: string;
+}
+
+const CATEGORY_ITEMS: CategoryConfig[] = [
+  {
+    key: 'Gerar Ideias & Inovação',
+    label: 'Gerar Ideias & Inovação',
+    shortLabel: 'Ideias & Inovação',
+    icon: 'Sparkles',
+    description: 'Estimular criatividade coletiva, romper bloqueios e engajar 100% dos participantes.'
+  },
+  {
+    key: 'Revelar & Diagnosticar',
+    label: 'Revelar & Diagnosticar',
+    shortLabel: 'Revelar & Diagnóstico',
+    icon: 'Search',
+    description: 'Expor tabus, diagnosticar impasses ocultos e mapear o espectro real de opiniões.'
+  },
+  {
+    key: 'Estratégia & Propósito',
+    label: 'Estratégia & Propósito',
+    shortLabel: 'Estratégia & Propósito',
+    icon: 'Target',
+    description: 'Alinhar propósito essencial, navegar incertezas críticas e desenhar governança viva.'
+  },
+  {
+    key: 'Colaboração & Ajuda',
+    label: 'Colaboração & Ajuda',
+    shortLabel: 'Colaboração & Ajuda',
+    icon: 'Users',
+    description: 'Consultoria mútua e franca entre pares, quebra de silos e fortalecimento de redes.'
+  },
+  {
+    key: 'Ação & Convergência',
+    label: 'Ação & Convergência',
+    shortLabel: 'Ação & Convergência',
+    icon: 'Zap',
+    description: 'Destravar autonomia imediata, prototipar soluções e filtrar regras mínimas.'
+  },
+  {
+    key: 'Conectar & Aquecer',
+    label: 'Conectar & Aquecer',
+    shortLabel: 'Conectar & Aquecer',
+    icon: 'Heart',
+    description: 'Aproximação humana rápida, segurança psicológica e abertura acolhedora.'
+  }
+];
+
 type EditionFilter = 'all' | 'classics' | 'fieldbook';
-type CategoryFilter = ELCategory | 'all';
 type ViewLayoutMode = 'grid' | 'list';
 
 export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
@@ -27,26 +78,26 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || 'pt';
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedEdition, setSelectedEdition] = useState<EditionFilter>('all');
   const [isMobileCategoryOpen, setIsMobileCategoryOpen] = useState(false);
   const [viewLayout, setViewLayout] = useState<ViewLayoutMode>('grid');
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Localized categories list (new Deck/Matchmaker taxonomy)
+  // Localized categories list
   const localizedCategories = useMemo(() => {
-    return EL_CATEGORY_ORDER.map((key) => {
-      const cfg = EL_CATEGORIES[key];
-      const isPt = !currentLang || currentLang.startsWith('pt');
-      const label = isPt ? cfg.label : currentLang.startsWith('es') ? cfg.es.label : cfg.en.label;
-      const shortLabel = isPt ? cfg.shortLabel : currentLang.startsWith('es') ? cfg.es.shortLabel : cfg.en.shortLabel;
+    return CATEGORY_ITEMS.map((cat) => {
+      const trans = CATEGORY_TRANSLATIONS[cat.key];
+      const label = !currentLang || currentLang.startsWith('pt')
+        ? cat.label
+        : currentLang.startsWith('es')
+        ? trans?.es || cat.label
+        : trans?.en || cat.label;
       return {
-        key,
+        ...cat,
         label,
-        shortLabel,
-        icon: cfg.icon as keyof typeof LucideIcons,
-        description: cfg.description
+        shortLabel: label
       };
     });
   }, [currentLang]);
@@ -59,7 +110,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
   // Base counts
   const totalCount = localizedPowers.length;
   const classicsCount = localizedPowers.filter((p) => Number(p.id) >= 1 && Number(p.id) <= 33).length;
-  const fieldbookCount = localizedPowers.filter((p) => Number(p.id) >= 34 && Number(p.id) <= 43).length;
+  const fieldbookCount = localizedPowers.filter((p) => Number(p.id) >= 34 && Number(p.id) <= 45).length;
 
   // Filtered structures
   const filteredPowers = useMemo(() => {
@@ -68,13 +119,12 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
       // Match Edition
       if (selectedEdition === 'classics' && (numId < 1 || numId > 33)) return false;
-      if (selectedEdition === 'fieldbook' && (numId < 34 || numId > 43)) return false;
+      if (selectedEdition === 'fieldbook' && (numId < 34 || numId > 45)) return false;
 
-      // Match Category (a EL pode pertencer a múltiplas categorias; nunca usar igualdade simples)
+      // Match Category
       if (selectedCategory !== 'all') {
         const rawPower = AI_POWERS.find((p) => p.id === power.id);
-        const categories = rawPower?.categories || power.categories || [];
-        if (!categories.includes(selectedCategory)) {
+        if (rawPower?.category !== selectedCategory && power.category !== selectedCategory) {
           return false;
         }
       }
@@ -92,21 +142,8 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
         const objectiveMatches = power.objective.toLowerCase().includes(query);
         const categoryMatches = power.category.toLowerCase().includes(query);
         const casesMatches = !!power.cases && power.cases.some((c) => c.toLowerCase().includes(query));
-        const categoriesLabelMatches = (power.categories || []).some((catKey) =>
-          EL_CATEGORIES[catKey]?.label.toLowerCase().includes(query)
-        );
-        const tagsMatches = !!power.tags && power.tags.some((tag) => tag.toLowerCase().includes(query));
 
-        if (
-          !idMatches &&
-          !titleMatches &&
-          !engTitleMatches &&
-          !objectiveMatches &&
-          !categoryMatches &&
-          !casesMatches &&
-          !categoriesLabelMatches &&
-          !tagsMatches
-        ) {
+        if (!idMatches && !titleMatches && !engTitleMatches && !objectiveMatches && !categoryMatches && !casesMatches) {
           return false;
         }
       }
@@ -142,11 +179,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
           </div>
 
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-white font-sans leading-tight">
-            {t('deck.title', { defaultValue: 'Deck das 43 Estruturas Libertadoras' })}
+            {t('deck.title', { defaultValue: `Deck das ${totalCount} Estruturas Libertadoras` })}
           </h2>
 
           <p className="text-slate-300 text-xs sm:text-sm md:text-base font-medium leading-relaxed">
-            {t('deck.subtitle', { defaultValue: 'Explore as 43 Estruturas Libertadoras oficiais (as 33 clássicas + as 10 novidades do Fieldbook em liberatingstructures.com) com seus desenhos oficiais, propósitos essenciais, fluxos sequenciais e regras mínimas.' })}
+            {t('deck.subtitle', { defaultValue: `Explore as ${totalCount} Estruturas Libertadoras oficiais (as 33 clássicas + as 12 inovações do Fieldbook em liberatingstructures.com) com seus desenhos oficiais, propósitos essenciais, fluxos sequenciais e regras mínimas.` })}
           </p>
 
           <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-center lg:justify-start pt-1">
@@ -218,7 +255,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
       {/* FILTER CONTROLS HUB — ZERO OVERFLOW & FULLY RESPONSIVE */}
       <div className="w-full max-w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-zinc-950/85 border border-white/10 p-3.5 sm:p-5 md:p-6 shadow-2xl backdrop-blur-md space-y-3.5 sm:space-y-4">
-
+        
         {/* ROW 1: SEARCH, VIEW SWITCHER & RESULTS COUNTER */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
           {/* Search Input */}
@@ -248,10 +285,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             <div className="flex items-center bg-black/40 p-1 rounded-xl border border-white/10">
               <button
                 onClick={() => setViewLayout('grid')}
-                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewLayout === 'grid'
+                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  viewLayout === 'grid'
                     ? 'bg-zello-orange text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
-                  }`}
+                }`}
                 title="Visualização em Cards"
                 aria-label="Ver em Cards"
               >
@@ -260,10 +298,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               </button>
               <button
                 onClick={() => setViewLayout('list')}
-                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${viewLayout === 'list'
+                className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  viewLayout === 'list'
                     ? 'bg-zello-orange text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
-                  }`}
+                }`}
                 title="Visualização em Lista Compacta"
                 aria-label="Ver em Lista"
               >
@@ -302,20 +341,22 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
           <div className="grid grid-cols-3 sm:flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/10 w-full sm:w-auto">
             <button
               onClick={() => setSelectedEdition('all')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'all'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
+                selectedEdition === 'all'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
+              }`}
             >
               Todas ({totalCount})
             </button>
 
             <button
               onClick={() => setSelectedEdition('classics')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'classics'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
+                selectedEdition === 'classics'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
+              }`}
             >
               <span className="sm:hidden">Clássicas ({classicsCount})</span>
               <span className="hidden sm:inline">33 Clássicas ({classicsCount})</span>
@@ -323,10 +364,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
 
             <button
               onClick={() => setSelectedEdition('fieldbook')}
-              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${selectedEdition === 'fieldbook'
+              className={`px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
+                selectedEdition === 'fieldbook'
                   ? 'bg-zello-orange text-white shadow-[0_0_12px_rgba(240,90,40,0.35)]'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
+              }`}
             >
               <span className="sm:hidden">Fieldbook ({fieldbookCount})</span>
               <span className="hidden sm:inline">10 Fieldbook ({fieldbookCount})</span>
@@ -340,12 +382,6 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400">
               <LucideIcons.Filter size={13} className="text-zello-orange" />
               Filtrar por Propósito:
-              <span
-                title="Uma mesma Estrutura Libertadora pode atender a mais de uma finalidade. Por isso, uma carta pode aparecer em diferentes categorias."
-                className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-white/10 text-slate-400 cursor-help shrink-0"
-              >
-                <LucideIcons.Info size={10} />
-              </span>
             </div>
 
             {/* Current Active Indicator Label on Mobile */}
@@ -357,25 +393,23 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               <LucideIcons.ChevronRight size={12} />
             </button>
           </div>
-          <p className="text-[10px] text-slate-500 leading-relaxed">
-            Uma mesma Estrutura Libertadora pode atender a mais de uma finalidade. Por isso, uma carta pode aparecer em diferentes categorias.
-          </p>
 
           {/* DESKTOP / TABLET (>= 768px): WRAPPED CHIPS THAT NEVER OVERFLOW */}
           <div className="hidden md:flex flex-wrap items-center gap-1.5 lg:gap-2">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${selectedCategory === 'all'
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                selectedCategory === 'all'
                   ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)] ring-1 ring-zello-orange/50'
                   : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
-                }`}
+              }`}
             >
               <LucideIcons.LayoutGrid size={13} />
               <span>Todas ({AI_POWERS.length})</span>
             </button>
 
             {localizedCategories.map((cat) => {
-              const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
+              const count = AI_POWERS.filter((p) => p.category === cat.key).length;
               const isSelected = selectedCategory === cat.key;
               const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -384,16 +418,18 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                   key={`cat-btn-desk-${cat.key}`}
                   onClick={() => setSelectedCategory(cat.key)}
                   title={cat.description}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${isSelected
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                    isSelected
                       ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)] ring-1 ring-zello-orange/50'
                       : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
-                    }`}
+                  }`}
                 >
                   <Icon size={13} className={isSelected ? 'text-white' : 'text-zello-orange'} />
                   <span>{cat.shortLabel}</span>
                   <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${isSelected ? 'bg-white/20 text-white font-bold' : 'bg-white/5 text-slate-400'
-                      }`}
+                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-md ${
+                      isSelected ? 'bg-white/20 text-white font-bold' : 'bg-white/5 text-slate-400'
+                    }`}
                   >
                     {count}
                   </span>
@@ -411,17 +447,18 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
             >
               <button
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${selectedCategory === 'all'
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${
+                  selectedCategory === 'all'
                     ? 'bg-zello-orange text-white shadow-[0_0_10px_rgba(240,90,40,0.3)]'
                     : 'bg-white/5 border border-white/10 text-slate-300'
-                  }`}
+                }`}
               >
                 <LucideIcons.LayoutGrid size={12} />
                 <span>{t('deck.all', { defaultValue: 'Todas' })} ({totalCount})</span>
               </button>
 
               {localizedCategories.map((cat) => {
-                const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
+                const count = AI_POWERS.filter((p) => p.category === cat.key).length;
                 const isSelected = selectedCategory === cat.key;
                 const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -429,10 +466,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                   <button
                     key={`cat-btn-mob-scroll-${cat.key}`}
                     onClick={() => setSelectedCategory(cat.key)}
-                    className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${isSelected
+                    className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 snap-start cursor-pointer ${
+                      isSelected
                         ? 'bg-zello-orange text-white shadow-[0_0_10px_rgba(240,90,40,0.3)]'
                         : 'bg-white/5 border border-white/10 text-slate-300'
-                      }`}
+                    }`}
                   >
                     <Icon size={12} className={isSelected ? 'text-white' : 'text-zello-orange'} />
                     <span>{cat.shortLabel}</span>
@@ -532,10 +570,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                     setSelectedCategory('all');
                     setIsMobileCategoryOpen(false);
                   }}
-                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${selectedCategory === 'all'
+                  className={`w-full p-3 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                    selectedCategory === 'all'
                       ? 'bg-zello-orange text-white border-zello-orange shadow-[0_0_15px_rgba(240,90,40,0.3)]'
                       : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                    }`}
+                  }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <LucideIcons.LayoutGrid size={16} />
@@ -545,7 +584,7 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                 </button>
 
                 {localizedCategories.map((cat) => {
-                  const count = AI_POWERS.filter((p) => p.categories.includes(cat.key)).length;
+                  const count = AI_POWERS.filter((p) => p.category === cat.key).length;
                   const isSelected = selectedCategory === cat.key;
                   const Icon = (LucideIcons as any)[cat.icon] || LucideIcons.Zap;
 
@@ -556,10 +595,11 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                         setSelectedCategory(cat.key);
                         setIsMobileCategoryOpen(false);
                       }}
-                      className={`w-full p-3 rounded-xl border text-left space-y-1 transition-all cursor-pointer ${isSelected
+                      className={`w-full p-3 rounded-xl border text-left space-y-1 transition-all cursor-pointer ${
+                        isSelected
                           ? 'bg-zello-orange text-white border-zello-orange shadow-[0_0_15px_rgba(240,90,40,0.3)]'
                           : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                        }`}
+                      }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -630,16 +670,16 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
               >
                 {/* Left: ID & Official Drawing Thumbnail / Icon */}
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl bg-white p-1 border border-white/20 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+                  <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl bg-white/5 p-1.5 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
                     {power.drawingUrl ? (
                       <img
                         src={power.drawingUrl}
                         alt={power.title}
-                        className="max-h-full max-w-full object-contain"
+                        className="max-h-full max-w-full object-contain filter invert brightness-110"
                         loading="lazy"
                       />
                     ) : (
-                      <IconComponent size={20} className="text-slate-800" />
+                      <IconComponent size={20} className="text-slate-400" />
                     )}
                   </div>
 
@@ -648,15 +688,9 @@ export const DeckSectionView: React.FC<DeckSectionViewProps> = ({
                       <span className="text-[10px] font-mono font-black text-zello-orange">
                         #{power.id.padStart(2, '0')}
                       </span>
-                      {power.categories.map((catKey) => (
-                        <span
-                          key={`list-cat-${power.id}-${catKey}`}
-                          title={EL_CATEGORIES[catKey]?.label}
-                          className="text-[8px] font-bold text-slate-400 uppercase tracking-wider bg-white/5 border border-white/10 rounded px-1.5 py-0.2"
-                        >
-                          {EL_CATEGORIES[catKey]?.shortLabel}
-                        </span>
-                      ))}
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                        • {power.category}
+                      </span>
                       {isFieldbook && (
                         <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">
                           Fieldbook

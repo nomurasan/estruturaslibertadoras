@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="800" preserveAspectRatio="xMidYMid meet">
+  <!-- Left Speech Bubble: Black Fill with Right Puzzle Tab and Bottom-Left Tail -->
+  <path d="M 160 30 
+           C 70 30, 10 90, 10 180 
+           L 10 650 
+           C 10 740, 70 800, 160 800 
+           L 140 890 
+           C 170 860, 220 810, 250 800 
+           L 460 800 
+           C 475 740, 480 700, 480 650 
+           C 480 570, 560 520, 620 440 
+           C 670 370, 640 280, 570 230 
+           C 515 190, 480 150, 480 90 
+           C 480 40, 450 30, 390 30 Z" fill="#000000" />
+
+  <!-- Radiating Sound Streaks Inside Left Bubble (White) -->
+  <path d="M 260 270 C 230 250, 270 200, 310 220 L 390 270 C 420 290, 390 330, 360 320 Z" fill="#ffffff" />
+  <path d="M 240 450 C 240 420, 270 410, 310 420 L 400 430 C 430 435, 430 475, 400 480 L 310 480 C 270 480, 240 470, 240 450 Z" fill="#ffffff" />
+  <path d="M 260 630 C 230 650, 270 700, 310 680 L 390 630 C 420 610, 390 570, 360 580 Z" fill="#ffffff" />
+
+  <!-- Right Speech Bubble: Thick Stroke with Left Puzzle Socket and Bottom-Right Tail -->
+  <path d="M 840 30 
+           C 930 30, 990 90, 990 180 
+           L 990 650 
+           C 990 740, 930 800, 840 800 
+           L 860 890 
+           C 830 860, 780 810, 750 800 
+           L 540 800 
+           C 525 740, 520 700, 520 650 
+           C 520 570, 600 520, 660 440 
+           C 710 370, 680 280, 610 230 
+           C 555 190, 520 150, 520 90 
+           C 520 40, 550 30, 610 30 Z" 
+        fill="none" stroke="#000000" stroke-width="46" stroke-linejoin="round" />
+
+  <!-- Radiating Sound Streaks Inside Right Bubble (Black) -->
+  <path d="M 740 270 C 770 250, 730 200, 690 220 L 610 270 C 580 290, 610 330, 640 320 Z" fill="#000000" />
+  <path d="M 760 450 C 760 420, 730 410, 690 420 L 600 430 C 570 435, 570 475, 600 480 L 690 480 C 730 480, 760 470, 760 450 Z" fill="#000000" />
+  <path d="M 740 630 C 770 650, 730 700, 690 680 L 610 630 C 580 610, 610 570, 640 580 Z" fill="#000000" />
+</svg>

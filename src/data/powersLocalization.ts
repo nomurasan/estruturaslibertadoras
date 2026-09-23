@@ -1246,6 +1246,62 @@ export const POWERS_LOCALIZATION: Record<string, { en: PowerLocaleData; es: Powe
       groupSize: 'Toda la organización y redes de liderazgo',
       cases: ['Gobernanza estratégica adaptativa', 'Renovación viva de portafolios', 'Desarrollo de liderazgo distribuido']
     }
+  },
+  '44': {
+    en: {
+      title: 'Tiny Monsters',
+      objective: 'Identify, externalize, and defuse the hidden fears, doubts, and small anxieties that paralyze team momentum, bringing lightness and collective courage.',
+      applicationContext: 'Kick-offs of ambitious projects, times of uncertainty, or when unspoken fears create hesitation in teams.',
+      practicalExample: 'Each participant draws and names their "tiny monsters" (anxieties, doubts), shares them in pairs with humor and empathy, and develops simple ways to tame them.',
+      expectedBenefits: ['Demystifies fear and lowers anxiety through empathy and humor.', 'Surfaces hidden concerns before they turn into road blocks.', 'Builds psychological safety.'],
+      input: 'Unspoken team anxieties and perceived risks.',
+      process: 'Individual sketch of monsters (1 min) ➔ Pair debrief and laugh (2 min) ➔ Foursome strategies to tame them (4 min) ➔ Whole-group debrief.',
+      output: 'Visual map of tamed fears and actionable agreements to move forward.',
+      timeNeeded: '25 to 35 min',
+      groupSize: 'Any group size (1 ➔ 2 ➔ 4 ➔ All)',
+      cases: ['Project kick-offs', 'Post-failure retrospectives', 'Change management transitions']
+    },
+    es: {
+      title: 'Pequeños Monstruos (Tiny Monsters)',
+      objective: 'Identificar, exteriorizar y neutralizar miedos, ansiedades y pequeñas dudas que paralizan el avance del equipo, aportando ligereza y valentía colectiva.',
+      applicationContext: 'Lanzamiento de proyectos complejos, momentos de incertidumbre o cuando temores silenciosos frenan la acción.',
+      practicalExample: 'Cada participante dibuja sus "monstruitos" (temores del reto), los comparte en parejas con empatía y humor, y el cuarteto define cómo domesticarlos.',
+      expectedBenefits: ['Desmitifica el miedo y reduce la ansiedad con humor y empatía.', 'Hace visibles inquietudes ocultas antes de que bloqueen el trabajo.', 'Genera seguridad psicológica.'],
+      input: 'Inseguridades y miedos no expresados del equipo.',
+      process: 'Dibujo individual de monstruos (1 min) ➔ Parejas para dialogar y reír (2 min) ➔ Cuartetos para acordar cómo domesticarlos (4 min) ➔ Plenario.',
+      output: 'Mapeo visual de temores desarmados y acuerdos claros de avance.',
+      timeNeeded: '25 a 35 min',
+      groupSize: 'Cualquier tamaño (1 ➔ 2 ➔ 4 ➔ Todos)',
+      cases: ['Inicio de proyectos desafiantes', 'Retrospectivas tras tropiezos', 'Transiciones y cambios culturales']
+    }
+  },
+  '45': {
+    en: {
+      title: 'Revealing Metaphors',
+      objective: 'Make explicit mental models, tacit assumptions, and deeper alignment by using visual and narrative metaphors that bridge diverse perspectives.',
+      applicationContext: 'When teams use the same words but hold different meanings, or to unlock complex visions of product, strategy, and culture.',
+      practicalExample: 'Ask the group: "If our project were a vehicle, what kind would it be and why?" or use metaphors to uncover discrepancies between stated plans and actual habits.',
+      expectedBenefits: ['Cuts through corporate jargon to reveal real perceptions.', 'Fosters rapid intuitive insights and aha moments.', 'Builds shared meaning and alignment.'],
+      input: 'A complex project, product, culture, or shared ambition.',
+      process: 'Individual metaphor generation (2 min) ➔ Pair matching and contrast (like puzzle pieces, 4 min) ➔ Synthesis and group-wide revelation (8 min).',
+      output: 'A guiding shared metaphor that anchors team decisions and cohesion.',
+      timeNeeded: '30 to 45 min',
+      groupSize: 'Groups from 4 to 100+ people',
+      cases: ['Product vision alignment', 'Organizational culture diagnostics', 'Resolving conceptual misalignments']
+    },
+    es: {
+      title: 'Metáforas Reveladoras (Revealing Metaphors)',
+      objective: 'Hacer explícitos los modelos mentales, supuestos tácitos y alineamiento profundo utilizando metáforas visuales y narrativas que conectan distintas perspectivas.',
+      applicationContext: 'Cuando los equipos usan las mismas palabras pero con significados distintos, o para desbloquear visiones complejas de producto y cultura.',
+      practicalExample: 'Preguntar al grupo: "Si nuestro proyecto fuese un vehículo, ¿cuál sería y por qué?" para revelar divergencias entre discurso y realidad.',
+      expectedBenefits: ['Supera el lenguaje corporativo formal y revela la percepción real.', 'Despierta insights intuitivos inmediatos.', 'Crea un significado común y alineamiento genuino.'],
+      input: 'Un reto, producto o visión organizacional que requiere claridad.',
+      process: 'Creación individual de metáforas (2 min) ➔ Encaje y contraste en parejas (4 min) ➔ Síntesis y revelación de modelos mentales ante el plenario (8 min).',
+      output: 'Metáfora guía compartida que orienta las decisiones y la cohesión.',
+      timeNeeded: '30 a 45 min',
+      groupSize: 'Grupos de 4 a 100+ personas',
+      cases: ['Alineamiento de visión de producto', 'Diagnóstico de cultura organizacional', 'Resolución de discrepancias conceptuales']
+    }
   }
 };
 

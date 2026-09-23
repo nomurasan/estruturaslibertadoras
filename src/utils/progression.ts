@@ -124,6 +124,13 @@ export function normalizeUserProfile(profile: Partial<UserProfile>): Partial<Use
       JEDI: completed.includes('JEDI') ? 14000 : 0,
       YODA: completed.includes('YODA') ? 14000 : 0
     };
+  } else {
+    // Sanitize: ensure no unauthorized higher level scores if prerequisite wasn't completed
+    bestScores = {
+      PADAWAN: Math.min(Number(bestScores.PADAWAN) || 0, 15000),
+      JEDI: completed.includes('PADAWAN') ? Math.min(Number(bestScores.JEDI) || 0, 15000) : 0,
+      YODA: completed.includes('JEDI') ? Math.min(Number(bestScores.YODA) || 0, 15000) : 0,
+    };
   }
 
   const normalizedXP = calculateTotalXP(bestScores);

@@ -1,34 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-  <!-- Principles Walk-Around: Walking person visiting posters/pillars with core principles -->
-  <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Circular / walking journey track -->
-    <ellipse cx="50" cy="58" rx="36" ry="24" stroke-width="2.5" stroke-dasharray="4 5" />
-
-    <!-- Station 1 / Pillar top-left (Principle poster) -->
-    <rect x="18" y="16" width="16" height="22" rx="2" stroke-width="3" />
-    <line x1="22" y1="22" x2="30" y2="22" stroke-width="2" />
-    <line x1="22" y1="27" x2="28" y2="27" stroke-width="2" />
-
-    <!-- Station 2 / Pillar top-right (Principle poster) -->
-    <rect x="66" y="16" width="16" height="22" rx="2" stroke-width="3" />
-    <line x1="70" y1="22" x2="78" y2="22" stroke-width="2" />
-    <line x1="70" y1="27" x2="76" y2="27" stroke-width="2" />
-
-    <!-- Station 3 / Poster bottom-center -->
-    <rect x="42" y="68" width="16" height="20" rx="2" stroke-width="3" />
-    <line x1="46" y1="74" x2="54" y2="74" stroke-width="2" />
-
-    <!-- Walking person in center-right in motion -->
-    <circle cx="50" cy="38" r="4.5" fill="#000000" />
-    <path d="M50 43 L48 54 L44 64" stroke-width="3" />
-    <path d="M48 54 L54 63" stroke-width="3" />
-    <path d="M46 47 L40 50" stroke-width="2.5" />
-    <path d="M48 47 L56 45" stroke-width="2.5" />
-
-    <!-- Footstep indicators on the path -->
-    <ellipse cx="32" cy="54" rx="2" ry="1" fill="#000000" transform="rotate(-20 32 54)" />
-    <ellipse cx="38" cy="62" rx="2" ry="1" fill="#000000" transform="rotate(10 38 62)" />
-    <ellipse cx="64" cy="62" rx="2" ry="1" fill="#000000" transform="rotate(-15 64 62)" />
-    <ellipse cx="68" cy="52" rx="2" ry="1" fill="#000000" transform="rotate(25 68 52)" />
-  </g>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="184.000000pt" height="186.000000pt" viewBox="0 0 184.000000 186.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+<g transform="translate(0.000000,186.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M755 1846 c-295 -58 -534 -243 -664 -517 -63 -131 -84 -229 -84 -389
+0 -159 20 -252 83 -387 51 -108 110 -191 196 -274 115 -109 234 -178 391 -225
+75 -23 110 -27 233 -29 80 -2 158 -8 173 -14 43 -17 56 -14 89 19 25 26 29 36
+24 63 -13 68 -80 87 -137 40 -32 -27 -36 -28 -153 -27 -174 1 -289 35 -439
+131 -174 111 -307 295 -359 496 -28 105 -30 298 -5 400 71 287 283 515 567
+609 89 30 104 32 245 32 127 1 162 -2 228 -22 289 -83 516 -313 594 -602 25
+-91 25 -329 0 -419 -41 -150 -119 -283 -230 -392 -63 -63 -73 -69 -111 -69
+-54 0 -90 -33 -88 -82 1 -38 40 -78 76 -78 32 0 76 37 77 63 0 14 23 40 62 73
+152 124 270 331 306 538 14 77 14 235 0 312 -61 348 -314 629 -656 730 -109
+32 -307 42 -418 20z"/>
+<path d="M825 1594 c-181 -43 -254 -82 -366 -194 -134 -133 -193 -274 -192
+-460 0 -183 59 -326 188 -456 162 -164 369 -231 585 -190 417 79 645 504 488
+906 -14 36 -26 80 -25 99 1 72 -90 105 -135 50 -37 -44 -7 -129 46 -129 11 0
+25 -18 40 -52 92 -209 44 -462 -119 -630 -227 -233 -590 -235 -820 -4 -233
+234 -227 602 13 827 140 131 333 185 515 145 67 -15 79 -21 92 -46 18 -35 43
+-50 84 -50 36 0 71 39 71 79 0 50 -66 95 -105 73 -12 -6 -37 -3 -79 10 -59 19
+-236 33 -281 22z"/>
+<path d="M830 1326 c-78 -21 -140 -59 -194 -117 -66 -71 -95 -133 -103 -217
+-3 -37 -12 -76 -19 -87 -36 -51 -3 -125 55 -125 43 0 60 9 76 41 22 41 19 57
+-16 91 -29 30 -30 32 -20 79 24 111 92 198 189 242 71 32 180 30 254 -5 67
+-31 127 -90 159 -156 35 -71 33 -198 -3 -267 -50 -95 -130 -156 -231 -176 -78
+-14 -136 -3 -156 32 -29 50 -81 62 -125 28 -36 -28 -36 -80 0 -116 22 -22 31
+-24 67 -19 23 3 68 2 99 -3 172 -29 340 61 419 225 31 64 33 76 33 164 0 85
+-4 102 -31 162 -81 175 -277 272 -453 224z"/>
+</g>
 </svg>

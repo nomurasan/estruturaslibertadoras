@@ -143,17 +143,17 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                     {t('home.cardDeckTitle', { defaultValue: 'DECK' })}
                   </h3>
                   <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">
-                    {t('home.cardDeckSub', { defaultValue: '43 ESTRUTURAS LIBERTADORAS' })}
+                    {t('home.cardDeckSub', { defaultValue: '45 ESTRUTURAS LIBERTADORAS' })}
                   </p>
                 </div>
                 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
-                  {t('home.cardDeckDesc', { defaultValue: 'Conheça todas as 43 Estruturas Libertadoras oficiais com propósito, passos, fluxo sequencial e conexão biológica com o Ecocycle Planning.' })}
+                  {t('home.cardDeckDesc', { defaultValue: 'Conheça todas as 45 Estruturas Libertadoras oficiais com propósito, passos, fluxo sequencial e conexão biológica com o Ecocycle Planning.' })}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-white/5 flex items-center justify-between text-zello-orange text-xs font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                <span>{t('home.cardDeckBtn', { defaultValue: 'EXPLORAR AS 43 ELS' })}</span>
+                <span>{t('home.cardDeckBtn', { defaultValue: 'EXPLORAR AS 45 ELS' })}</span>
                 <ChevronRight size={16} />
               </div>
             </div>
@@ -217,7 +217,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 {t('home.cardDashTitle', { defaultValue: 'Dashboard de Facilitação' })}
               </div>
               <div className="text-slate-400 font-medium text-sm leading-relaxed mt-1 max-w-xl">
-                {t('home.cardDashDesc', { defaultValue: 'Acompanhe o domínio das 43 Estruturas Libertadoras, sua evolução em montagem de Strings e diagnósticos do Ecocycle Planning.' })}
+                {t('home.cardDashDesc', { defaultValue: 'Acompanhe o domínio das 45 Estruturas Libertadoras, sua evolução em montagem de Strings e diagnósticos do Ecocycle Planning.' })}
               </div>
             </div>
           </div>

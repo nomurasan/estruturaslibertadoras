@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { AIPower } from '../data/powers';
-import { EL_CATEGORIES } from '../data/elCategories';
 import * as LucideIcons from 'lucide-react';
 
 interface SuperPowerCardProps {
@@ -23,13 +22,13 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
       onClick={onClick}
     >
       <div className="relative w-full h-full rounded-2xl sm:rounded-[32px] overflow-hidden border border-white/10 bg-zinc-950/90 shadow-2xl transition-all duration-500 group-hover:border-zello-orange/60 group-hover:shadow-[0_0_40px_rgba(240,90,40,0.25)] flex flex-col justify-between">
-
+        
         {/* Subtle Ambient Background Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] via-transparent to-zello-orange/[0.03] pointer-events-none" />
 
         {/* Content Container */}
         <div className="relative h-full p-4 sm:p-5 md:p-6 flex flex-col justify-between z-10 space-y-3.5 sm:space-y-4">
-
+          
           {/* Top Section: Category, Icon & EL Number */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
@@ -59,37 +58,21 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             </div>
           </div>
 
-          {/* Categories (Matchmaker taxonomy) — discreet badges, wraps on mobile */}
-          {power.categories && power.categories.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {power.categories.map((catKey) => (
-                <span
-                  key={`${power.id}-cat-${catKey}`}
-                  title={EL_CATEGORIES[catKey]?.label}
-                  className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-zello-orange/10 border border-zello-orange/20 text-zello-orange"
-                >
-                  {EL_CATEGORIES[catKey]?.shortLabel}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Official Drawing Showcase - Frameless, Transparent & Prominently Sized */}
+          <div className="relative w-full h-36 sm:h-44 md:h-48 flex items-center justify-center p-2 group/drawing select-none">
+            {/* Subtle ambient backlight aura behind the drawing */}
+            <div className="absolute inset-x-8 inset-y-4 bg-zello-orange/[0.04] group-hover:bg-zello-orange/[0.12] rounded-full blur-2xl transition-all duration-500 pointer-events-none" />
 
-          {/* Official Drawing Canvas Showcase */}
-          <div className="relative w-full h-32 sm:h-36 md:h-40 rounded-xl sm:rounded-2xl bg-gradient-to-b from-white to-slate-100 p-2.5 sm:p-3 flex items-center justify-center overflow-hidden border border-white/20 shadow-md group-hover:shadow-[0_0_25px_rgba(240,90,40,0.2)] group-hover:border-zello-orange/40 transition-all duration-300">
             {power.drawingUrl ? (
               <img
                 src={power.drawingUrl}
                 alt={t('deck.officialDrawingOf', { title: power.title, defaultValue: `Desenho oficial de ${power.title}` })}
-                className="max-h-full max-w-full object-contain filter drop-shadow select-none group-hover:scale-105 transition-transform duration-300"
+                className="relative z-10 max-h-full max-w-[85%] w-auto object-contain filter invert brightness-110 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] group-hover:scale-110 group-hover:brightness-135 group-hover:drop-shadow-[0_0_25px_rgba(240,90,40,0.45)] transition-all duration-300 pointer-events-none"
                 loading="lazy"
               />
             ) : (
-              <IconComponent size={40} className="text-slate-700" />
+              <IconComponent size={56} className="text-white/40" />
             )}
-
-            <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/10 border border-black/5 text-[7px] sm:text-[8px] font-mono text-slate-700 font-bold uppercase tracking-wider">
-              {t('deck.officialDrawingBadge', { defaultValue: 'Desenho Oficial' })}
-            </div>
           </div>
 
           {/* Title & Objective Section */}
@@ -97,7 +80,7 @@ export const SuperPowerCard: React.FC<SuperPowerCardProps> = ({ power, isLocked 
             <h3 className="text-base sm:text-lg md:text-xl font-black text-white uppercase italic tracking-tighter group-hover:text-zello-orange transition-colors leading-tight font-sans">
               {power.title}
             </h3>
-
+            
             <p className="text-xs text-slate-300 font-medium leading-relaxed line-clamp-3">
               {power.objective}
             </p>

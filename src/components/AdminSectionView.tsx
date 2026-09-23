@@ -74,10 +74,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
             {t('admin.title', { defaultValue: 'Painel Administrativo' })}
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter leading-none font-sans">
-            {t('admin.headerTitlePrefix', { defaultValue: 'CONTROLE DE' })} <span className="text-zello-orange">{t('admin.headerTitleHighlight', { defaultValue: 'ACESSO & USUÁRIOS' })}</span>
+            {t('admin.controlPrefix', { defaultValue: 'CONTROLE DE' })} <span className="text-zello-orange">{t('admin.corporateAccessControl', { defaultValue: 'ACESSO CORPORATIVO' })}</span>
           </h2>
           <p className="text-slate-400 font-medium">
-            {t('admin.subtitle', { defaultValue: 'Gerencie e autorize colaboradores, crie turmas e acompanhe a evolução de XP.' })}
+            {t('admin.corporateAccessDesc', { defaultValue: 'Gerencie e autorize colaboradores, crie turmas e acompanhe a evolução de XP.' })}
           </p>
         </div>
       </div>
@@ -90,17 +90,17 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zello-orange to-transparent"></div>
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">
-              {t('admin.editCompanyTitle', { defaultValue: 'Editar Nome da Turma' })}
+              {t('admin.editCohortTitle', { defaultValue: 'Editar Nome da Turma' })}
             </h3>
             <p className="text-sm text-slate-500 font-medium font-sans">
-              {t('admin.editCompanyDesc', { defaultValue: 'Insira o novo nome para identificar esta organização na plataforma.' })}
+              {t('admin.editCohortDesc', { defaultValue: 'Insira o novo nome para identificar esta organização na plataforma.' })}
             </p>
           </div>
 
           <div className="space-y-4">
             <input
               type="text"
-              placeholder={t('admin.companyNamePlaceholder', { defaultValue: 'Ex: Organização' })}
+              placeholder={t('admin.cohortPlaceholder', { defaultValue: 'Ex: Organização' })}
               value={editingCompany.name}
               onChange={(e) => {
                 setEditingCompany({ ...editingCompany, name: e.target.value });
@@ -138,10 +138,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/5 p-6 rounded-[32px] border border-white/10 select-none">
                 <div className="space-y-1">
                   <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter">
-                    {t('admin.companiesTitle', { defaultValue: 'Empresas & Turmas' })}
+                    {t('admin.cohortsTitle', { defaultValue: 'Empresas & Turmas' })}
                   </h2>
                   <p className="text-sm text-slate-500 font-medium">
-                    {t('admin.companiesSubtitle', { defaultValue: 'Turmas cadastradas na plataforma.' })}
+                    {t('admin.cohortsDesc', { defaultValue: 'Turmas cadastradas na plataforma.' })}
                   </p>
                 </div>
               </div>
@@ -161,19 +161,19 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           <button
                             onClick={() => setEditingCompany(comp)}
                             className="p-3 bg-white/5 rounded-xl hover:bg-white/10 text-slate-500 hover:text-white transition-all cursor-pointer"
-                            title={t('admin.editTooltip', { defaultValue: 'Editar' })}
+                            title={t('common.edit', { defaultValue: 'Editar' })}
                           >
                             <LucideIcons.Settings size={16} />
                           </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (confirm(t('admin.confirmDeleteCompany', { defaultValue: 'Deseja realmente remover esta empresa/turma?' }))) {
+                              if (confirm(t('admin.confirmDeleteCohort', { defaultValue: 'Deseja realmente remover esta empresa/turma?' }))) {
                                 handleDeleteCompany(comp.id);
                               }
                             }}
                             className="p-3 bg-white/5 rounded-xl hover:bg-red-500/20 text-slate-500 hover:text-red-400 transition-all cursor-pointer"
-                            title={t('admin.deleteTooltip', { defaultValue: 'Excluir' })}
+                            title={t('common.delete', { defaultValue: 'Excluir' })}
                           >
                             <LucideIcons.Trash2 size={16} />
                           </button>
@@ -199,7 +199,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       }}
                       className="relative z-10 w-full mt-8 py-4 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl group-hover:bg-zello-orange group-hover:border-zello-orange transition-all flex items-center justify-center gap-3 cursor-pointer"
                     >
-                      {t('admin.selectCompany', { defaultValue: 'Selecionar esta Turma' })}
+                      {t('admin.selectCohort', { defaultValue: 'Selecionar esta Turma' })}
                       <LucideIcons.ChevronRight size={14} />
                     </button>
 
@@ -219,10 +219,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
               <div className="space-y-2 text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
                   <LucideIcons.Users size={12} />
-                  {t('admin.directory', { defaultValue: 'Diretório Global' })}
+                  {t('admin.globalDirectory', { defaultValue: 'Diretório Global' })}
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black text-white italic uppercase tracking-tighter leading-none">
-                  {t('admin.allParticipantsPrefix', { defaultValue: 'TODOS OS' })} <span className="text-zello-orange">{t('admin.allParticipantsHighlight', { defaultValue: 'PARTICIPANTES' })}</span>
+                  {t('admin.allParticipantsTitle', { defaultValue: 'TODOS OS PARTICIPANTES' })}
                 </h2>
                 <p className="text-sm text-slate-500 font-medium">
                   {t('admin.allParticipantsDesc', { defaultValue: 'Lista de todos os usuários que acessaram a plataforma e seus níveis de acesso.' })}
@@ -240,7 +240,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                 </div>
                 <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">
-                    {t('admin.totalAdmins', { defaultValue: 'ADMINS' })}
+                    {t('admin.adminsCount', { defaultValue: 'ADMINS' })}
                   </span>
                   <div className="text-2xl font-black text-zello-orange tabular-nums italic">
                     {allUsers.filter((u) => u.isAdmin).length}
@@ -250,30 +250,26 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden backdrop-blur-md">
-              <div className="hidden lg:block overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar">
-                <table className="w-full text-left table-fixed">
-                  <colgroup>
-                    <col className="w-[38%]" />
-                    <col className="w-[14%]" />
-                    <col className="w-[14%]" />
-                    <col className="w-[16%]" />
-                    <col className="w-[18%]" />
-                  </colgroup>
+              <div className="overflow-x-auto overflow-y-auto max-h-[600px] custom-scrollbar">
+                <table className="w-full text-left">
                   <thead className="bg-white/10 sticky top-0 z-20 backdrop-blur-md">
                     <tr key="global-users-header-row-st">
-                      <th className="p-4 lg:p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                         {t('admin.participant', { defaultValue: 'Participante' })}
                       </th>
-                      <th className="p-4 lg:p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
                         {t('admin.accumulatedXp', { defaultValue: 'XP Acumulado' })}
                       </th>
-                      <th className="p-4 lg:p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
                         {t('admin.rank', { defaultValue: 'Rank' })}
                       </th>
-                      <th className="p-4 lg:p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                        {t('admin.company', { defaultValue: 'Empresa / Turma' })}
+                      </th>
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
                         {t('admin.role', { defaultValue: 'Função' })}
                       </th>
-                      <th className="p-4 lg:p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
+                      <th className="p-8 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
                         {t('admin.actions', { defaultValue: 'Ações' })}
                       </th>
                     </tr>
@@ -284,61 +280,69 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                         key={`global-list-usr-row-v6-${u.userId || 'u'}-${idx}`}
                         className="hover:bg-white/5 transition-colors group/row"
                       >
-                        <td className="p-4 lg:p-5 text-left">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-11 h-11 shrink-0 rounded-2xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-lg shadow-inner select-none">
+                        <td className="p-8 text-left">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-lg shadow-inner select-none">
                               {u.email?.[0].toUpperCase() || '?'}
                             </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-sm lg:text-base font-bold text-white group-hover/row:text-zello-orange transition-colors select-text truncate" title={u.email}>
+                            <div className="flex flex-col">
+                              <span className="text-base font-bold text-white group-hover/row:text-zello-orange transition-colors select-text">
                                 {u.email}
                               </span>
-                              <span className="text-[10px] text-slate-500 font-mono tracking-wider opacity-60 select-all truncate">
+                              <span className="text-[10px] text-slate-500 font-mono tracking-wider opacity-60 select-all">
                                 ID: {u.userId}
                               </span>
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 lg:p-5 text-center select-none">
-                          <div className="inline-flex items-center gap-1 px-3 py-2 bg-zello-orange/10 rounded-xl text-zello-orange text-xs lg:text-sm font-black tabular-nums italic">
+                        <td className="p-8 text-center select-none">
+                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-zello-orange/10 rounded-xl text-zello-orange text-sm font-black tabular-nums italic">
                             {u.xp || 0} XP
                           </div>
                         </td>
-                        <td className="p-4 lg:p-5 text-center select-none">
+                        <td className="p-8 text-center select-none">
                           <div className={`text-xs font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
                             {getRank(u.completedQuizzes).name}
                           </div>
                         </td>
-                        <td className="p-4 lg:p-5 text-center select-none">
+                        <td className="p-8 text-center select-none">
+                          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                            {availableCompanies.find((c) => c.id === u.companyId)?.name || (
+                              <span className="text-slate-600 italic">{t('admin.noCohort', { defaultValue: 'Sem Turma' })}</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-8 text-center select-none">
                           <button
                             onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                             disabled={u.userId === user?.uid}
-                            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${u.isAdmin
-                              ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]'
-                              : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'
-                              }`}
+                            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:cursor-not-allowed ${
+                              u.isAdmin
+                                ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.4)]'
+                                : 'bg-white/5 text-slate-500 border border-white/10 hover:bg-white/10'
+                            }`}
                           >
-                            {u.isAdmin ? t('admin.roleAdminShort', { defaultValue: 'ADMIN' }) : t('admin.roleParticipantShort', { defaultValue: 'PARTICIPANTE' })}
+                            {u.isAdmin ? t('admin.roleAdmin', { defaultValue: 'ADMINISTRADOR' }) : t('admin.roleParticipant', { defaultValue: 'PARTICIPANTE' })}
                           </button>
                         </td>
-                        <td className="p-4 lg:p-5 text-right select-none">
-                          <div className="flex items-center justify-end gap-1.5">
+                        <td className="p-8 text-right select-none">
+                          <div className="flex items-center justify-end gap-2">
                             {handleResetUserProgress && (
                               <button
                                 onClick={() => handleResetUserProgress(u.userId)}
-                                className="p-2.5 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all cursor-pointer"
+                                className="p-3 bg-white/5 rounded-2xl hover:bg-amber-500/20 text-slate-400 hover:text-amber-400 transition-all cursor-pointer"
                                 title={t('admin.resetProgress', { defaultValue: 'ZERAR PROGRESSO' })}
                               >
-                                <LucideIcons.RotateCcw size={16} />
+                                <LucideIcons.RotateCcw size={18} />
                               </button>
                             )}
                             <button
                               onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                               disabled={u.userId === user?.uid}
-                              className="p-2.5 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
+                              className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 text-slate-400 hover:text-white transition-all disabled:opacity-20 cursor-pointer"
                               title={u.isAdmin ? t('admin.demoteAdmin', { defaultValue: 'Demitir Admin' }) : t('admin.makeAdmin', { defaultValue: 'Tornar Admin' })}
                             >
-                              <LucideIcons.Shield size={16} />
+                              <LucideIcons.Shield size={18} />
                             </button>
                             <button
                               onClick={() => {
@@ -347,10 +351,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                                 }
                               }}
                               disabled={u.userId === user?.uid}
-                              className="p-2.5 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
+                              className="p-3 bg-white/5 rounded-2xl hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-all disabled:opacity-20 cursor-pointer"
                               title={t('admin.deleteUser', { defaultValue: 'EXCLUIR USUÁRIO' })}
                             >
-                              <LucideIcons.UserMinus size={16} />
+                              <LucideIcons.UserMinus size={18} />
                             </button>
                           </div>
                         </td>
@@ -358,7 +362,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                     ))}
                     {allUsers.length === 0 && (
                       <tr key="global-users-empty-placeholder-v5">
-                        <td colSpan={5} className="p-32 text-center select-none">
+                        <td colSpan={6} className="p-32 text-center select-none">
                           <div className="space-y-4">
                             <LucideIcons.UserSearch size={64} className="text-slate-800 mx-auto" strokeWidth={1.5} />
                             <p className="text-slate-500 font-bold italic uppercase tracking-widest">
@@ -372,26 +376,26 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                 </table>
               </div>
 
-              {/* Mobile & Tablet Cards View */}
-              <div className="lg:hidden divide-y divide-white/5 p-4 space-y-4">
+              {/* Mobile Cards View */}
+              <div className="md:hidden divide-y divide-white/5 p-4 space-y-4">
                 {allUsers.map((u, idx) => (
                   <div
                     key={`admin-user-card-m-${u.userId || 'u'}-${idx}`}
-                    className="w-full p-5 bg-white/[0.03] border border-white/10 rounded-2xl space-y-4"
+                    className="p-5 bg-white/[0.03] border border-white/10 rounded-2xl space-y-4"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-zello-orange/10 flex items-center justify-center text-zello-orange font-black text-sm shrink-0">
                         {u.email?.[0].toUpperCase() || '?'}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-bold text-white truncate" title={u.email}>{u.email}</div>
+                        <div className="text-sm font-bold text-white truncate">{u.email}</div>
                         <div className="text-[10px] text-slate-500 font-mono truncate">ID: {u.userId}</div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
-                        <span className="text-[9px] uppercase font-bold text-slate-500 block">{t('admin.rank', { defaultValue: 'Rank' })}</span>
+                        <span className="text-[9px] uppercase font-bold text-slate-500 block">{t('admin.levelRank', { defaultValue: 'Nível (Rank)' })}</span>
                         <span className={`font-black uppercase italic ${getRank(u.completedQuizzes).color}`}>
                           {getRank(u.completedQuizzes).name}
                         </span>
@@ -404,36 +408,38 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="p-2.5 bg-black/20 rounded-xl border border-white/5">
-                      <span className="text-[9px] uppercase font-bold text-slate-500 block mb-1">{t('admin.role', { defaultValue: 'Função' })}</span>
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        {availableCompanies.find(c => c.id === u.companyId)?.name || t('admin.noCohort', { defaultValue: 'Sem Turma' })}
+                      </div>
                       <button
                         onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                         disabled={u.userId === user?.uid}
-                        className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
-                          }`}
+                        className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                          u.isAdmin ? 'bg-zello-orange text-white' : 'bg-white/10 text-slate-400'
+                        }`}
                       >
                         {u.isAdmin ? t('admin.roleAdminShort', { defaultValue: 'ADMIN' }) : t('admin.roleParticipantShort', { defaultValue: 'PARTICIPANTE' })}
                       </button>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-white/5">
-                      <span className="text-[9px] uppercase font-bold text-slate-500 block">{t('admin.actions', { defaultValue: 'Ações' })}</span>
+                    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
                       {handleResetUserProgress && (
                         <button
                           onClick={() => handleResetUserProgress(u.userId)}
-                          className="w-full py-3 px-3 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
+                          className="py-2 px-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                         >
-                          <LucideIcons.RotateCcw size={14} />
-                          {t('admin.resetProgress', { defaultValue: 'ZERAR PROGRESSO' })}
+                          <LucideIcons.RotateCcw size={12} />
+                          {t('admin.resetShort', { defaultValue: 'Zerar' })}
                         </button>
                       )}
                       <button
                         onClick={() => handleToggleUserAdmin(u.userId, !!u.isAdmin)}
                         disabled={u.userId === user?.uid}
-                        className="w-full py-3 px-3 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-30 cursor-pointer"
+                        className="py-2 px-2 bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
                       >
-                        <LucideIcons.Shield size={14} />
-                        {u.isAdmin ? t('admin.demoteAdmin', { defaultValue: 'Demitir Admin' }) : t('admin.makeAdmin', { defaultValue: 'Tornar Admin' })}
+                        <LucideIcons.Shield size={12} />
+                        {u.isAdmin ? t('admin.demoteShort', { defaultValue: 'Demitir' }) : t('admin.promoteShort', { defaultValue: 'Promover' })}
                       </button>
                       <button
                         onClick={() => {
@@ -442,10 +448,10 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                           }
                         }}
                         disabled={u.userId === user?.uid}
-                        className="w-full py-3 px-3 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-30 cursor-pointer"
+                        className="py-2 px-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 cursor-pointer"
                       >
-                        <LucideIcons.UserMinus size={14} />
-                        {t('admin.deleteUser', { defaultValue: 'EXCLUIR USUÁRIO' })}
+                        <LucideIcons.UserMinus size={12} />
+                        {t('admin.deleteShort', { defaultValue: 'Excluir' })}
                       </button>
                     </div>
                   </div>
@@ -475,7 +481,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                     {t('admin.authorizeAccess', { defaultValue: 'Autorizar Acesso' })}
                   </h3>
                   <p className="text-sm text-slate-500 font-medium">
-                    {t('admin.authorizeDesc', { defaultValue: 'Adicione e-mails à lista de permissão de acesso da plataforma.' })}
+                    {t('admin.authorizeAccessDesc', { defaultValue: 'Adicione e-mails à lista de permissão de acesso da plataforma.' })}
                   </p>
                 </div>
 
@@ -499,7 +505,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                     ) : (
                       <LucideIcons.UserPlus size={16} />
                     )}
-                    {t('admin.addToWhitelist', { defaultValue: 'Adicionar aos Permitidos' })}
+                    {t('admin.addToAllowed', { defaultValue: 'Adicionar aos Permitidos' })}
                   </button>
                 </div>
               </div>
@@ -514,11 +520,11 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       {t('admin.authorizedMembers', { defaultValue: 'Membros Autorizados' })}
                     </h3>
                     <p className="text-xs text-slate-500 font-medium">
-                      {t('admin.authorizedDesc', { defaultValue: 'Estes e-mails estão autorizados a realizar Onboarding.' })}
+                      {t('admin.authorizedMembersDesc', { defaultValue: 'Estes e-mails estão autorizados a realizar Onboarding.' })}
                     </p>
                   </div>
                   <span className="px-3.5 py-1 bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-[10px] font-black rounded-lg">
-                    {whitelist.length} {t('admin.authorizedCount', { defaultValue: 'AUTORIZADOS' })}
+                    {whitelist.length} {t('admin.authorizedBadge', { defaultValue: 'AUTORIZADOS' })}
                   </span>
                 </div>
 
@@ -542,7 +548,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                       <button
                         onClick={() => handleRemoveWhitelist(item.id)}
                         className="p-3 bg-white/5 rounded-xl text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
-                        title={t('admin.removeAuthorization', { defaultValue: 'Remover Autorização' })}
+                        title={t('admin.removeAuth', { defaultValue: 'Remover Autorização' })}
                       >
                         <LucideIcons.Trash2 size={14} />
                       </button>
@@ -552,7 +558,7 @@ export const AdminSectionView: React.FC<AdminSectionViewProps> = ({
                     <div className="py-20 text-center space-y-4">
                       <LucideIcons.Fingerprint size={48} className="text-slate-800 mx-auto" strokeWidth={1.5} />
                       <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
-                        {t('admin.emptyWhitelist', { defaultValue: 'Nenhuma credencial whitelist configurada' })}
+                        {t('admin.noWhitelist', { defaultValue: 'Nenhuma credencial whitelist configurada' })}
                       </p>
                     </div>
                   )}

@@ -226,8 +226,8 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                 <React.Fragment key={`pipeline-step-${struct!.id}`}>
                   <div className="px-3 py-1.5 rounded-xl bg-zello-orange/20 border border-zello-orange/40 text-white text-xs font-bold flex items-center gap-2">
                     {struct!.drawingUrl && (
-                      <div className="w-6 h-6 rounded-md bg-white p-0.5 flex items-center justify-center shrink-0 shadow-sm">
-                        <img src={struct!.drawingUrl} alt="" className="max-h-full max-w-full object-contain" />
+                      <div className="w-6 h-6 rounded-md bg-white/10 p-0.5 flex items-center justify-center shrink-0 border border-white/10 shadow-sm">
+                        <img src={struct!.drawingUrl} alt="" className="max-h-full max-w-full object-contain filter invert brightness-110" />
                       </div>
                     )}
                     <span className="text-[9px] font-mono text-zello-orange font-black">EL #{struct!.id}</span>
@@ -300,11 +300,11 @@ export const QuizSectionView: React.FC<QuizSectionViewProps> = ({
                     <div className="flex items-start justify-between w-full gap-2">
                       <div className="flex items-center gap-2.5">
                         {power.drawingUrl ? (
-                          <div className="w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-white/20 shadow-sm">
+                          <div className="w-12 h-12 rounded-xl bg-white/5 p-1.5 flex items-center justify-center shrink-0 border border-white/10 shadow-sm">
                             <img
                               src={power.drawingUrl}
                               alt={power.title}
-                              className="max-h-full max-w-full object-contain"
+                              className="max-h-full max-w-full object-contain filter invert brightness-110"
                               loading="lazy"
                             />
                           </div>

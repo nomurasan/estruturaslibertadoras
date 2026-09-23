@@ -96,4 +96,39 @@ describe('Logic and Progression Unit Tests (10 tests)', () => {
     expect(normalized.completedQuizzes).toContain('PADAWAN');
     expect(getRank(normalized.completedQuizzes).name).toBe('Jedi');
   });
+
+  // Test 11: normalizeUserProfile sanitizes legacy cumulative XP (e.g. 26487) down to max 15000 for Padawan-only user
+  it('11. normalizeUserProfile clears unauthorized level scores and normalizes legacy cumulative XP', () => {
+    const rawProfile: UserProfile = {
+      userId: 'user-padawan-legacy',
+      email: 'padawan@example.com',
+      companyId: 'Empresa A',
+      createdAt: '2025-01-01',
+      lastActive: '2025-01-01',
+      unlockedPowers: [],
+      currentMissionIndex: 0,
+      missionProgress: {},
+      xp: 26487, // Legacy accumulated repetitions
+      completedQuizzes: [], // Has not passed Padawan
+      bestScores: { PADAWAN: 15000, JEDI: 11487, YODA: 0 } // Injected or rogue higher score
+    };
+    const normalized = normalizeUserProfile(rawProfile);
+    expect(normalized.bestScores?.PADAWAN).toBe(15000);
+    expect(normalized.bestScores?.JEDI).toBe(0); // Prerequisite not met, JEDI must be 0
+    expect(normalized.bestScores?.YODA).toBe(0);
+    expect(normalized.xp).toBe(15000); // Strictly sum of valid scores
+  });
+
+  // Test 12: User who has completed Padawan can have JEDI scores, but not YODA scores if JEDI not completed
+  it('12. normalizeUserProfile restricts YODA scores to users who completed JEDI', () => {
+    const rawProfile: Partial<UserProfile> = {
+      completedQuizzes: ['PADAWAN'],
+      bestScores: { PADAWAN: 15000, JEDI: 12000, YODA: 8000 }
+    };
+    const normalized = normalizeUserProfile(rawProfile);
+    expect(normalized.bestScores?.PADAWAN).toBe(15000);
+    expect(normalized.bestScores?.JEDI).toBe(12000);
+    expect(normalized.bestScores?.YODA).toBe(0); // YODA is 0 because JEDI is not completed
+    expect(normalized.xp).toBe(27000);
+  });
 });

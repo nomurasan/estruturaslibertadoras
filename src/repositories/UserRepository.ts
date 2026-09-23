@@ -12,6 +12,7 @@ import {
 import { db } from '../lib/firebase';
 import { UserProfile } from '../types';
 import { translateFirebaseError } from '../utils/errors';
+import { normalizeUserProfile } from '../utils/progression';
 
 export class UserRepository {
   public static async getUserProfile(userId: string): Promise<UserProfile | null> {
@@ -19,7 +20,8 @@ export class UserRepository {
       const docRef = doc(db, 'users', userId);
       const snap = await getDoc(docRef);
       if (snap.exists()) {
-        return { userId: snap.id, ...snap.data() } as UserProfile;
+        const raw = { userId: snap.id, ...snap.data() } as UserProfile;
+        return normalizeUserProfile(raw) as UserProfile;
       }
       return null;
     } catch (err) {
@@ -63,7 +65,8 @@ export class UserRepository {
       docRef,
       (snap) => {
         if (snap.exists()) {
-          callback({ userId: snap.id, ...snap.data() } as UserProfile);
+          const raw = { userId: snap.id, ...snap.data() } as UserProfile;
+          callback(normalizeUserProfile(raw) as UserProfile);
         } else {
           callback(null);
         }
@@ -82,7 +85,10 @@ export class UserRepository {
     return onSnapshot(
       q,
       (snap) => {
-        const users = snap.docs.map((d) => ({ ...d.data(), userId: d.id } as UserProfile));
+        const users = snap.docs.map((d) => {
+          const raw = { ...d.data(), userId: d.id } as UserProfile;
+          return normalizeUserProfile(raw) as UserProfile;
+        });
         // Deduplicate
         const uniqueUsers = Array.from(new Map(users.map((u) => [u.userId, u])).values());
         callback(uniqueUsers);
@@ -103,7 +109,10 @@ export class UserRepository {
     return onSnapshot(
       q,
       (snap) => {
-        const users = snap.docs.map((d) => ({ ...d.data(), userId: d.id } as UserProfile));
+        const users = snap.docs.map((d) => {
+          const raw = { ...d.data(), userId: d.id } as UserProfile;
+          return normalizeUserProfile(raw) as UserProfile;
+        });
         const uniqueUsers = Array.from(new Map(users.map((u) => [u.userId, u])).values());
         callback(uniqueUsers);
       },
