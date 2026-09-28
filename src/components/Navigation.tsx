@@ -34,8 +34,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   const currentLang = i18n.language?.startsWith('es')
     ? 'es'
     : i18n.language?.startsWith('en')
-    ? 'en'
-    : 'pt-BR';
+      ? 'en'
+      : 'pt-BR';
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -117,33 +117,30 @@ export const Navigation: React.FC<NavigationProps> = ({
             <Globe size={13} className="text-slate-500 ml-1.5 mr-0.5" />
             <button
               onClick={() => changeLanguage('pt-BR')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'pt-BR'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'pt-BR'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="Português"
             >
               PT
             </button>
             <button
               onClick={() => changeLanguage('es')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'es'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'es'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="Español"
             >
               ES
             </button>
             <button
               onClick={() => changeLanguage('en')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                currentLang === 'en'
+              className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'en'
                   ? 'bg-zello-orange text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="English"
             >
               EN
@@ -275,31 +272,28 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 gap-1">
                   <button
                     onClick={() => changeLanguage('pt-BR')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'pt-BR'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'pt-BR'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     PT
                   </button>
                   <button
                     onClick={() => changeLanguage('es')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'es'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'es'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     ES
                   </button>
                   <button
                     onClick={() => changeLanguage('en')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                      currentLang === 'en'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${currentLang === 'en'
                         ? 'bg-zello-orange text-white shadow-sm'
                         : 'text-slate-400 hover:text-white'
-                    }`}
+                      }`}
                   >
                     EN
                   </button>

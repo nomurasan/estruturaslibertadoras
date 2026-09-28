@@ -1,16 +1,16 @@
 export type GameState =
-  | 'home'
-  | 'level-selection'
-  | 'game'
-  | 'deck'
-  | 'observer'
-  | 'designer'
-  | 'tuning'
-  | 'reflection'
-  | 'results'
-  | 'dashboards'
-  | 'admin'
-  | 'autoconhecimento';
+  | "home"
+  | "level-selection"
+  | "game"
+  | "deck"
+  | "observer"
+  | "designer"
+  | "tuning"
+  | "reflection"
+  | "results"
+  | "dashboards"
+  | "admin"
+  | "autoconhecimento";
 
 export interface Company {
   id: string;
@@ -23,12 +23,12 @@ export interface Company {
 }
 
 export type EcocycleConcept =
-  | 'GESTAÇÃO'
-  | 'NASCIMENTO'
-  | 'MATURIDADE'
-  | 'DESTRUIÇÃO_CRIATIVA'
-  | 'ARMADILHA_DA_POBREZA'
-  | 'ARMADILHA_DA_RIGIDEZ';
+  | "GESTAÇÃO"
+  | "NASCIMENTO"
+  | "MATURIDADE"
+  | "DESTRUIÇÃO_CRIATIVA"
+  | "ARMADILHA_DA_POBREZA"
+  | "ARMADILHA_DA_RIGIDEZ";
 
 export interface UserProfile {
   userId: string;
@@ -49,7 +49,7 @@ export interface UserProfile {
     JEDI?: number;
     YODA?: number;
   };
-  preferredLanguage?: 'pt-BR' | 'es' | 'en';
+  preferredLanguage?: "pt-BR" | "es" | "en";
   quizStats?: QuizStats;
 }
 
@@ -57,7 +57,7 @@ export interface QuizAttemptRecord {
   id: string;
   challengeId: number;
   challengeTitle: string;
-  level: 'PADAWAN' | 'JEDI' | 'YODA';
+  level: "PADAWAN" | "JEDI" | "YODA";
   isCorrect: boolean;
   energyChange: number;
   energyAfter: number;
@@ -102,12 +102,12 @@ export interface AIUsageAudit {
 export interface RecommendedSkill {
   skillId: number;
   weight: number;
-  role: 'primary' | 'secondary';
+  role: "primary" | "secondary";
 }
 
 export interface Challenge {
   id: number;
-  level: 'PADAWAN' | 'JEDI' | 'YODA';
+  level: "PADAWAN" | "JEDI" | "YODA";
   title: string;
   scenario: string;
   correctSkillIds: number[];
@@ -116,13 +116,13 @@ export interface Challenge {
   explanation: string;
 
   // Pedagogical 4-Block Feedback Fields
-  bestChoiceName?: string;          // 1. Melhor escolha (Nome da EL ou String)
-  whyItWorks?: string;              // 2. Por que funciona? (Relação desafio vs estrutura)
-  scenarioClue?: string;            // 3. Pista do cenário (Frase-chave / conceito)
-  inStringRole?: string;            // Papel na String (Antes / Durante / Depois do Ecocycle)
-  stringSequence?: string;          // Sequência visual sugerida (ex: TRIZ ➔ Ecocycle ➔ 15%)
-  anotherPossibility?: string;      // 4. Outra possibilidade (EL complementar quando aplicável)
-  ecocyclePhase?: string;           // Ponto do Ecociclo (ex: Gestação, Armadilha da Pobreza, etc.)
+  bestChoiceName?: string; // 1. Melhor escolha (Nome da EL ou String)
+  whyItWorks?: string; // 2. Por que funciona? (Relação desafio vs estrutura)
+  scenarioClue?: string; // 3. Pista do cenário (Frase-chave / conceito)
+  inStringRole?: string; // Papel na String (Antes / Durante / Depois do Ecocycle)
+  stringSequence?: string; // Sequência visual sugerida (ex: TRIZ ➔ Ecocycle ➔ 15%)
+  anotherPossibility?: string; // 4. Outra possibilidade (EL complementar quando aplicável)
+  ecocyclePhase?: string; // Ponto do Ecociclo (ex: Gestação, Armadilha da Pobreza, etc.)
   ecocycleConcepts?: EcocycleConcept[];
 }
 
@@ -137,7 +137,7 @@ export interface AIPower {
   expectedBenefits: string[];
   icon: string;
   image: string;
-  
+
   // Liberating Structures & String Lab Fields
   ecocycleConnection?: string;
   input?: string;
@@ -194,7 +194,7 @@ export interface TeamQuizStats {
     totalAnswers: number;
   }>;
   levelMastery: Array<{
-    level: 'PADAWAN' | 'JEDI' | 'YODA';
+    level: "PADAWAN" | "JEDI" | "YODA";
     label: string;
     accuracy: number;
     completedUsers: number;

@@ -43,7 +43,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
         <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-white uppercase italic font-sans">
           {t('home.heroTitle1', { defaultValue: 'ESTRUTURAS' })} <br /> <span className="text-zello-orange">{t('home.heroTitle2', { defaultValue: 'LIBERTADORAS' })}</span>
         </h1>
-        
+
         <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
           {t('home.heroDesc', { defaultValue: 'Desenhe experiências. Observe o que emerge. Sintonize sua prática.' })}
         </p>
@@ -141,7 +141,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                     <LayoutGrid size={24} />
                   </div>
                 </div>
-                
+
                 <div className="space-y-1">
                   <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">
                     {t('home.cardDeckTitle', { defaultValue: 'DECK' })}
@@ -150,7 +150,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                     {t('home.cardDeckSub', { defaultValue: '45 ESTRUTURAS LIBERTADORAS' })}
                   </p>
                 </div>
-                
+
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
                   {t('home.cardDeckDesc', { defaultValue: 'Conheça o repertório de Estruturas Libertadoras e descubra diferentes maneiras de incluir todas as vozes e liberar a inteligência coletiva.' })}
                 </p>
@@ -182,7 +182,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                     <Gamepad2 size={24} />
                   </div>
                 </div>
-                
+
                 <div className="space-y-1">
                   <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">
                     {t('home.cardQuizTitle', { defaultValue: 'APRENDER' })}
@@ -191,7 +191,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                     {t('home.cardQuizSub', { defaultValue: 'QUIZ & PROGRESSÃO' })}
                   </p>
                 </div>
-                
+
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
                   {t('home.cardQuizDesc', { defaultValue: 'Continue praticando, acumulando XP e ampliando seu repertório de combinações e decisões de facilitação.' })}
                 </p>
