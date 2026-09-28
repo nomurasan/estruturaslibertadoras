@@ -63,7 +63,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             <Zap className="text-white fill-white" size={24} />
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-black italic tracking-tighter leading-none text-white font-sans">ECOCYCLE PLANNING</span>
+            <span className="text-xl font-black italic tracking-tighter leading-none text-white font-sans">ESTRUTURAS LIBERTADORAS</span>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-[10px] font-bold text-zello-orange uppercase tracking-widest leading-none">{t('nav.freeAccess', { defaultValue: 'ACESSO LIVRE' })}</span>
               {currentCompany && (
@@ -89,6 +89,12 @@ export const Navigation: React.FC<NavigationProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'level-selection' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
             >
               {t('nav.quizzes', { defaultValue: 'Quizzes' })}
+            </button>
+            <button
+              onClick={() => setGameState('observer')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-widest cursor-pointer ${gameState === 'observer' ? 'bg-zello-orange text-white shadow-[0_0_15px_rgba(240,90,40,0.3)]' : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'}`}
+            >
+              {t('nav.observe', { defaultValue: 'Observar' })}
             </button>
             <button
               onClick={() => setGameState('dashboards')}
@@ -211,6 +217,17 @@ export const Navigation: React.FC<NavigationProps> = ({
               >
                 <span>{t('nav.quizzes', { defaultValue: 'Quizzes' })}</span>
                 <ChevronRight size={16} className={gameState === 'level-selection' ? 'text-zello-orange' : 'text-slate-500'} />
+              </button>
+
+              <button
+                onClick={() => {
+                  setGameState('observer');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full py-4 px-6 rounded-2xl text-left text-sm font-black uppercase tracking-wider transition-all flex items-center justify-between cursor-pointer ${gameState === 'observer' ? 'bg-zello-orange/10 border border-zello-orange/30 text-zello-orange' : 'bg-white/5 border border-white/5 text-slate-300 hover:bg-white/10'}`}
+              >
+                <span>{t('nav.observe', { defaultValue: 'Observar' })}</span>
+                <ChevronRight size={16} className={gameState === 'observer' ? 'text-zello-orange' : 'text-slate-500'} />
               </button>
 
               <button

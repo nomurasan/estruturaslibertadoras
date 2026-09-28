@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Infinity as InfinityIcon, Play, LayoutGrid, Gamepad2, BarChart2, ChevronRight } from 'lucide-react';
+import { Infinity as InfinityIcon, Play, LayoutGrid, Gamepad2, BarChart2, ChevronRight, Eye as EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { GameState } from '../types';
 
@@ -37,15 +37,15 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zello-orange/10 border border-zello-orange/20 text-zello-orange text-xs font-black uppercase tracking-widest">
           <InfinityIcon size={14} className="text-zello-orange" />
-          {t('home.freeAccessBadge', { defaultValue: 'Acesso Livre • Estruturas Libertadoras & Ecocycle Planning' })}
+          {t('home.freeAccessBadge', { defaultValue: 'Acesso Livre • Estruturas Libertadoras' })}
         </div>
 
         <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-white uppercase italic font-sans">
-          {t('home.heroTitle1', { defaultValue: 'ECOCYCLE' })} <br /> <span className="text-zello-orange">{t('home.heroTitle2', { defaultValue: 'PLANNING' })}</span>
+          {t('home.heroTitle1', { defaultValue: 'ESTRUTURAS' })} <br /> <span className="text-zello-orange">{t('home.heroTitle2', { defaultValue: 'LIBERTADORAS' })}</span>
         </h1>
         
         <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-          {t('home.heroDesc', { defaultValue: 'Domine a arte de desenhar Strings com Estruturas Libertadoras para destravar as Armadilhas da Pobreza e da Rigidez, equilibrar o portfólio no Ecocycle e semear novas iniciativas.' })}
+          {t('home.heroDesc', { defaultValue: 'Desenhe experiências. Observe o que emerge. Sintonize sua prática.' })}
         </p>
 
         <div className="flex justify-center pt-2 w-full">
@@ -85,7 +85,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 <button
                   onClick={() =>
                     setActiveVideo({
-                      title: t('home.howJourneyWorks', { defaultValue: 'Como Funciona a Jornada do Ecocycle Planning?' }),
+                      title: t('home.howJourneyWorks', { defaultValue: 'Como Funciona a Jornada?' }),
                       url: 'https://www.youtube.com/embed/-SIsDpgvoXs?rel=0',
                     })
                   }
@@ -106,11 +106,15 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
           {t('home.journeyTitle', { defaultValue: 'Sua Jornada com Estruturas Libertadoras' })}
         </h2>
         <div className="flex items-center justify-center gap-2 md:gap-4 text-white text-base md:text-lg font-black tracking-wider uppercase italic">
-          <span>{t('home.journeyStep1', { defaultValue: 'Explore o Deck' })}</span>
+          <span>{t('home.journeyStep1', { defaultValue: 'EXPLORAR' })}</span>
           <span className="text-zello-orange/60">•</span>
-          <span>{t('home.journeyStep2', { defaultValue: 'Monte Strings' })}</span>
+          <span>{t('home.journeyStep2', { defaultValue: 'DESENHAR' })}</span>
           <span className="text-zello-orange/60">•</span>
-          <span>{t('home.journeyStep3', { defaultValue: 'Dashboard' })}</span>
+          <span>{t('home.journeyStep3', { defaultValue: 'OBSERVAR' })}</span>
+          <span className="text-zello-orange/60">•</span>
+          <span>SINTONIZAR</span>
+          <span className="text-zello-orange/60">•</span>
+          <span>REFLETIR</span>
         </div>
       </div>
 
@@ -148,7 +152,7 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 </div>
                 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
-                  {t('home.cardDeckDesc', { defaultValue: 'Conheça todas as 45 Estruturas Libertadoras oficiais com propósito, passos, fluxo sequencial e conexão biológica com o Ecocycle Planning.' })}
+                  {t('home.cardDeckDesc', { defaultValue: 'Conheça o repertório de Estruturas Libertadoras e descubra diferentes maneiras de incluir todas as vozes e liberar a inteligência coletiva.' })}
                 </p>
               </div>
 
@@ -181,15 +185,15 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
                 
                 <div className="space-y-1">
                   <h3 className="font-black text-3xl text-white uppercase italic tracking-tighter font-sans">
-                    {t('home.cardQuizTitle', { defaultValue: 'QUIZZES' })}
+                    {t('home.cardQuizTitle', { defaultValue: 'APRENDER' })}
                   </h3>
                   <p className="text-zello-orange font-bold text-[10px] uppercase tracking-widest font-mono">
-                    {t('home.cardQuizSub', { defaultValue: 'MONTAGEM DE STRINGS' })}
+                    {t('home.cardQuizSub', { defaultValue: 'QUIZ & PROGRESSÃO' })}
                   </p>
                 </div>
                 
                 <p className="text-slate-400 text-xs font-semibold leading-relaxed">
-                  {t('home.cardQuizDesc', { defaultValue: '30 exercícios desafiadores em 3 níveis (Padawan, Jedi e Yoda) de encadeamento de Strings com o Ecocycle Planning para destravar gargalos.' })}
+                  {t('home.cardQuizDesc', { defaultValue: 'Continue praticando, acumulando XP e ampliando seu repertório de combinações e decisões de facilitação.' })}
                 </p>
               </div>
 
@@ -199,6 +203,41 @@ export const HomeSectionView: React.FC<HomeSectionViewProps> = ({
               </div>
             </div>
           </div>
+        </div>
+
+        <button
+          onClick={() => setGameState('observer')}
+          className="w-full max-w-4xl group relative flex items-center justify-between gap-4 p-8 bg-zello-orange/10 border border-zello-orange/30 hover:border-zello-orange rounded-3xl transition-all duration-300 text-left cursor-pointer"
+        >
+          <div className="flex items-center gap-6">
+            <div className="p-4 bg-zello-orange/20 rounded-2xl shrink-0">
+              <EyeIcon size={32} className="text-zello-orange" />
+            </div>
+            <div>
+              <div className="font-black text-2xl text-white uppercase italic tracking-tighter">
+                {t('home.cardObserverTitle', { defaultValue: 'OBSERVATÓRIO EL' })}
+              </div>
+              <div className="text-slate-300 text-sm leading-relaxed mt-1 max-w-xl">
+                {t('home.cardObserverDesc', { defaultValue: 'Escolha o que deseja tornar mais perceptível e encontre ELs que podem criar condições interessantes para observar o grupo.' })}
+              </div>
+            </div>
+          </div>
+          <ChevronRight size={24} className="text-zello-orange group-hover:translate-x-1 transition-transform shrink-0" />
+        </button>
+
+        <div className="grid md:grid-cols-3 gap-3 w-full max-w-4xl">
+          <button onClick={() => setGameState('designer')} className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-zello-orange/40 text-left transition-colors">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zello-orange">Desenhar</span>
+            <span className="block text-white font-black uppercase mt-2">Criar experiência</span>
+          </button>
+          <button onClick={() => setGameState('tuning')} className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-zello-orange/40 text-left transition-colors">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zello-orange">Sintonizar</span>
+            <span className="block text-white font-black uppercase mt-2">Adaptar uma EL</span>
+          </button>
+          <button onClick={() => setGameState('reflection')} className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-zello-orange/40 text-left transition-colors">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zello-orange">Refletir</span>
+            <span className="block text-white font-black uppercase mt-2">Registrar aprendizados</span>
+          </button>
         </div>
 
         <button

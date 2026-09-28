@@ -34,13 +34,17 @@ import { getRank, RANKS, RankInfo, recordQuizAttemptScore, calculateTotalXP, nor
 // Modular child components
 import { Navigation } from './components/Navigation';
 import { HomeSectionView } from './components/HomeSectionView';
+import { ObserverSectionView } from './components/ObserverSectionView';
+import { ExperienceDesignerView } from './components/ExperienceDesignerView';
+import { TuningSectionView } from './components/TuningSectionView';
+import { ReflectionSectionView } from './components/ReflectionSectionView';
 import { QuizSectionView } from './components/QuizSectionView';
 import { LevelSelectionView } from './components/LevelSelectionView';
 import { DeckSectionView } from './components/DeckSectionView';
 import { AdminSectionView } from './components/AdminSectionView';
 import { AppStateProvider } from './contexts/AppStateContext';
 
-type GameState = 'home' | 'level-selection' | 'game' | 'deck' | 'results' | 'dashboards' | 'admin' | 'autoconhecimento';
+type GameState = 'home' | 'level-selection' | 'game' | 'deck' | 'observer' | 'designer' | 'tuning' | 'reflection' | 'results' | 'dashboards' | 'admin' | 'autoconhecimento';
 
 interface Company {
   id: string;
@@ -2206,6 +2210,17 @@ export default function App() {
               gameState={gameState}
             />
           )}
+
+          {gameState === 'observer' && (
+            <ObserverSectionView
+              key="observer-section-view-call"
+              setGameState={setGameState}
+            />
+          )}
+
+          {gameState === 'designer' && <ExperienceDesignerView key="designer-section-view-call" setGameState={setGameState} />}
+          {gameState === 'tuning' && <TuningSectionView key="tuning-section-view-call" setGameState={setGameState} />}
+          {gameState === 'reflection' && <ReflectionSectionView key="reflection-section-view-call" setGameState={setGameState} />}
 
           {gameState === 'dashboards' && (
             <motion.div 

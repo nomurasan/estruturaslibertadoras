@@ -34,6 +34,21 @@ import {
   Brain
 } from 'lucide-react';
 
+export interface ObservationLens {
+  id: string;
+  title: string;
+  description: string;
+  questions: string[];
+}
+
+export interface DesignElements {
+  invitation?: string;
+  participation?: string;
+  groups?: string;
+  space?: string;
+  sequenceTime?: string;
+}
+
 export interface AIPower {
   id: string;
   category: string;
@@ -54,6 +69,14 @@ export interface AIPower {
   output?: string;
   timeNeeded?: string;
   groupSize?: string;
+
+  purposes?: string[];
+  observationDimensions?: string[];
+  observationLenses?: ObservationLens[];
+  designElements?: DesignElements;
+  facilitatorAttention?: string[];
+  possibleContexts?: string[];
+  combinations?: string[];
 
   // Special Card Fields (ex: 5 Design Elements - Meta-facilitação)
   isDesignCard?: boolean;
